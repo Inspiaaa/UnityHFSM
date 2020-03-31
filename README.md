@@ -2,7 +2,7 @@
 
 
 
-A simple yet powerful finite state machine for the Unity game engine. It is class based, but also supports functions for fast prototyping.
+A simple yet powerful hierarchical finite state machine for the Unity game engine. It is class based, but also supports functions for fast prototyping.
 
 ## Example
 
@@ -103,6 +103,8 @@ public class EnemyController : MonoBehaviour
     }
 ```
 
+Although this example is using lambda expressions for the states' logic, you can of course just pass normal functions.
+
 ### Adding transitions
 
 ```csharp
@@ -150,3 +152,17 @@ public class EnemyController : MonoBehaviour
         fsm.OnLogic();
     }
 ```
+
+
+
+## Hierarchical State Machine
+
+Because StateMachine inherits from FSMNode, it can be treated as a normal State, therefore allowing for the nesting of state machines together with states.
+
+
+
+### Expanding on the previous example
+
+
+
+![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/EnemySpyHierarchicalExample.png)
