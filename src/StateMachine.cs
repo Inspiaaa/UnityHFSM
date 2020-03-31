@@ -16,10 +16,10 @@ namespace FSM {
 		private string startState;
 		private string pendingState;
 		public FSMNode activeState;
-		private Transition[] activeTransitions;
+		private FSMTransition[] activeTransitions;
 
 		private Dictionary<string, FSMNode> states = new Dictionary<string, FSMNode>();
-		private Dictionary<string, List<Transition>> transitions = new Dictionary<string, List<Transition>>();
+		private Dictionary<string, List<FSMTransition>> transitions = new Dictionary<string, List<FSMTransition>>();
 
 		public StateMachine(GameObject gameObject, bool needsExitTime = true) : base(needsExitTime) {
 			this.gameObject = gameObject;
@@ -114,9 +114,9 @@ namespace FSM {
 			startState = name;
 		}
 
-		public void AddTransition(Transition transition) {
+		public void AddTransition(FSMTransition transition) {
 			if (! transitions.ContainsKey(transition.from)) {
-				transitions[transition.from] = new List<Transition>();
+				transitions[transition.from] = new List<FSMTransition>();
 			}
 
 			transition.fsm = this;

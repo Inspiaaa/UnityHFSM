@@ -4,28 +4,19 @@ using UnityEngine;
 using System;
 
 namespace FSM {
-	public class Transition {
-		public string from;
-		public string to;
+	public class Transition : FSMTransition{
 
 		public Func<Transition, bool> condition;
-		public bool forceInstantly;
-
-		public StateMachine fsm;
-		public GameObject gameObject;
 
 		public Transition(string from, 
 				string to, 
 				Func<Transition, bool> condition = null,
-				bool forceInstantly = false) 
+				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
-			this.from = from;
-			this.to = to;
 			this.condition = condition;
-			this.forceInstantly = forceInstantly;
 		}
 
-		public bool ShouldTransition() {
+		public override bool ShouldTransition() {
 			if (condition == null)
 				return true;
 			

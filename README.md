@@ -1,5 +1,7 @@
 # Finite State Machine for Unity
 
+![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)
+
 A simple yet powerful hierarchical finite state machine for the Unity game engine. It is class based, but also supports functions for fast prototyping.
 
 ## Example
@@ -203,7 +205,5 @@ So that we can see a difference, the enemy should be spinning when it enters the
         fsm.AddState("ExtractIntel", extractIntel);
     }
 ```
-
-
 
 TODO: Continue the documentation from "Separate FSM for the ExtractIntel state"
