@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
- // TODO: Add my library / framework to Github
  // TODO: Add explicit error if fsm has not been initialised yet (calling fsm.OnEnter())
 
 /**
@@ -16,7 +15,7 @@ namespace FSM {
 	public class StateMachine : FSMNode {
 		private string startState;
 		private string pendingState;
-		private FSMNode activeState;
+		public FSMNode activeState;
 		private Transition[] activeTransitions;
 
 		private Dictionary<string, FSMNode> states = new Dictionary<string, FSMNode>();
