@@ -1,7 +1,5 @@
 # Finite State Machine for Unity
 
-
-
 A simple yet powerful hierarchical finite state machine for the Unity game engine. It is class based, but also supports functions for fast prototyping.
 
 ## Example
@@ -44,7 +42,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
   }
   ```
 
-### Initialising the state machine
+#### Initialising the state machine
 
 ```csharp
 using System.Collections;
@@ -66,10 +64,9 @@ public class EnemyController : MonoBehaviour
 }
 ```
 
-### Adding states
+#### Adding states
 
 ```csharp
-    
     float DistanceToPlayer() {
         // Or however you have your scene and player configured
         return (transform.position - PlayerController.Instance.transform.position).magnitude;
@@ -80,7 +77,7 @@ public class EnemyController : MonoBehaviour
         Vector3 player = PlayerController.Instance.transform.position;
         transform.position += (player - transform.position).normalized * speed * Time.deltaTime;
     }
-    
+
     void Start()
     {
         fsm = new StateMachine(gameObject);
@@ -105,12 +102,15 @@ public class EnemyController : MonoBehaviour
 
 Although this example is using lambda expressions for the states' logic, you can of course just pass normal functions.
 
-### Adding transitions
+# 
+
+#### Adding transitions
 
 ```csharp
     void Start()
     {
         // ...
+
         fsm.AddTransition(new Transition(
             "ExtractIntel", 
             "FollowPlayer",
@@ -137,7 +137,7 @@ Although this example is using lambda expressions for the states' logic, you can
     }
 ```
 
-### Initialising and runnning the state machine
+#### Initialising and runnning the state machine
 
 ```csharp
     void Start() 
@@ -153,16 +153,57 @@ Although this example is using lambda expressions for the states' logic, you can
     }
 ```
 
-
-
 ## Hierarchical State Machine
 
 Because StateMachine inherits from FSMNode, it can be treated as a normal State, therefore allowing for the nesting of state machines together with states.
 
-
-
 ### Expanding on the previous example
 
-
-
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/EnemySpyHierarchicalExample.png)
+
+So that we can see a difference, the enemy should be spinning when it enters the "SendData" state
+
+### The idea:
+
+- Create a separate state machine for the nested states (States in Extract Intel)
+
+- Add the nested states to the new state machine
+
+- Add the new state machine to the main state machine as a normal state
+
+#### 
+
+#### Separate FSM for the ExtractIntel state
+
+```csharp
+    void Start()
+    {
+        // This is the main state machine
+        fsm = new StateMachine(gameObject);
+
+        StateMachine extractIntel = new StateMachine(gameObject);
+
+        extractIntel.AddState("SendData", new State(
+            onLogic: (state) => {
+                if (state.timer > 5) {
+                    state.fsm.StateCanExit();
+                }
+
+                // Make the enemy turn at 100 degrees per second
+                transform.rotation = Quateranion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+            },
+            needsExitTime: true
+        ));
+
+        extractIntel.AddState("CollectData", new State(
+            onLogic: (state) => {if (state.timer > 5) state.fsm.StateCanExit();},
+            needsExitTime: true)
+        );
+
+        fsm.AddState("ExtractIntel", extractIntel);
+    }
+```
+
+
+
+TODO: Continue the documentation from "Separate FSM for the ExtractIntel state"
