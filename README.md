@@ -230,7 +230,7 @@ So that we can see a difference, the enemy should be spinning when it enters the
     }
 ```
 
-What is `fsm.StaceCanExit()` and `needsExitTime`?
+What is `fsm.StateCanExit()` and `needsExitTime`?
 
 When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transtion has the `forceInstantly`  property). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
 
