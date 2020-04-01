@@ -13,3 +13,11 @@ graph TD
   F --> G(["fsm.StateCanExit()"])
   end
   G --> C
+
+
+
+Mermaid Configuration:
+{
+  "theme": "default",
+  "fontFamily": "Cascadia Mono"
+}
