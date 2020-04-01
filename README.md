@@ -185,7 +185,7 @@ So that we can see a difference, the enemy should be spinning when it enters the
 
         StateMachine extractIntel = new StateMachine(gameObject, needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
-    
+
         // ...
     }
 ```
@@ -200,7 +200,7 @@ So that we can see a difference, the enemy should be spinning when it enters the
 
         StateMachine extractIntel = new StateMachine(gameObject, needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
-    
+
         extractIntel.AddState("SendData", new State(
             onLogic: (state) => {
                 // When the state has been active for more than 5 seconds,
@@ -220,30 +220,26 @@ So that we can see a difference, the enemy should be spinning when it enters the
             onLogic: (state) => {if (state.timer > 5) state.fsm.StateCanExit();},
             needsExitTime: true
         ));
-    
+
         // A transition without a condition
         extractIntel.AddTransition(new Transition("SendData", "CollectData"));
         extractIntel.AddTransition(new Transition("CollectData", "SendData"));
         extractIntel.SetStartState("CollectData");
-    
+
         // ...
     }
 ```
-
-
 
 What is `fsm.StaceCanExit()` and `needsExitTime`?
 
 When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transtion has the `forceInstantly`  property). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
 
-But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `onChange`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit. 
+But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `onChange`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
 
-![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.svg)
+![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
 
 1. When a transition should happen, the state machine calls `activeState.RequestExit()`, this calling the `onChange` function. If the state can exit, the `onChange` function has to call `fsm.StateCanExit()` and if not, it doesn't call `fsm.StateCanExit()`.
 
 2. If the state couldn't exit when `onChange` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
-
-
 
 More documentation coming soon...
