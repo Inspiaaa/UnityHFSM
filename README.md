@@ -236,10 +236,10 @@ When needsExitTime is set to false, the state can exit any time (because of a tr
 
 But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `onChange`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
 
-![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
-
 1. When a transition should happen, the state machine calls `activeState.RequestExit()`, this calling the `onChange` function. If the state can exit, the `onChange` function has to call `fsm.StateCanExit()` and if not, it doesn't call `fsm.StateCanExit()`.
 
 2. If the state couldn't exit when `onChange` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
+
+![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
 
 More documentation coming soon...
