@@ -8,7 +8,7 @@ using UnityEngine;
  * * Hierarchichal finite state machine for Unity 
  * by LavaAfterburner
  * 
- * * Version: 1.0
+ * * Version: 1.1
  */
 
 namespace FSM {

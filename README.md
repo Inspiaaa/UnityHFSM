@@ -183,27 +183,49 @@ So that we can see a difference, the enemy should be spinning when it enters the
         // This is the main state machine
         fsm = new StateMachine(gameObject);
 
-        StateMachine extractIntel = new StateMachine(gameObject);
+        StateMachine extractIntel = new StateMachine(gameObject, needsExitTime: false);
+        fsm.AddState("ExtractIntel", extractIntel);
+    
+        // ...
+    }
+```
 
+#### Adding States and Transitions
+
+```csharp
+    void Start()
+    {
+        // This is the main state machine
+        fsm = new StateMachine(gameObject);
+
+        StateMachine extractIntel = new StateMachine(gameObject, needsExitTime: false);
+        fsm.AddState("ExtractIntel", extractIntel);
+    
         extractIntel.AddState("SendData", new State(
             onLogic: (state) => {
-                if (state.timer > 5) {
+                // When the state has been active for more than 5 seconds,
+                // notify the fsm that the state can cleanly exit
+                if (state.timer > 5)
                     state.fsm.StateCanExit();
-                }
 
                 // Make the enemy turn at 100 degrees per second
                 transform.rotation = Quateranion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
             },
+            // This means the state won't instantly exit when a transition should happen
+            // but instead the state machine waits until it is given permission to change state
             needsExitTime: true
         ));
 
         extractIntel.AddState("CollectData", new State(
             onLogic: (state) => {if (state.timer > 5) state.fsm.StateCanExit();},
-            needsExitTime: true)
-        );
-
-        fsm.AddState("ExtractIntel", extractIntel);
+            needsExitTime: true
+        ));
+    
+        // A transition without a condition
+        extractIntel.AddTransition(new Transition("SendData", "CollectData"));
+        extractIntel.AddTransition(new Transition("CollectData", "SendData"));
+        extractIntel.SetStartState("CollectData");
+    
+        // ...
     }
 ```
-
-TODO: Continue the documentation from "Separate FSM for the ExtractIntel state"
