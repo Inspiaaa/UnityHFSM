@@ -1,0 +1,15 @@
+graph TD
+  Start([State Transition]) --> B{State needs<br>exit time}
+
+  B -->|No| C([Change State])
+
+  B -->|Yes| D(["FSM callls<br> activeState.RequestExit()"])
+  D --> E{"activeState calls<br>fsm.StateCanExit()"}
+
+  E -->|Yes| C
+  E -->|No| F(["Later in<br>activeState.OnLogic()"])
+
+  subgraph "Delayed State Change"
+  F --> G(["fsm.StateCanExit()"])
+  end
+  G --> C
