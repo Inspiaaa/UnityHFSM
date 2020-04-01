@@ -234,12 +234,20 @@ What is `fsm.StateCanExit()` and `needsExitTime`?
 
 When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transtion has the `forceInstantly`  property). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
 
-But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `onChange`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
+But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `canExit`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
 
-1. When a transition should happen, the state machine calls `activeState.RequestExit()`, this calling the `onChange` function. If the state can exit, the `onChange` function has to call `fsm.StateCanExit()` and if not, it doesn't call `fsm.StateCanExit()`.
+1. When a transition should happen, the state machine calls `activeState.RequestExit()`, this calling the `canExit` function. If the state can exit, the `canExit` function has to call `fsm.StateCanExit()` and if not, it doesn't call `fsm.StateCanExit()`.
 
-2. If the state couldn't exit when `onChange` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
+2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
 
+
+
 More documentation coming soon...
+
+
+
+Todo:
+
+[ ] Better naming in the Mermaid flow chart document

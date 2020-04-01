@@ -1,19 +1,20 @@
 graph TD
-  Start([State Transition]) --> B{State needs<br>exit time}
+  Start([State Transition]) --> NeedsExitTime{"Does activeState<br>need exit time"}
 
-  B -->|No| C([Change State])
+  NeedsExitTime -->|No| End([Change State])
 
-  B -->|Yes| D(["FSM callls<br> activeState.RequestExit()"])
-  D --> E{"activeState calls<br>fsm.StateCanExit()"}
+  NeedsExitTime -->|Yes| RequestExit["FSM callls<br> activeState.RequestExit()"]
+  RequestExit --> IsCanExitDefinined{"Is<br>activeState.canExit<br>defined"}
+  IsCanExitDefinined -->|Yes| CanExitCallsStateCanExit{"Does<br>canExit call<br>fsm.StateCanExit()"}
+  IsCanExitDefinined -->|No| Later
 
-  E -->|Yes| C
-  E -->|No| F(["Later in<br>activeState.OnLogic()"])
+  CanExitCallsStateCanExit -->|Yes| End
+  CanExitCallsStateCanExit -->|No| Later["Later in<br>activeState.OnLogic()"]
 
   subgraph "Delayed State Change"
-  F --> G(["fsm.StateCanExit()"])
+  Later --> CallStateCanExit["fsm.StateCanExit()"]
   end
-  G --> C
-
+  CallStateCanExit --> End
 
 
 Mermaid Configuration:
