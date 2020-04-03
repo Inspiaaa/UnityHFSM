@@ -245,9 +245,3 @@ But when is the right time for the state machine to finally change states? This 
 
 
 More documentation coming soon...
-
-
-
-Todo:
-
-[ ] Better naming in the Mermaid flow chart document
