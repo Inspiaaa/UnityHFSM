@@ -4,17 +4,15 @@
 
 A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class based**, but also supports functions (or lambdas) for **fast prototyping**.
 
-
-
 - [Fast prototyping](#simple-state-machine)
 
 - [Hierarchical features](#hierarchical-state-machine)
 
+- [Multiple state change patterns](#state-change-patters)
+
 - Scalable (class based)
 
 - Unity **coroutines**
-
-
 
 ## Examples
 
@@ -34,9 +32,9 @@ As you can see the enemy will try to stay outside of the player's scanning range
   
   ```csharp
   fsm.AddState( new State(
-   onEnter,
-   onLogic,
-   onExit
+      onEnter,
+      onLogic,
+      onExit
   ));
   ```
 
@@ -44,9 +42,9 @@ As you can see the enemy will try to stay outside of the player's scanning range
   
   ```csharp
   fsm.AddTransition( new Transition(
-   from,
-   to,
-   condition
+      from,
+      to,
+      condition
   ));
   ```
 
@@ -54,7 +52,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
   
   ```csharp
   void Update {
-   fsm.OnLogic()
+      fsm.OnLogic()
   }
   ```
 
@@ -254,10 +252,40 @@ But when is the right time for the state machine to finally change states? This 
 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
-
-
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
 
 
+
+## State Change Patterns
+
+The state machine supports two ways of chaning states:
+
+1. Using transitions as described earlier
+   
+   ```csharp
+   fsm.AddTransition( new Transition(
+       from,
+       to,
+       condition
+   ));
+   ```
+
+2. Calling the `RequestStateChange` method
+   
+   ```csharp
+   fsm.RequestStateChange(state, forceInstantly: false);
+   ```
+   
+   Example
+   
+   ```csharp
+   fsm.AddState("FollowPlayer", new State(
+       onLogic: (state) => {
+           MoveTowardsPlayer(1);
+   
+           if (DistanceToPlayer() < ownScanningRange)
+               fsm.RequestStateChange("ExtractIntel")
+       }));
+   ```
 
 More documentation coming soon...
