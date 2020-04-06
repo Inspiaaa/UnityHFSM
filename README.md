@@ -8,7 +8,7 @@ A simple yet powerful **hierarchical finite state machine** for the Unity game e
 
 - [Hierarchical features](#hierarchical-state-machine)
 
-- [Multiple state change patterns](#state-change-patters)
+- [Multiple state change patterns](#state-change-patterns)
 
 - Scalable (class based)
 
@@ -253,8 +253,6 @@ But when is the right time for the state machine to finally change states? This 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
-
-
 
 ## State Change Patterns
 
