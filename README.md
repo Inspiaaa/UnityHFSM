@@ -2,9 +2,23 @@
 
 ![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)
 
-A simple yet powerful hierarchical finite state machine for the Unity game engine. It is class based, but also supports functions for fast prototyping.
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class based**, but also supports functions (or lambdas) for **fast prototyping**.
 
-## Example
+
+
+- [Fast prototyping](#simple-state-machine)
+
+- [Hierarchical features](#hierarchical-state-machine)
+
+- Scalable (class based)
+
+- Unity **coroutines**
+
+
+
+## Examples
+
+## Simple State Machine
 
 Here's a simple state machine for an enemy spy in your game.
 
@@ -240,6 +254,10 @@ But when is the right time for the state machine to finally change states? This 
 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
+
+
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
+
+
 
 More documentation coming soon...
