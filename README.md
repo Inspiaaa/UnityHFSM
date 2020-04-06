@@ -61,7 +61,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         // Create a new StateMachine instance
-        fsm = new StateMachine(gameObject);
+        fsm = new StateMachine(this);
     }
 }
 ```
@@ -82,7 +82,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        fsm = new StateMachine(gameObject);
+        fsm = new StateMachine(this);
 
         // Empty state without any logic
         fsm.AddState("ExtractIntel", new State());
@@ -181,9 +181,9 @@ So that we can see a difference, the enemy should be spinning when it enters the
     void Start()
     {
         // This is the main state machine
-        fsm = new StateMachine(gameObject);
+        fsm = new StateMachine(this);
 
-        StateMachine extractIntel = new StateMachine(gameObject, needsExitTime: false);
+        StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
 
         // ...
@@ -196,9 +196,9 @@ So that we can see a difference, the enemy should be spinning when it enters the
     void Start()
     {
         // This is the main state machine
-        fsm = new StateMachine(gameObject);
+        fsm = new StateMachine(this);
 
-        StateMachine extractIntel = new StateMachine(gameObject, needsExitTime: false);
+        StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
 
         extractIntel.AddState("SendData", new State(
@@ -241,7 +241,5 @@ But when is the right time for the state machine to finally change states? This 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
-
-
 
 More documentation coming soon...

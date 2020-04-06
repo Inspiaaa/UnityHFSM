@@ -21,8 +21,8 @@ namespace FSM {
 		private Dictionary<string, FSMNode> states = new Dictionary<string, FSMNode>();
 		private Dictionary<string, List<FSMTransition>> transitions = new Dictionary<string, List<FSMTransition>>();
 
-		public StateMachine(GameObject gameObject, bool needsExitTime = true) : base(needsExitTime) {
-			this.gameObject = gameObject;
+		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(needsExitTime) {
+			this.mono = mono;
 		}
 
 		public void StateCanExit() {
@@ -101,7 +101,7 @@ namespace FSM {
 		public void AddState(string name, FSMNode state) {
 			state.fsm = this;
 			state.name = name;
-			state.gameObject = gameObject;
+			state.mono = mono;
 
 			states[name] = state;
 
@@ -120,7 +120,7 @@ namespace FSM {
 			}
 
 			transition.fsm = this;
-			transition.gameObject = gameObject;
+			transition.mono = mono;
 
 			transitions[transition.from].Add(transition);
 		}

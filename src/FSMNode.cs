@@ -8,7 +8,7 @@ namespace FSM {
 		public string name;
 
 		public StateMachine fsm;
-		public GameObject gameObject;
+		public MonoBehaviour mono;
 
 		public FSMNode(bool needsExitTime) {
 			this.needsExitTime = needsExitTime;

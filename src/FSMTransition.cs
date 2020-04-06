@@ -10,7 +10,7 @@ namespace FSM {
 		public bool forceInstantly;
 
 		public StateMachine fsm;
-		public GameObject gameObject;
+		public MonoBehaviour mono;
 
 		public FSMTransition(string from, string to, bool forceInstantly = false) 
 		{
