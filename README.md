@@ -10,9 +10,9 @@ A simple yet powerful **hierarchical finite state machine** for the Unity game e
 
 - [Multiple state change patterns](#state-change-patterns)
 
-- Scalable (class based)
+- [Unity **coroutines**](#unity-coroutines)
 
-- Unity **coroutines**
+- Scalable (class based)
 
 ## Examples
 
@@ -175,7 +175,7 @@ Because StateMachine inherits from FSMNode, it can be treated as a normal State,
 
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/EnemySpyHierarchicalExample.png)
 
-So that we can see a difference, the enemy should be spinning when it enters the "SendData" state
+So that you can see a visual difference, the enemy should be spinning when it enters the "SendData" state
 
 ### The idea:
 
@@ -274,7 +274,7 @@ The state machine supports two ways of chaning states:
    fsm.RequestStateChange(state, forceInstantly: false);
    ```
    
-   Example
+   **Example**
    
    ```csharp
    fsm.AddState("FollowPlayer", new State(
@@ -285,5 +285,21 @@ The state machine supports two ways of chaning states:
                fsm.RequestStateChange("ExtractIntel")
        }));
    ```
+
+
+
+## Unity Coroutines
+
+By using the `CoState` class you can run coroutines. This class handles the following things automatically:
+
+- Starting the Coroutine
+
+- Running the Coroutine again once it has completed
+
+- Terminating the Coroutine on state exit
+
+As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expression to define IEnumerators (=> Coroutines)
+
+
 
 More documentation coming soon...

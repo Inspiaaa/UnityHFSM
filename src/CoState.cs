@@ -56,8 +56,8 @@ namespace FSM {
 		}
 
 		override public void OnLogic() {
-			if (onLogic != null) {
-				if (coroutine == null)
+			if (coroutine == null) {
+				if (onLogic != null)
 					coroutine = mono.StartCoroutine(LoopCoroutine());
 			}
 		}
