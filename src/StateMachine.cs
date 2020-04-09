@@ -38,7 +38,7 @@ namespace FSM {
 		}
 
 		/// <summary>
-		/// Notifies the FSM that the state can cleanly exit,
+		/// Notifies the state machine that the state can cleanly exit,
 		/// and if a state change is pending, it will execute it
 		/// </summary>
 		public void StateCanExit() {
@@ -125,7 +125,7 @@ namespace FSM {
 		}
 
 		/// <summary>
-		/// Adds a new node / state to the FSM
+		/// Adds a new node / state to the state machine
 		/// </summary>
 		/// <param name="name">The name / identifier of the new state</param>
 		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c></param>
@@ -142,7 +142,7 @@ namespace FSM {
 		}
 
 		/// <summary>
-		/// Defines the entry point of the FSM
+		/// Defines the entry point of the state machine
 		/// </summary>
 		/// <param name="name">The name / identifier of the start state</param>
 		public void SetStartState(string name) {

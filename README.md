@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)
 
-A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class based**, but also supports functions (or lambdas) for **fast prototyping**.
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class -based**, but also supports functions (or lambdas) for **fast prototyping**.
 
 - [Fast prototyping](#simple-state-machine)
 
@@ -12,7 +12,7 @@ A simple yet powerful **hierarchical finite state machine** for the Unity game e
 
 - [Unity **coroutines**](#unity-coroutines)
 
-- Scalable (class based)
+- Scalable (class-based)
 
 ## Examples
 
@@ -48,7 +48,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
   ));
   ```
 
-- Run the statemachine
+- Run the state machine
   
   ```csharp
   void Update {
@@ -151,7 +151,7 @@ Although this example is using lambda expressions for the states' logic, you can
     }
 ```
 
-#### Initialising and runnning the state machine
+#### Initialising and running the state machine
 
 ```csharp
     void Start() 
@@ -169,7 +169,7 @@ Although this example is using lambda expressions for the states' logic, you can
 
 ## Hierarchical State Machine
 
-Because StateMachine inherits from FSMNode, it can be treated as a normal State, therefore allowing for the nesting of state machines together with states.
+Because StateMachine inherits from FSMNode, it can be treated as a normal state, therefore allowing for the nesting of state machines together with states.
 
 ### Expanding on the previous example
 
@@ -244,7 +244,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
 
 What is `fsm.StateCanExit()` and `needsExitTime`?
 
-When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transtion has the `forceInstantly`  property). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
+When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transition has the `forceInstantly`  property). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
 
 But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `canExit`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
 
@@ -256,7 +256,7 @@ But when is the right time for the state machine to finally change states? This 
 
 ## State Change Patterns
 
-The state machine supports two ways of chaning states:
+The state machine supports two ways of changing states:
 
 1. Using transitions as described earlier
    
@@ -298,7 +298,7 @@ By using the `CoState` class you can run coroutines. This class handles the foll
 
 - Terminating the Coroutine on state exit
 
-As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expression to define IEnumerators (=> Coroutines)
+As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expressions to define IEnumerators (=> Coroutines)
 
 
 
