@@ -12,6 +12,19 @@ namespace FSM {
 
 		public Timer timer;
 		
+		/// <summary>
+		/// Initialises a new instance of the State class
+		/// </summary>
+		/// <param name="onEnter">A function that is called when the state machine enters this state</param>
+		/// <param name="onLogic">A function that is called by the logic function of the state machine if this state is active</param>
+		/// <param name="onExit">A function that is called when the state machine exits this state</param>
+		/// <param name="canExit">(Only if needsExitTime is true):
+		/// 	Called when a state transition from this state to another state should happen.
+		/// 	If it can exit, it should call fsm.StateCanExit()
+		/// 	and if it can not exit right now, later in OnLogic() it should call fsm.StateCanExit()</param>
+		/// <param name="needsExitTime">Determins if the state is allowed to instantly
+		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
+		/// state change (true)</param>
 		public State(Action<State> onEnter = null, 
 				Action<State> onLogic = null,
 				Action<State> onExit = null,

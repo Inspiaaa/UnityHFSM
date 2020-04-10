@@ -25,14 +25,13 @@ namespace FSM {
 		private Dictionary<string, List<FSMTransition>> transitions = new Dictionary<string, List<FSMTransition>>();
 
 		/// <summary>
-		/// Initializes a new instance of the StateMachine class
+		/// Initialises a new instance of the StateMachine class
 		/// </summary>
 		/// <param name="mono">The MonoBehaviour of the script that created the state machine</param>
 		/// <param name="needsExitTime">(Only for hierarchical states):
-		/// 	Determins if the state machine as a state of a parent state machine is allowed to instantly
+		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true)</param>
-		/// <returns></returns>
 		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(needsExitTime) {
 			this.mono = mono;
 		}
@@ -150,7 +149,7 @@ namespace FSM {
 		}
 
 		/// <summary>
-		/// Adds a new transition betweeen two states
+		/// Adds a new transition between two states
 		/// </summary>
 		/// <param name="transition">The transition instance</param>
 		public void AddTransition(FSMTransition transition) {
