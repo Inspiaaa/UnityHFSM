@@ -29,18 +29,15 @@ namespace FSM {
 		override public void OnEnter() {
 			timer.Reset();
 
-			if (onEnter != null)
-				onEnter(this);
+			if (onEnter != null) onEnter(this);
 		}
 
 		override public void OnLogic() {
-			if (onLogic != null)
-				onLogic(this);
+			if (onLogic != null) onLogic(this);
 		}
 
 		override public void OnExit() {
-			if (onExit != null)
-				onExit(this);
+			if (onExit != null)	onExit(this);
 		}
 
 		override public void RequestExit() {

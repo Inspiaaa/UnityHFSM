@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)
 
-A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class -based**, but also supports functions (or lambdas) for **fast prototyping**.
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
 
 - [Fast prototyping](#simple-state-machine)
 
