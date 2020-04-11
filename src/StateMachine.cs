@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
- // TODO: Add explicit error if fsm has not been initialised yet (calling fsm.OnEnter())
+// TODO: Add explicit error if fsm has not been initialised yet (calling fsm.OnEnter())
 
 /**
  * * Hierarchichal finite state machine for Unity 
