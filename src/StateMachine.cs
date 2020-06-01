@@ -173,7 +173,7 @@ namespace FSM {
 
 				FSMNode selectedNode = states[name];
 
-				if (selectedNode ! is StateMachine) {
+				if (! (selectedNode is StateMachine)) {
 					System.Exception exception = new System.Exception(
 						$"The state '{name}' is not a StateMachine"
 					);
