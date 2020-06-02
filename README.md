@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)
 
-A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable by being **class -based**, but also supports functions (or lambdas) for **fast prototyping**.
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
 
 - [Fast prototyping](#simple-state-machine)
 
@@ -286,8 +286,6 @@ The state machine supports two ways of changing states:
        }));
    ```
 
-
-
 ## Unity Coroutines
 
 By using the `CoState` class you can run coroutines. This class handles the following things automatically:
@@ -299,7 +297,5 @@ By using the `CoState` class you can run coroutines. This class handles the foll
 - Terminating the Coroutine on state exit
 
 As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expressions to define IEnumerators (=> Coroutines)
-
-
 
 More documentation coming soon...
