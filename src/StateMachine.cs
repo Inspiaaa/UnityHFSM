@@ -8,7 +8,7 @@ using UnityEngine;
  * * Hierarchichal finite state machine for Unity 
  * by LavaAfterburner
  * 
- * * Version: 1.2
+ * * Version: 1.3
  */
 
 namespace FSM {
@@ -110,6 +110,10 @@ namespace FSM {
 		}
 
 		override public void OnLogic() {
+			if (activeState == null) {
+				throw new System.Exception("The FSM has not been initialised yet! "
+					+ "Call fsm.SetStartState(...) and fsm.OnEnter() to initialise");
+			}
 			foreach(FSMTransition transition in activeTransitions) {
 				if (! transition.ShouldTransition())
 					continue;

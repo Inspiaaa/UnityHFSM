@@ -111,6 +111,8 @@ public class EnemyController : MonoBehaviour
 
         // This configures the entry point of the state machine
         fsm.SetStartState("FollowPlayer");
+        // Initialises the state machine and must be called for OnLogic() is called
+        fsm.OnEnter()
     }
 ```
 
