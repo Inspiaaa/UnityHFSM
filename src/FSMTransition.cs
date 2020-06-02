@@ -29,6 +29,11 @@ namespace FSM {
 		}
 
 		/// <summary>
+		/// Called when the state machine enters the "from" state
+		/// </summary>
+		public virtual void OnEnter() { }
+
+		/// <summary>
 		/// Called to determin whether the state machine should transition to the <c>to</c> state
 		/// </summary>
 		/// <returns>True if the state machine should change states / transition</returns>

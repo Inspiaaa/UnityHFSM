@@ -95,6 +95,10 @@ namespace FSM {
 
 			if (transitions.ContainsKey(name)) {
 				activeTransitions = transitions[name].ToArray();
+
+				for (int i = 0; i < activeTransitions.Length; i ++) {
+					activeTransitions[i].OnEnter();
+				}
 			}
 			else {
 				activeTransitions = new Transition[] {};
@@ -106,7 +110,7 @@ namespace FSM {
 		}
 
 		override public void OnLogic() {
-			foreach(Transition transition in activeTransitions) {
+			foreach(FSMTransition transition in activeTransitions) {
 				if (! transition.ShouldTransition())
 					continue;
 				
