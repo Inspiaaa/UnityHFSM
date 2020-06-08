@@ -43,6 +43,7 @@ namespace FSM {
 		public void StateCanExit() {
 			if (pendingState != null) {
 				ChangeState(pendingState);
+				pendingState = null;
 			}
 
 			if (fsm != null) {
