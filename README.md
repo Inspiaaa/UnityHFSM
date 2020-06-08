@@ -223,7 +223,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
                     state.fsm.StateCanExit();
 
                 // Make the enemy turn at 100 degrees per second
-                transform.rotation = Quateranion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+                transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
             },
             // This means the state won't instantly exit when a transition should happen
             // but instead the state machine waits until it is given permission to change state
