@@ -100,18 +100,16 @@ public class EnemyController : MonoBehaviour
         fsm.AddState("ExtractIntel", new State());
 
         fsm.AddState("FollowPlayer", new State(
-            // Move towards player at 1 unit per second
             onLogic: (state) => MoveTowardsPlayer(1)
         ));
 
         fsm.AddState("FleeFromPlayer", new State(
-            // Move away from player at 1 unit per second
             onLogic: (state) => MoveTowardsPlayer(-1)
         ));
 
         // This configures the entry point of the state machine
         fsm.SetStartState("FollowPlayer");
-        // Initialises the state machine and must be called for OnLogic() is called
+        // Initialises the state machine and must be called before OnLogic() is called
         fsm.OnEnter()
     }
 ```

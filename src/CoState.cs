@@ -19,7 +19,7 @@ namespace FSM {
 		/// </summary>
 		/// <param name="onEnter">A function that is called when the state machine enters this state</param>
 		/// <param name="onLogic">A coroutine that is run while this state is active
-		/// 	It runs independantly from the parent state machine's OnLogic(), because it is handled by Unity
+		/// 	It runs independently from the parent state machine's OnLogic(), because it is handled by Unity
 		/// 	It is run again once it has completed
 		/// 	It is terminated when the state exits</param>
 		/// <param name="onExit">A function that is called when the state machine exits this state</param>
@@ -30,7 +30,8 @@ namespace FSM {
 		/// <param name="needsExitTime">Determins if the state is allowed to instantly
 		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// state change (true)</param>
-		public CoState(Action<CoState> onEnter = null, 
+		public CoState(
+				Action<CoState> onEnter = null, 
 				Func<CoState, IEnumerator> onLogic = null,
 				Action<CoState> onExit = null,
 				Func<CoState, bool> canExit = null,
@@ -57,7 +58,8 @@ namespace FSM {
 			while (true) {
 
 				// This checks if the routine needs at least one frame to execute.
-				// If not, LoopCoroutine will wait 1 frame to avoid an infite loop which will crash Unity
+				// If not, LoopCoroutine will wait 1 frame to avoid an infinite 
+				// loop which will crash Unity
 				if (routine.MoveNext())
 					yield return routine.Current;
 				else

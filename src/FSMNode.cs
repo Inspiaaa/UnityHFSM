@@ -17,8 +17,8 @@ namespace FSM {
 		/// Initialises a new instance of the FSMNode class
 		/// </summary>
 		/// <param name="needsExitTime">Determins if the state is allowed to instantly
-		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
-		/// state change (true)</param>
+		/// 	exit on a transition (false), or if the state machine should wait until
+		/// 	the state is ready for a state change (true)</param>
 		public FSMNode(bool needsExitTime) {
 			this.needsExitTime = needsExitTime;
 		}
