@@ -6,7 +6,7 @@ namespace FSM {
 	/// <summary>
 	/// The base class of all states
 	/// </summary>
-	public class FSMNode {
+	public class StateBase {
 		public bool needsExitTime;
 		public string name;
 
@@ -14,12 +14,12 @@ namespace FSM {
 		public MonoBehaviour mono;
 
 		/// <summary>
-		/// Initialises a new instance of the FSMNode class
+		/// Initialises a new instance of the BaseState class
 		/// </summary>
 		/// <param name="needsExitTime">Determins if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until
 		/// 	the state is ready for a state change (true)</param>
-		public FSMNode(bool needsExitTime) {
+		public StateBase(bool needsExitTime) {
 			this.needsExitTime = needsExitTime;
 		}
 

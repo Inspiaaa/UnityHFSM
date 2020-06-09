@@ -169,7 +169,7 @@ Although this example is using lambda expressions for the states' logic, you can
 
 ## Hierarchical State Machine
 
-Because StateMachine inherits from FSMNode, it can be treated as a normal state, therefore allowing for the nesting of state machines together with states.
+Because StateMachine inherits from StateBase, it can be treated as a normal state, therefore allowing for the nesting of state machines together with states.
 
 ### Expanding on the previous example
 

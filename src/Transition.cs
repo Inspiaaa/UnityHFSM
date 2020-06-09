@@ -7,7 +7,7 @@ namespace FSM {
 	/// <summary>
 	/// A class used to determin whether the state machine should transition to another state
 	/// </summary>
-	public class Transition : FSMTransition{
+	public class Transition : TransitionBase{
 
 		public Func<Transition, bool> condition;
 

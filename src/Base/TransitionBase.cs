@@ -6,7 +6,7 @@ namespace FSM {
 	/// <summary>
 	/// The base class of all transitions
 	/// </summary>
-	public class FSMTransition {
+	public class TransitionBase {
 		public string from;
 		public string to;
 
@@ -16,13 +16,13 @@ namespace FSM {
 		public MonoBehaviour mono;
 
 		/// <summary>
-		/// Initialises a new instance of the FSMTransition class
+		/// Initialises a new instance of the TransitionBase class
 		/// </summary>
 		/// <param name="from">The name / identifier of the active state</param>
 		/// <param name="to">The name / identifier of the next state</param>
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
 		/// 	=> Forces an instant transition</param>
-		public FSMTransition(string from, string to, bool forceInstantly = false) 
+		public TransitionBase(string from, string to, bool forceInstantly = false) 
 		{
 			this.from = from;
 			this.to = to;

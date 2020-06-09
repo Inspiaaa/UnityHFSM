@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 namespace FSM {
-	public class CoState : FSMNode
+	public class CoState : StateBase
 	{
 		private Action<CoState> onEnter;
 		private Func<CoState, IEnumerator> onLogic;

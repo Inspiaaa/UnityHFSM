@@ -7,7 +7,7 @@ namespace FSM {
 	/// <summary>
 	/// A class used to determin whether the state machine should transition to another state
 	/// </summary>
-	public class TransitionAfter : FSMTransition{
+	public class TransitionAfter : TransitionBase{
 
 		public float delay;
 		public Func<TransitionAfter, bool> condition;

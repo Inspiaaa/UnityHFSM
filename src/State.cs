@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 namespace FSM {
-	public class State : FSMNode {
+	public class State : StateBase {
 		private Action<State> onEnter;
 		private Action<State> onLogic;
 		private Action<State> onExit;

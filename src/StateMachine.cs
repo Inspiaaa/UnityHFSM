@@ -5,24 +5,24 @@ using UnityEngine;
 // TODO: Add explicit error if fsm has not been initialised yet (calling fsm.OnEnter())
 
 /**
- * * Hierarchichal finite state machine for Unity 
+ * Hierarchichal finite state machine for Unity 
  * by LavaAfterburner
  * 
- * * Version: 1.3
+ * Version: 1.4.0
  */
 
 namespace FSM {
 	/// <summary>
 	/// A finite state machine
 	/// </summary>
-	public class StateMachine : FSMNode {
+	public class StateMachine : StateBase {
 		private string startState;
 		private string pendingState;
-		public FSMNode activeState;
-		private FSMTransition[] activeTransitions;
+		public StateBase activeState;
+		private TransitionBase[] activeTransitions;
 
-		private Dictionary<string, FSMNode> states = new Dictionary<string, FSMNode>();
-		private Dictionary<string, List<FSMTransition>> transitions = new Dictionary<string, List<FSMTransition>>();
+		private Dictionary<string, StateBase> states = new Dictionary<string, StateBase>();
+		private Dictionary<string, List<TransitionBase>> transitions = new Dictionary<string, List<TransitionBase>>();
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
@@ -115,7 +115,7 @@ namespace FSM {
 				throw new System.Exception("The FSM has not been initialised yet! "
 					+ "Call fsm.SetStartState(...) and fsm.OnEnter() to initialise");
 			}
-			foreach(FSMTransition transition in activeTransitions) {
+			foreach(TransitionBase transition in activeTransitions) {
 				if (! transition.ShouldTransition())
 					continue;
 				
@@ -137,7 +137,7 @@ namespace FSM {
 		/// </summary>
 		/// <param name="name">The name / identifier of the new state</param>
 		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c></param>
-		public void AddState(string name, FSMNode state) {
+		public void AddState(string name, StateBase state) {
 			state.fsm = this;
 			state.name = name;
 			state.mono = mono;
@@ -161,9 +161,9 @@ namespace FSM {
 		/// Adds a new transition between two states
 		/// </summary>
 		/// <param name="transition">The transition instance</param>
-		public void AddTransition(FSMTransition transition) {
+		public void AddTransition(TransitionBase transition) {
 			if (! transitions.ContainsKey(transition.from)) {
-				transitions[transition.from] = new List<FSMTransition>();
+				transitions[transition.from] = new List<TransitionBase>();
 			}
 
 			transition.fsm = this;
@@ -180,7 +180,7 @@ namespace FSM {
 					);
 				}
 
-				FSMNode selectedNode = states[name];
+				StateBase selectedNode = states[name];
 
 				if (! (selectedNode is StateMachine)) {
 					System.Exception exception = new System.Exception(
