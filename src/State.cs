@@ -23,8 +23,8 @@ namespace FSM {
 		/// 	If it can exit, it should call fsm.StateCanExit()
 		/// 	and if it can not exit right now, later in OnLogic() it should call fsm.StateCanExit()</param>
 		/// <param name="needsExitTime">Determins if the state is allowed to instantly
-		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
-		/// state change (true)</param>
+		/// 	exit on a transition (false), or if the state machine should wait until the state is ready for a
+		/// 	state change (true)</param>
 		public State(
 				Action<State> onEnter = null, 
 				Action<State> onLogic = null,
