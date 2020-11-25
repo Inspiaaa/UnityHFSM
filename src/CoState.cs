@@ -65,9 +65,11 @@ namespace FSM {
 				else
 					yield return null;
 
+				// Iterate from the onLogic coroutine until it is depleted
 				while (routine.MoveNext())
 					yield return routine.Current;
 
+				// Restart the onLogic coroutine
 				routine = onLogic(this);
 			}
 		}

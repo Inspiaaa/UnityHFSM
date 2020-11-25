@@ -12,7 +12,7 @@ A simple yet powerful **hierarchical finite state machine** for the Unity game e
 
 - [Unity **coroutines**](#unity-coroutines)
 
-- Scalable (class-based)
+- [Scalable (class-based)](#class-based-architecture)
 
 ## Examples
 
@@ -62,7 +62,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FSM;    // This line imports the required classes for the state machine
+using FSM;    // Import the required classes for the state machine
 
 public class EnemyController : MonoBehaviour
 {
@@ -72,7 +72,6 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        // Create a new StateMachine instance
         fsm = new StateMachine(this);
     }
 }
@@ -195,6 +194,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
         // This is the main state machine
         fsm = new StateMachine(this);
 
+        // This is the nested state machine
         StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
 
@@ -207,7 +207,6 @@ So that you can see a visual difference, the enemy should be spinning when it en
 ```csharp
     void Start()
     {
-        // This is the main state machine
         fsm = new StateMachine(this);
 
         StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
@@ -297,5 +296,77 @@ By using the `CoState` class you can run coroutines. This class handles the foll
 - Terminating the Coroutine on state exit
 
 As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expressions to define IEnumerators (=> Coroutines)
+
+In this example, we can replace the `SendData` state with a more advanced one, which makes the spy turn in one direction for two seconds, and the in the other direction for the same duration.
+
+```csharp
+    IEnumerator SendData(CoState state) {
+        while (state.timer.Elapsed < 2) {
+            transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+            // Wait until the next frame
+            yield return null;
+        }
+
+        while (state.timer.Elapsed < 4) {
+            transform.rotation = Quaternion.Euler(transform.eulerAngles - new Vector3(0, 0, Time.deltaTime * 100));
+            yield return null;
+        }
+
+        state.timer.Reset();
+        // Because needsExitTime is true, we have to tell the FSM when it can
+        // safely exit the state
+        state.fsm.StateCanExit();
+        yield break;
+    }
+
+    void Start()
+    {
+        // ...
+        extractIntel.AddState("SendData", new CoState(
+            onLogic: SendData,
+            needsExitTime: true
+        ));
+        // ...
+    }
+```
+
+## Class based architecture
+
+Because the states, transitions and the state machine itself are implemented in a object oriented manner, custom state and transition classes can be created. By inheriting from the common base classes (`StateBase`, `TransitionBase`), custom states and transitions can be developed.
+This is also how `CoState`, `TransitionAfter`, ... have been implemented internally.
+
+**Creating your own states**
+
+Simply inherit from the base class `StateBase` and override the methods you need
+
+```csharp
+    class CustomSendData : StateBase {
+        // Important: The constructor must call StateBase's constructor (here: base(...))
+        // because it declares whether the state needsExitTime
+        public CustomSendData() : base(needsExitTime: false) {
+            // Optional initialisation code here
+        }
+
+        public override void OnEnter()
+        {
+            // Write your code for OnEnter here
+            // If you don't have any, you can just leave this entire method override out
+        }
+
+        public override void OnLogic()
+        {
+            // The MonoBehaviour can be accessed from inside the state with this.mono or simply mono
+            this.mono.transform.rotation = Quaternion.Euler(
+                this.mono.transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+        }
+    }
+
+    void Start()
+    {
+        // ...
+        extractIntel.AddState("SendData", new CustomSendData());
+        // ...
+    }
+```
 
 More documentation coming soon...
