@@ -68,8 +68,8 @@ namespace FSM {
 				activeState.RequestExit();
 				/**
 				 * If it can exit, the activeState would call
-            	 * -> state.fsm.StateCanExit()
-            	 * -> fsm.ChangeState(...) 
+				 * -> state.fsm.StateCanExit()
+				 * -> fsm.ChangeState(...) 
 				 */
 			}
 		}
