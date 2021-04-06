@@ -36,8 +36,12 @@ namespace FSM {
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
 
-		private Dictionary<string, StateBase> nameToState = new Dictionary<string, StateBase>();
-		private Dictionary<string, List<TransitionBase>> fromNameToTransitions = new Dictionary<string, List<TransitionBase>>();
+		private Dictionary<string, StateBase> nameToState 
+			= new Dictionary<string, StateBase>();
+		private Dictionary<string, List<TransitionBase>> fromNameToTransitions 
+			= new Dictionary<string, List<TransitionBase>>();
+
+		private List<TransitionBase> transitionsFromAny = new List<TransitionBase>();
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
@@ -109,7 +113,9 @@ namespace FSM {
 			activeState = nameToState[name];
 			activeState.OnEnter();
 
-			if (fromNameToTransitions.TryGetValue(name, out activeTransitions)) {
+			if (fromNameToTransitions.TryGetValue(name, out List<TransitionBase> currentTransitions)) {
+				activeTransitions = currentTransitions;
+
 				for (int i = 0; i < activeTransitions.Count; i ++) {
 					activeTransitions[i].OnEnter();
 				}
@@ -127,26 +133,59 @@ namespace FSM {
 			ChangeState(startState);
 		}
 
+		/// <summary>
+		/// Checks if a transition can take place, and if this is the case, transition to the
+		/// "to" state and return true. Otherwise it returns false
+		/// </summary>
+		/// <param name="transition"></param>
+		/// <returns></returns>
+		private bool TryTransition(TransitionBase transition) {
+			if (! transition.ShouldTransition())
+				return false;
+				
+			if (! activeState.needsExitTime || transition.forceInstantly) {
+				ChangeState(transition.to);
+			}
+			else {
+				RequestStateChange(transition.to);
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Runs one logic step. It does at most one transition itself and 
+		/// calls the active state's logic function (after the state transition, if
+		/// one occurred).
+		/// </summary>
 		override public void OnLogic() {
 			if (activeState == null) {
 				throw new System.Exception("The FSM has not been initialised yet! "
 					+ "Call fsm.SetStartState(...) and fsm.OnEnter() to initialise");
 			}
 
+			// Try the "global" transitions that can transition from any state
+			for (int i = 0; i < transitionsFromAny.Count; i++) {
+				TransitionBase transition = transitionsFromAny[i];
+
+				// Don't transition to the "to" state, if that state is already the active state
+				if (transition.to == activeState.name)
+					continue;
+
+				if (TryTransition(transition)) {
+					activeState.OnLogic();
+					return;
+				}
+			}
+
+			// Try the "normal" transitions that transition from one specific state to another
 			for (int i = 0; i < activeTransitions.Count; i++) {
 				TransitionBase transition = activeTransitions[i];
 
-				if (! transition.ShouldTransition())
-					continue;
-				
-				if (! activeState.needsExitTime || transition.forceInstantly) {
-					ChangeState(transition.to);
+				if (TryTransition(transition)) {
+					activeState.OnLogic();
+					return;
 				}
-				else {
-					RequestStateChange(transition.to);
-				}
-
-				break;
 			}
 
 			activeState.OnLogic();
@@ -190,6 +229,18 @@ namespace FSM {
 			transition.mono = mono;
 
 			fromNameToTransitions[transition.from].Add(transition);
+		}
+
+		/// <summary>
+		/// Adds a new transition that can happen from any possible state
+		/// </summary>
+		/// <param name="transition">The transition instance; The "from" field can be
+		/// left empty, as it has no meaning in this context.</param>
+		public void AddTransitionFromAny(TransitionBase transition) {
+			transition.fsm = this;
+			transition.mono = mono;
+
+			transitionsFromAny.Add(transition);
 		}
 
 		public StateMachine this[string name] {
