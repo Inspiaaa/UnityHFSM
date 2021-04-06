@@ -19,6 +19,12 @@ namespace FSM {
 		public StateBase activeState;
 		private TransitionBase[] activeTransitions;
 
+		public StateBase ActiveState {
+			get {
+				return activeState;
+			}
+		}
+
 		private Dictionary<string, StateBase> states = new Dictionary<string, StateBase>();
 		private Dictionary<string, List<TransitionBase>> transitions = new Dictionary<string, List<TransitionBase>>();
 
