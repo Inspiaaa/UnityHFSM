@@ -14,7 +14,7 @@ It has a special focus on the timing and control flow of state transitions, maki
 
 - [Multiple state change patterns](#state-change-patterns)
 
-- [Control flow of OnLogic](#control-flow -of-onlogic)
+- [Control flow of OnLogic](#control-flow-of-onlogic)
 
 - [Unity **coroutines**](#unity-coroutines)
 
