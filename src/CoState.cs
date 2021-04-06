@@ -48,7 +48,7 @@ namespace FSM {
 		override public void OnEnter() {
 			timer.Reset();
 
-			if (onEnter != null) onEnter(this);
+			onEnter?.Invoke(this);
 
 			coroutine = null;
 		}
@@ -84,7 +84,7 @@ namespace FSM {
 			mono.StopCoroutine(coroutine);
 			coroutine = null;
 
-			if (onExit != null)	onExit(this);
+			onExit?.Invoke(this);
 		}
 
 		override public void RequestExit() {

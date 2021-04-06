@@ -43,15 +43,15 @@ namespace FSM {
 		override public void OnEnter() {
 			timer.Reset();
 
-			if (onEnter != null) onEnter(this);
+			onEnter?.Invoke(this);
 		}
 
 		override public void OnLogic() {
-			if (onLogic != null) onLogic(this);
+			onLogic?.Invoke(this);
 		}
 
 		override public void OnExit() {
-			if (onExit != null)	onExit(this);
+			onExit?.Invoke(this);
 		}
 
 		override public void RequestExit() {
