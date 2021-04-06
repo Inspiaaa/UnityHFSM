@@ -14,16 +14,27 @@ namespace FSM {
 	/// A finite state machine
 	/// </summary>
 	public class StateMachine : StateBase {
+
 		private string startState;
 		private string pendingState;
-		public StateBase activeState;
-		private TransitionBase[] activeTransitions;
+
+		private StateBase activeState;
+		private List<TransitionBase> activeTransitions = new List<TransitionBase>();
 
 		public StateBase ActiveState {
 			get {
 				return activeState;
 			}
 		}
+
+		public string ActiveStateName {
+			get {
+				return activeState.name;
+			}
+		}
+
+		// A cached empty list of transitions (For improved readability, less GC)
+		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
 
 		private Dictionary<string, StateBase> states = new Dictionary<string, StateBase>();
 		private Dictionary<string, List<TransitionBase>> transitions = new Dictionary<string, List<TransitionBase>>();
@@ -99,14 +110,14 @@ namespace FSM {
 			activeState.OnEnter();
 
 			if (transitions.ContainsKey(name)) {
-				activeTransitions = transitions[name].ToArray();
+				activeTransitions = transitions[name];
 
-				for (int i = 0; i < activeTransitions.Length; i ++) {
+				for (int i = 0; i < activeTransitions.Count; i ++) {
 					activeTransitions[i].OnEnter();
 				}
 			}
 			else {
-				activeTransitions = new Transition[] {};
+				activeTransitions = noTransitions;
 			}
 		}
 
@@ -123,7 +134,10 @@ namespace FSM {
 				throw new System.Exception("The FSM has not been initialised yet! "
 					+ "Call fsm.SetStartState(...) and fsm.OnEnter() to initialise");
 			}
-			foreach(TransitionBase transition in activeTransitions) {
+
+			for (int i = 0; i < activeTransitions.Count; i++) {
+				TransitionBase transition = activeTransitions[i];
+
 				if (! transition.ShouldTransition())
 					continue;
 				
@@ -136,7 +150,7 @@ namespace FSM {
 
 				break;
 			}
-
+			
 			activeState.OnLogic();
 		}
 
