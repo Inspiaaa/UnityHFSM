@@ -4,11 +4,17 @@
 
 A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
 
+It has a special focus on the timing and control flow of state transitions, making it ideal for timing and synchronisation sensitive problems.
+
 - [Fast prototyping](#simple-state-machine)
 
 - [Hierarchical features](#hierarchical-state-machine)
 
+- [Timing of state changes](#timing-of-state-changes)
+
 - [Multiple state change patterns](#state-change-patterns)
+
+- [Control flow of OnLogic](#control-flow -of-onlogic)
 
 - [Unity **coroutines**](#unity-coroutines)
 
@@ -115,8 +121,6 @@ public class EnemyController : MonoBehaviour
 
 Although this example is using lambda expressions for the states' logic, you can of course just pass normal functions.
 
-# 
-
 #### Adding transitions
 
 ```csharp
@@ -184,8 +188,6 @@ So that you can see a visual difference, the enemy should be spinning when it en
 
 - Add the new state machine to the main state machine as a normal state
 
-#### 
-
 #### Separate FSM for the ExtractIntel state
 
 ```csharp
@@ -241,23 +243,25 @@ So that you can see a visual difference, the enemy should be spinning when it en
     }
 ```
 
-What is `fsm.StateCanExit()` and `needsExitTime`?
+What is `fsm.StateCanExit()` and `needsExitTime`? (See the next paragraph below)
 
-When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transition has the `forceInstantly`  property). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
+## Timing of state changes
 
-But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the State constructor: `canExit`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
+When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transition has the `forceInstantly`  property set to true). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
 
-1. When a transition should happen, the state machine calls `activeState.RequestExit()`, this calling the `canExit` function. If the state can exit, the `canExit` function has to call `fsm.StateCanExit()` and if not, it doesn't call `fsm.StateCanExit()`.
+But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the `State` constructor: `canExit`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
+
+1. When a transition should happen, the state machine calls `activeState.RequestExit()`, this in turn calling the `canExit` function. If the state can exit, the `canExit` function has to call `fsm.StateCanExit()` and if not, it doesn't call `fsm.StateCanExit()`.
 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
-![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowChart.png)
+![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowchart.jpg)
 
 ## State Change Patterns
 
 The state machine supports two ways of changing states:
 
-1. Using transitions as described earlier
+1. Using `Transition` objects as described earlier
    
    ```csharp
    fsm.AddTransition( new Transition(
@@ -267,7 +271,7 @@ The state machine supports two ways of changing states:
    ));
    ```
 
-2. Calling the `RequestStateChange` method
+2. Calling the `RequestStateChange` method: Instead of using Transition objects to manage transitions, each state can individually also manage its own transitions by directly calling the `RequestStateChange` method
    
    ```csharp
    fsm.RequestStateChange(state, forceInstantly: false);
@@ -282,8 +286,46 @@ The state machine supports two ways of changing states:
    
            if (DistanceToPlayer() < ownScanningRange)
                fsm.RequestStateChange("ExtractIntel")
-       }));
+   }));
    ```
+
+There is also a slight variation of the `Transition` state change behaviour, that allows you to transition to a specific state from any other state (a "global" transition as opposed to a "local" / "direct" transition). They have the same `forceInstantly` / `needsExitTime` handling as normal transitions.
+
+```csharp
+fsm.AddTransitionFromAny( new Transition(
+    from,
+    to,
+    condition 
+));
+```
+
+**Example**
+
+```csharp
+fsm.AddTransitionFromAny( new Transition(
+    "",    // From can be left empty, as it has no meaning in this context
+    "Dead",
+    t => health <= 0
+));
+```
+
+## Control flow of OnLogic
+
+Every StateMachine's `OnLogic` method manages the automatic transitions via Transition (`TransitionBase`) objects and the active state's logic function.
+
+Here's what happens:
+
+1. The state machine checks all global transitions (transitions from any state) and sees if a transition should occur. If this is the case, the state machine will transition to the new state, and call the new state's `OnLogic` function.
+
+2. If this is not the case, the fsm checks all direct transitions (transitions that go directly from the active state to another state) and sees if a transition should occur. If this is the case, the state machine will transition to the new state, and call the new state's `OnLogic` function.
+
+3. If this is not the case, the fsm will finally call the currently active state's `OnLogic` function.
+
+Because global transitions are checked first, they have the highest priority. The reason for this can be illustrated with the following example: When the health of the player drops below 0, regardless of which state the fsm is in, it should transition to the `Dead` state.
+
+As you can see on the steps mentioned above, only one transition can occur per `OnLogic` call. This has many reasons, one of which being that the state machine does not get stuck in an infinite loop.
+
+![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/OnLogicFlowchart.jpg)
 
 ## Unity Coroutines
 

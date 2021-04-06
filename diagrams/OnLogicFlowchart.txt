@@ -1,0 +1,19 @@
+graph TD
+    Start([OnLogic])
+    GlobalTransitions{Is there a fitting<br>global transition?}
+    LocalTransitions{Is there a fitting<br>direct transition?}
+    ActiveState["ActiveState.OnLogic()"]
+    Transition
+    NewState["NewState.OnLogic()"]
+    Return([Return])
+
+    Start --> GlobalTransitions
+    GlobalTransitions --> |No| LocalTransitions
+    GlobalTransitions --> |Yes| Transition
+    LocalTransitions -->  |No| ActiveState
+    LocalTransitions -->  |Yes| Transition
+
+    Transition --> NewState
+
+    ActiveState --> Return
+    NewState --> Return

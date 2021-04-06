@@ -48,7 +48,7 @@ namespace FSM {
 		/// (Only if needsExitTime is true):
 		/// 	Called when a state transition from this state to another state should happen.
 		/// 	If it can exit, it should call fsm.StateCanExit()
-		/// 	and if it can not exit right now, it should call fsm.StateCanExit() later in OnLogic()
+		/// 	and if it can not exit right now, it should call fsm.StateCanExit() later in OnLogic().
 		/// </summary>
 		public virtual void RequestExit() {
 			
