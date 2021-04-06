@@ -109,9 +109,7 @@ namespace FSM {
 			activeState = states[name];
 			activeState.OnEnter();
 
-			if (transitions.ContainsKey(name)) {
-				activeTransitions = transitions[name];
-
+			if (transitions.TryGetValue(name, out activeTransitions)) {
 				for (int i = 0; i < activeTransitions.Count; i ++) {
 					activeTransitions[i].OnEnter();
 				}
@@ -150,7 +148,7 @@ namespace FSM {
 
 				break;
 			}
-			
+
 			activeState.OnLogic();
 		}
 
