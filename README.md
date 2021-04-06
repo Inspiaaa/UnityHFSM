@@ -174,7 +174,7 @@ Because StateMachine inherits from StateBase, it can be treated as a normal stat
 
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/EnemySpyHierarchicalExample.png)
 
-So that you can see a visual difference, the enemy should be spinning when it enters the "SendData" state
+So that you can see a visual difference, the enemy should be spinning when it enters the "SendData" state.
 
 ### The idea:
 
@@ -295,7 +295,7 @@ By using the `CoState` class you can run coroutines. This class handles the foll
 
 - Terminating the Coroutine on state exit
 
-As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expressions to define IEnumerators (=> Coroutines)
+As a result of a [limitation of the C# language](https://stackoverflow.com/questions/35473442/yield-return-in-the-lambda-expression), you can sadly not use lambda expressions to define IEnumerators (=> Coroutines).
 
 In this example, we can replace the `SendData` state with a more advanced one, which makes the spy turn in one direction for two seconds, and the in the other direction for the same duration.
 
@@ -337,7 +337,7 @@ This is also how `CoState`, `TransitionAfter`, ... have been implemented interna
 
 **Creating your own states**
 
-Simply inherit from the base class `StateBase` and override the methods you need
+Simply inherit from the base class `StateBase` and override the methods you need.
 
 ```csharp
     class CustomSendData : StateBase {

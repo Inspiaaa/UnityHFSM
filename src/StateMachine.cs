@@ -29,14 +29,14 @@ namespace FSM {
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
-		/// 	state change (true)</param>
+		/// 	state change (true).</param>
 		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(needsExitTime) {
 			this.mono = mono;
 		}
 
 		/// <summary>
 		/// Notifies the state machine that the state can cleanly exit,
-		/// and if a state change is pending, it will execute it
+		/// and if a state change is pending, it will execute it.
 		/// </summary>
 		public void StateCanExit() {
 			if (pendingState != null) {
@@ -54,7 +54,7 @@ namespace FSM {
 		}
 
 		/// <summary>
-		/// Request a state change, respecting the <c>needsExitTime</c> property of the active state
+		/// Requests a state change, respecting the <c>needsExitTime</c> property of the active state
 		/// </summary>
 		/// <param name="name">The name / identifier of the target state</param>
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
@@ -68,7 +68,7 @@ namespace FSM {
 				activeState.RequestExit();
 				/**
 				 * If it can exit, the activeState would call
-				 * -> state.fsm.StateCanExit()
+				 * -> state.fsm.StateCanExit() which in turn would call
 				 * -> fsm.ChangeState(...) 
 				 */
 			}
@@ -104,6 +104,10 @@ namespace FSM {
 			}
 		}
 
+		/// <summary>
+		/// Initialises the state machine and must be called before OnLogic is called.
+		/// OnEnter() sets the activeState to the selected startState.
+		/// </summary>
 		override public void OnEnter() {
 			ChangeState(startState);
 		}

@@ -19,14 +19,14 @@ namespace FSM {
 		/// </summary>
 		/// <param name="onEnter">A function that is called when the state machine enters this state</param>
 		/// <param name="onLogic">A coroutine that is run while this state is active
-		/// 	It runs independently from the parent state machine's OnLogic(), because it is handled by Unity
-		/// 	It is run again once it has completed
-		/// 	It is terminated when the state exits</param>
+		/// 	It runs independently from the parent state machine's OnLogic(), because it is handled by Unity.
+		/// 	It is run again once it has completed.
+		/// 	It is terminated when the state exits.</param>
 		/// <param name="onExit">A function that is called when the state machine exits this state</param>
 		/// <param name="canExit">(Only if needsExitTime is true):
 		/// 	Called when a state transition from this state to another state should happen.
 		/// 	If it can exit, it should call fsm.StateCanExit()
-		/// 	and if it can not exit right now, later in OnLogic() it should call fsm.StateCanExit()</param>
+		/// 	and if it can not exit right now, later in OnLogic() it should call fsm.StateCanExit().</param>
 		/// <param name="needsExitTime">Determins if the state is allowed to instantly
 		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// state change (true)</param>
@@ -88,7 +88,7 @@ namespace FSM {
 		}
 
 		override public void RequestExit() {
-			if (!needsExitTime || canExit != null && canExit(this)) {
+			if (!needsExitTime || (canExit != null && canExit(this))) {
 				fsm.StateCanExit();
 			}
 		}
