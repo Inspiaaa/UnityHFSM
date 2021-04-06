@@ -36,8 +36,8 @@ namespace FSM {
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
 
-		private Dictionary<string, StateBase> states = new Dictionary<string, StateBase>();
-		private Dictionary<string, List<TransitionBase>> transitions = new Dictionary<string, List<TransitionBase>>();
+		private Dictionary<string, StateBase> nameToState = new Dictionary<string, StateBase>();
+		private Dictionary<string, List<TransitionBase>> fromNameToTransitions = new Dictionary<string, List<TransitionBase>>();
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
@@ -96,8 +96,8 @@ namespace FSM {
 		/// </summary>
 		/// <param name="name">The name / identifier of the active state</param>
 		private void ChangeState(string name) {
-			if (! states.ContainsKey(name)) {
-				System.Exception exception = new System.Exception(
+			if (! nameToState.ContainsKey(name)) {
+				throw new System.Exception(
 					$"The state '{name}' has not been defined yet / doesn't exist"
 				);
 			}
@@ -106,10 +106,10 @@ namespace FSM {
 				activeState.OnExit();
 			}
 
-			activeState = states[name];
+			activeState = nameToState[name];
 			activeState.OnEnter();
 
-			if (transitions.TryGetValue(name, out activeTransitions)) {
+			if (fromNameToTransitions.TryGetValue(name, out activeTransitions)) {
 				for (int i = 0; i < activeTransitions.Count; i ++) {
 					activeTransitions[i].OnEnter();
 				}
@@ -162,9 +162,9 @@ namespace FSM {
 			state.name = name;
 			state.mono = mono;
 
-			states[name] = state;
+			nameToState[name] = state;
 
-			if (states.Count == 1 && startState == null) {
+			if (nameToState.Count == 1 && startState == null) {
 				SetStartState(name);
 			}
 		}
@@ -182,28 +182,28 @@ namespace FSM {
 		/// </summary>
 		/// <param name="transition">The transition instance</param>
 		public void AddTransition(TransitionBase transition) {
-			if (! transitions.ContainsKey(transition.from)) {
-				transitions[transition.from] = new List<TransitionBase>();
+			if (! fromNameToTransitions.ContainsKey(transition.from)) {
+				fromNameToTransitions[transition.from] = new List<TransitionBase>();
 			}
 
 			transition.fsm = this;
 			transition.mono = mono;
 
-			transitions[transition.from].Add(transition);
+			fromNameToTransitions[transition.from].Add(transition);
 		}
 
 		public StateMachine this[string name] {
 			get {
-				if (! states.ContainsKey(name)) {
-					System.Exception exception = new System.Exception(
+				if (! nameToState.ContainsKey(name)) {
+					throw new System.Exception(
 						$"The state '{name}' has not been defined yet / doesn't exist"
 					);
 				}
 
-				StateBase selectedNode = states[name];
+				StateBase selectedNode = nameToState[name];
 
 				if (! (selectedNode is StateMachine)) {
-					System.Exception exception = new System.Exception(
+					throw new System.Exception(
 						$"The state '{name}' is not a StateMachine"
 					);
 				}
