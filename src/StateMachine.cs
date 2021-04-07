@@ -11,7 +11,8 @@ using UnityEngine;
 
 namespace FSM {
 	/// <summary>
-	/// A finite state machine
+	/// A finite state machine that can also be used as a state of a parent state machine to create
+	/// a hierarchy (-> hierarchical state machine)
 	/// </summary>
 	public class StateMachine : StateBase {
 

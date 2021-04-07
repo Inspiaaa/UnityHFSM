@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 
 namespace FSM {
+	/// <summary>
+	/// A state that can run a Unity coroutine as its OnLogic method
+	/// </summary>
 	public class CoState : StateBase
 	{
 		private Action<CoState> onEnter;

@@ -4,6 +4,10 @@ using UnityEngine;
 using System;
 
 namespace FSM {
+	/// <summary>
+	/// The "normal" state class that can run code on Enter, on Logic and on Exit, 
+	/// while also handling the timing of the next state transition
+	/// </summary>
 	public class State : StateBase {
 		private Action<State> onEnter;
 		private Action<State> onLogic;

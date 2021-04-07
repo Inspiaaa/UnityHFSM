@@ -441,11 +441,11 @@ More documentation coming soon...
 
 **v1.6**
 
-- [ ] HybridStateMachine for less code duplication
+- [x] HybridStateMachine for less code duplication
 
 - [ ] State wrappers for running companion code with states
 
-- [ ] Docstring documentation of HybridStateMachine
+- [x] Docstring documentation of HybridStateMachine
 
 - [ ] Docstring documentation of StateWrapper
 
