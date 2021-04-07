@@ -127,7 +127,7 @@ namespace FSM {
 
 		/// <summary>
 		/// Initialises the state machine and must be called before OnLogic is called.
-		/// OnEnter() sets the activeState to the selected startState.
+		/// It sets the activeState to the selected startState.
 		/// </summary>
 		override public void OnEnter() {
 			ChangeState(startState);

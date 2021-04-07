@@ -1,7 +1,7 @@
 graph TD
     Start([OnLogic])
-    GlobalTransitions{Is there a fitting<br>global transition?}
-    LocalTransitions{Is there a fitting<br>direct transition?}
+    GlobalTransitions{Is a global<br>transition triggered?}
+    LocalTransitions{Is a direct<br>transition triggered?}
     ActiveState["ActiveState.OnLogic()"]
     Transition
     NewState["NewState.OnLogic()"]

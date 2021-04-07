@@ -4,7 +4,7 @@
 
 A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
 
-It has a special focus on the timing and control flow of state transitions, making it ideal for timing and synchronisation sensitive problems.
+It has a special focus on the temporal aspects of state transitions, making it ideal for timing and synchronisation sensitive problems.
 
 - [Fast prototyping](#simple-state-machine)
 
@@ -20,7 +20,29 @@ It has a special focus on the timing and control flow of state transitions, maki
 
 - [Scalable (class-based)](#class-based-architecture)
 
-## Examples
+
+
+**Why use UnityHFSM?**
+
+- State machines are an amazingly easy way to write and organise game logic. (As soon as you have states, e.g. Walk, Run, Sneak, Jump, you can use a state machine)
+
+- It helps you **tame complex behaviour** (e.g. weapon handling -> cooling, ammo, reload, fire) or write AI for NPCs
+
+- Helps you write **self documenting code**, that is **maintainable** and **readable**
+
+- **Reduces the boilerplate** code required to write a state machine
+
+- UnityHFSM is **lightweight** and **efficient**, making it perfect for solving small and big problems
+
+- It is **especially designed for Unity**, and supports **Coroutines**, which would otherwise be difficult to implement in a state machine
+
+- The code is **well documented**
+
+- It is **not a component** (MonoBehaviour) and therefore has a **low overhead**
+
+- By being hierarchical, it can reduce the amount of duplicate code between states
+
+## Example
 
 ## Simple State Machine
 
@@ -289,7 +311,7 @@ The state machine supports two ways of changing states:
    }));
    ```
 
-There is also a slight variation of the `Transition` state change behaviour, that allows you to transition to a specific state from any other state (a "global" transition as opposed to a "local" / "direct" transition). They have the same `forceInstantly` / `needsExitTime` handling as normal transitions.
+There is also a slight variation of the `Transition` state change behaviour, that allows you to change to a specific state from any other state (a "global" transition as opposed to a "local" / "direct" transition). They have the same `forceInstantly` / `needsExitTime` handling as normal transitions.
 
 ```csharp
 fsm.AddTransitionFromAny( new Transition(
@@ -311,13 +333,13 @@ fsm.AddTransitionFromAny( new Transition(
 
 ## Control flow of OnLogic
 
-Every StateMachine's `OnLogic` method manages the automatic transitions via Transition (`TransitionBase`) objects and the active state's logic function.
+Every StateMachine's `OnLogic` method manages the automatic transitions via `Transition` (`TransitionBase`) objects and the active state's logic function.
 
 Here's what happens:
 
-1. The state machine checks all global transitions (transitions from any state) and sees if a transition should occur. If this is the case, the state machine will transition to the new state, and call the new state's `OnLogic` function.
+1. The state machine checks all global transitions (transitions from any state) and sees if a transition should occur. If this is the case, the state machine will advance to the new state, and call the new state's `OnLogic` function.
 
-2. If this is not the case, the fsm checks all direct transitions (transitions that go directly from the active state to another state) and sees if a transition should occur. If this is the case, the state machine will transition to the new state, and call the new state's `OnLogic` function.
+2. If this is not the case, the fsm checks all direct transitions (transitions that go directly from the active state to another state) and sees if a transition should occur. If this is the case, the state machine will move on to the new state, and call the new state's `OnLogic` function.
 
 3. If this is not the case, the fsm will finally call the currently active state's `OnLogic` function.
 
@@ -412,3 +434,29 @@ Simply inherit from the base class `StateBase` and override the methods you need
 ```
 
 More documentation coming soon...
+
+### Roadmap
+
+- [ ] Getting started / Installation guide
+
+**v1.6**
+
+- [ ] HybridStateMachine for less code duplication
+
+- [ ] State wrappers for running companion code with states
+
+- [ ] Docstring documentation of HybridStateMachine
+
+- [ ] Docstring documentation of StateWrapper
+
+- [ ] Documentation for avoiding duplicate code by using the HybridStateMachine
+
+**v1.7**
+
+- [ ] Dynamic state removal
+
+- [ ] More demos
+
+- [ ] Documentation for re-using state machines (by using functions to create FSMs)
+
+- [ ] Documentation of dynamically created state machines (and their use, e.g. wall jump -> has the player unlocked this ability? -> Don't add transitions if not)
