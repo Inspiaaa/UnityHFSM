@@ -4,13 +4,6 @@ using UnityEngine;
 using System;
 
 namespace FSM {
-    // A State-like StateMachine that allows you to run additional functions
-    // especially handy for hierarchichal state machines
-    // e.g. Jump and Move should both have the camera follow them
-    // => Create a CodeStateMachine that has the camera work onLogic
-    // As CodeStateMachine should run code that both Jump and Move should share,
-    // the functions are run after running the active state's code.
-
     /// <summary>
     /// A State-like StateMachine that allows you to run additional functions (companion code)
     /// with the sub-states.
