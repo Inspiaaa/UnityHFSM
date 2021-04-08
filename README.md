@@ -20,9 +20,7 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 - [Scalable (class-based)](#class-based-architecture)
 
-
-
-**Why use UnityHFSM?**
+### Why use UnityHFSM?
 
 - State machines are an amazingly easy way to write and organise game logic. (As soon as you have states, e.g. Walk, Run, Sneak, Jump, you can use a state machine)
 
@@ -137,7 +135,7 @@ public class EnemyController : MonoBehaviour
         // This configures the entry point of the state machine
         fsm.SetStartState("FollowPlayer");
         // Initialises the state machine and must be called before OnLogic() is called
-        fsm.OnEnter()
+        fsm.Init()
     }
 ```
 
@@ -183,7 +181,7 @@ Although this example is using lambda expressions for the states' logic, you can
     {
         // ...
 
-        fsm.OnEnter();
+        fsm.Init();
     }
 
     void Update()
