@@ -260,6 +260,8 @@ namespace FSM {
 			state.name = name;
 			state.mono = mono;
 
+			state.Init();
+
 			nameToState[name] = state;
 
 			if (nameToState.Count == 1 && startState == null) {
@@ -287,6 +289,8 @@ namespace FSM {
 			transition.fsm = this;
 			transition.mono = mono;
 
+			transition.Init();
+
 			fromNameToTransitions[transition.from].Add(transition);
 		}
 
@@ -298,6 +302,8 @@ namespace FSM {
 		public void AddTransitionFromAny(TransitionBase transition) {
 			transition.fsm = this;
 			transition.mono = mono;
+
+			transition.Init();
 
 			transitionsFromAny.Add(transition);
 		}
