@@ -34,6 +34,12 @@ namespace FSM {
 			}
 		}
 
+		private bool IsRootFSM {
+			get {
+				return fsm == null;
+			}
+		}
+
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
 
@@ -54,6 +60,58 @@ namespace FSM {
 		/// 	state change (true).</param>
 		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(needsExitTime) {
 			this.mono = mono;
+		}
+
+		/// <summary>
+		/// Calls OnEnter if it is the root machine, therefore initialising the state machine
+		/// </summary>
+		public override void Init()
+		{
+			if (!IsRootFSM) return;
+
+			// TODO: Update code and code examples to no longer call OnEnter(), but instead Init()
+			OnEnter();
+		}
+
+		/// <summary>
+		/// Checks that all names of states in transitions / the start state refer 
+		/// to existing states and if not, log a warning.
+		/// It is can be rather helpful and time saving, when you are debugging larger
+		/// state machines and want to make sure that all transitions are set up correctly.
+		/// </summary>
+		public void ValidateStates() {
+
+			// Check that all transitions refer to real states
+			foreach (List<TransitionBase> transitions in fromNameToTransitions.Values) {
+				foreach (TransitionBase t in transitions) {
+
+					bool fromStateExists = nameToState.ContainsKey(t.from);
+					bool toStateExists = nameToState.ContainsKey(t.to);
+
+					if (fromStateExists && toStateExists) continue;
+
+					string errorMessage  = 
+						"The '{0}' state that the " + $"{t.GetType()} ('{t.from}' --> '{t.to}') "
+						+"is referring to does not exist "
+						+"and can cause an error later. ";
+
+					if (! fromStateExists) {
+						Debug.LogWarning(string.Format(errorMessage, "from"));
+					}
+
+					if (! toStateExists) {
+						Debug.LogWarning(string.Format(errorMessage, "to"));
+					}
+				}
+			}
+
+			// Check that the start state is an actual state
+			if (! nameToState.ContainsKey(startState)) {
+				Debug.LogWarning(
+					$"The start state '{startState}' does not exist and will "
+					+"cause an error. (Typo?)"
+				);
+			}
 		}
 
 		/// <summary>

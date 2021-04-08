@@ -24,6 +24,13 @@ namespace FSM {
 		}
 
 		/// <summary>
+		/// Called to initialise the state, after values like name, mono and fsm have been set
+		/// </summary>
+		public virtual void Init() {
+
+		}
+
+		/// <summary>
 		/// Called when the state machine transitions to this state (enters this state)
 		/// </summary>
 		public virtual void OnEnter() {

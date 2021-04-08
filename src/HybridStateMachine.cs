@@ -10,6 +10,7 @@ namespace FSM {
     /// It is especially handy for hierarchical state machines, as it allows you to factor out
     /// common code from the sub states into the HybridStateMachines, essentially removing
     /// duplicate code.
+    /// The HybridStateMachine can also be seen as a StateWrapper around a normal StateMachine.
     /// </summary>
     public class HybridStateMachine : StateMachine
     {

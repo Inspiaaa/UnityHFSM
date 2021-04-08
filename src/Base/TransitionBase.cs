@@ -30,6 +30,11 @@ namespace FSM {
 		}
 
 		/// <summary>
+		/// Called to initialise the transition, after values like mono and fsm have been set 
+		/// </summary>
+		public virtual void Init() { }
+
+		/// <summary>
 		/// Called when the state machine enters the "from" state
 		/// </summary>
 		public virtual void OnEnter() { }

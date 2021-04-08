@@ -443,7 +443,7 @@ More documentation coming soon...
 
 - [x] HybridStateMachine for less code duplication
 
-- [ ] State wrappers for running companion code with states
+- [x] State wrappers for running companion code with states
 
 - [x] Docstring documentation of HybridStateMachine
 
