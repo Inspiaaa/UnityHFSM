@@ -75,11 +75,11 @@ namespace FSM {
 
 		/// <summary>
 		/// Checks that all names of states in transitions / the start state refer 
-		/// to existing states and if not, log a warning.
+		/// to existing states and if not, it logs a warning.
 		/// It is can be rather helpful and time saving, when you are debugging larger
 		/// state machines and want to make sure that all transitions are set up correctly.
 		/// </summary>
-		public void ValidateStates() {
+		public void Validate() {
 
 			// Check that all transitions refer to real states
 			foreach (List<TransitionBase> transitions in fromNameToTransitions.Values) {
@@ -92,15 +92,20 @@ namespace FSM {
 
 					string errorMessage  = 
 						"The '{0}' state that the " + $"{t.GetType()} ('{t.from}' --> '{t.to}') "
-						+"is referring to does not exist "
-						+"and can cause an error later. ";
+						+"is referring to does not exist {1}";
 
 					if (! fromStateExists) {
-						Debug.LogWarning(string.Format(errorMessage, "from"));
+						Debug.LogWarning(string.Format(errorMessage, 
+							"from",
+							"and can create an unexpected behaviour later, when the fsm does not transition. "
+						));
 					}
 
 					if (! toStateExists) {
-						Debug.LogWarning(string.Format(errorMessage, "to"));
+						Debug.LogWarning(string.Format(errorMessage, 
+							"to",
+							"and can cause an error later."
+						));
 					}
 				}
 			}
@@ -220,7 +225,7 @@ namespace FSM {
 		override public void OnLogic() {
 			if (activeState == null) {
 				throw new System.Exception("The FSM has not been initialised yet! "
-					+ "Call fsm.SetStartState(...) and fsm.OnEnter() to initialise");
+					+ "Call fsm.SetStartState(...) and fsm.OnEnter() or fsm.Init() to initialise");
 			}
 
 			// Try the "global" transitions that can transition from any state
