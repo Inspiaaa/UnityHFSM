@@ -107,13 +107,13 @@ public class EnemyController : MonoBehaviour
 
 ```csharp
     float DistanceToPlayer() {
-        // This implementation is an example and may differ for you scene setup
+        // This implementation is an example and may differ for your scene setup
         Vector3 player = PlayerController.Instance.transform.position;
         return Vector2.Distance(transform.position, player);
     }
 
     void MoveTowardsPlayer(float speed) {
-        // This implementation is an example and may differ for you scene setup
+        // This implementation is an example and may differ for your scene setup
         Vector3 player = PlayerController.Instance.transform.position;
         transform.position = Vector2.MoveTowards(transform.position, player, speed * Time.deltaTime);
     }
