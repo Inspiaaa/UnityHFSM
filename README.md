@@ -107,14 +107,15 @@ public class EnemyController : MonoBehaviour
 
 ```csharp
     float DistanceToPlayer() {
-        // Or however you have your scene and player configured
-        return (transform.position - PlayerController.Instance.transform.position).magnitude;
+        // This implementation is an example and may differ for you scene setup
+        Vector3 player = PlayerController.Instance.transform.position;
+        return Vector2.Distance(transform.position, player);
     }
 
     void MoveTowardsPlayer(float speed) {
-        // Or however you have your scene and player configured
+        // This implementation is an example and may differ for you scene setup
         Vector3 player = PlayerController.Instance.transform.position;
-        transform.position += (player - transform.position).normalized * speed * Time.deltaTime;
+        transform.position = Vector2.MoveTowards(transform.position, player, speed * Time.deltaTime);
     }
 
     void Start()
@@ -227,6 +228,10 @@ So that you can see a visual difference, the enemy should be spinning when it en
 #### Adding States and Transitions
 
 ```csharp
+    void RotateAtSpeed(float speed) {
+        transform.eulerAngles += new Vector3(0, 0, speed * Time.deltaTime);
+    }
+    
     void Start()
     {
         fsm = new StateMachine(this);
@@ -242,7 +247,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
                     state.fsm.StateCanExit();
 
                 // Make the enemy turn at 100 degrees per second
-                transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+                RotateAtSpeed(100f);
             },
             // This means the state won't instantly exit when a transition should happen
             // but instead the state machine waits until it is given permission to change state
@@ -325,7 +330,7 @@ fsm.AddTransitionFromAny( new Transition(
 fsm.AddTransitionFromAny( new Transition(
     "",    // From can be left empty, as it has no meaning in this context
     "Dead",
-    t => health <= 0
+    t => (health <= 0)
 ));
 ```
 
@@ -364,13 +369,13 @@ In this example, we can replace the `SendData` state with a more advanced one, w
 ```csharp
     IEnumerator SendData(CoState state) {
         while (state.timer.Elapsed < 2) {
-            transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+            RotateAtSpeed(100f);
             // Wait until the next frame
             yield return null;
         }
 
         while (state.timer.Elapsed < 4) {
-            transform.rotation = Quaternion.Euler(transform.eulerAngles - new Vector3(0, 0, Time.deltaTime * 100));
+            RotateAtSpeed(-100f);
             yield return null;
         }
 
@@ -418,8 +423,7 @@ Simply inherit from the base class `StateBase` and override the methods you need
         public override void OnLogic()
         {
             // The MonoBehaviour can be accessed from inside the state with this.mono or simply mono
-            this.mono.transform.rotation = Quaternion.Euler(
-                this.mono.transform.eulerAngles + new Vector3(0, 0, Time.deltaTime * 100));
+            this.mono.transform.eulerAngles += new Vector3(0, 0, 100 * Time.deltaTime);
         }
     }
 
@@ -448,6 +452,8 @@ More documentation coming soon...
 - [ ] Docstring documentation of StateWrapper
 
 - [ ] Documentation for avoiding duplicate code by using the HybridStateMachine
+
+- [x] Improve code examples -> first FSM example with move towards player can be more concise
 
 **v1.7**
 
