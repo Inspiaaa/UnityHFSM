@@ -24,6 +24,8 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 - State machines are an amazingly easy way to write and organise game logic. (As soon as you have states, e.g. Walk, Run, Sneak, Jump, you can use a state machine)
 
+- It's **easy** and **straightforward** to use
+
 - It helps you **tame complex behaviour** (e.g. weapon handling -> cooling, ammo, reload, fire) or write AI for NPCs
 
 - Helps you write **self documenting code**, that is **maintainable** and **readable**

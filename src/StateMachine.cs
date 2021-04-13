@@ -6,7 +6,7 @@ using UnityEngine;
  * Hierarchichal finite state machine for Unity 
  * by LavaAfterburner
  * 
- * Version: 1.5.0
+ * Version: 1.6.0
  */
 
 namespace FSM {
@@ -69,7 +69,6 @@ namespace FSM {
 		{
 			if (!IsRootFSM) return;
 
-			// TODO: Update code and code examples to no longer call OnEnter(), but instead Init()
 			OnEnter();
 		}
 
