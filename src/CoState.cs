@@ -84,8 +84,10 @@ namespace FSM {
 		}
 
 		override public void OnExit() {
-			mono.StopCoroutine(coroutine);
-			coroutine = null;
+			if (coroutine != null) {
+				mono.StopCoroutine(coroutine);
+				coroutine = null;
+			}
 
 			onExit?.Invoke(this);
 		}

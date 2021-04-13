@@ -16,10 +16,10 @@ namespace FSM {
 	/// </summary>
 	public class StateMachine : StateBase {
 
-		private string startState;
-		private string pendingState;
+		private string startState = "";
+		private string pendingState = null;
 
-		private StateBase activeState;
+		private StateBase activeState = null;
 		private List<TransitionBase> activeTransitions = new List<TransitionBase>();
 
 		public StateBase ActiveState {
@@ -252,6 +252,13 @@ namespace FSM {
 			}
 
 			activeState.OnLogic();
+		}
+
+		public override void OnExit() {
+			if (activeState != null) {
+				activeState.OnExit();
+				activeState = null;
+			}
 		}
 
 		/// <summary>
