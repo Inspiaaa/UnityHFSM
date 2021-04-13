@@ -163,7 +163,7 @@ namespace FSM {
 		/// </summary>
 		/// <param name="name">The name / identifier of the active state</param>
 		private void ChangeState(string name) {
-			if (! nameToState.ContainsKey(name)) {
+			if (! nameToState.TryGetValue(name, out StateBase newState)) {
 				throw new System.Exception(
 					$"The state '{name}' has not been defined yet / doesn't exist"
 				);
@@ -173,7 +173,7 @@ namespace FSM {
 				activeState.OnExit();
 			}
 
-			activeState = nameToState[name];
+			activeState = newState;
 			activeState.OnEnter();
 
 			if (fromNameToTransitions.TryGetValue(name, out List<TransitionBase> currentTransitions)) {

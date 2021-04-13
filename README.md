@@ -36,6 +36,8 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 - It is **especially designed for Unity**, and supports **Coroutines**, which would otherwise be difficult to implement in a state machine
 
+- **No GC Allocations** for state changes / updates / ... after setting up the state machine (-> No unwanted GC related lag spikes because of the state machine)
+
 - The code is **well documented**
 
 - It is **not a component** (MonoBehaviour) and therefore has a **low overhead**
@@ -233,7 +235,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
     void RotateAtSpeed(float speed) {
         transform.eulerAngles += new Vector3(0, 0, speed * Time.deltaTime);
     }
-    
+
     void Start()
     {
         fsm = new StateMachine(this);
