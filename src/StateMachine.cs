@@ -4,9 +4,9 @@ using UnityEngine;
 
 /**
  * Hierarchichal finite state machine for Unity 
- * by LavaAfterburner
+ * by Inspiaaa
  * 
- * Version: 1.6.0
+ * Version: 1.6.1
  */
 
 namespace FSM {
