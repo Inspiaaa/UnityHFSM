@@ -16,7 +16,7 @@ namespace FSM {
 	/// </summary>
 	public class StateMachine : StateBase {
 
-		private string startState = "";
+		private string startState = null;
 		private string pendingState = null;
 
 		private StateBase activeState = null;
