@@ -8,6 +8,11 @@ namespace FSM {
         public class Down : TransitionBase {
             private KeyCode keyCode;
 
+            /// <summary>
+            /// Initialises a new transition that triggers, while a key is down.
+            /// It behaves like Input.GetKey(...).
+            /// </summary>
+            /// <param name="key">The KeyCode of the key to watch</param>
             public Down(
                     string from, 
                     string to, 
@@ -22,6 +27,11 @@ namespace FSM {
             }
         }
 
+        /// <summary>
+        /// Initialises a new transition that triggers, when a key was just down and is up now.
+        /// It behaves like Input.GetKeyUp(...).
+        /// </summary>
+        /// <param name="key">The KeyCode of the key to watch</param>
         public class Release : TransitionBase {
             private KeyCode keyCode;
 
@@ -39,6 +49,11 @@ namespace FSM {
             }
         }
 
+        /// <summary>
+        /// Initialises a new transition that triggers, when a key was just up and is down now.
+        /// It behaves like Input.GetKeyDown(...).
+        /// </summary>
+        /// <param name="key">The KeyCode of the key to watch</param>
         public class Press : TransitionBase {
             private KeyCode keyCode;
 
@@ -56,6 +71,11 @@ namespace FSM {
             }
         }
 
+        /// <summary>
+        /// Initialises a new transition that triggers, while a key is up.
+        /// It behaves like ! Input.GetKey(...).
+        /// </summary>
+        /// <param name="key">The KeyCode of the key to watch</param>
         public class Up : TransitionBase {
             private KeyCode keyCode;
 
