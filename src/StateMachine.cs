@@ -6,7 +6,7 @@ using UnityEngine;
  * Hierarchichal finite state machine for Unity 
  * by Inspiaaa
  * 
- * Version: 1.6.1
+ * Version: 1.6.2
  */
 
 namespace FSM {
