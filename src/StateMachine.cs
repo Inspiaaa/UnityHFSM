@@ -134,7 +134,14 @@ namespace FSM {
 		}
 
 		public override void RequestExit() {
-			activeState.RequestExit();
+			if (activeState.needsExitTime) {
+				activeState.RequestExit();
+				return;	
+			}
+
+			if (fsm != null) {
+				fsm.StateCanExit();
+			}
 		}
 
 		/// <summary>
