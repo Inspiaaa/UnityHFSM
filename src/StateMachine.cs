@@ -170,11 +170,7 @@ namespace FSM {
 		/// </summary>
 		/// <param name="name">The name / identifier of the active state</param>
 		private void ChangeState(string name) {
-			if (! nameToState.TryGetValue(name, out StateBase newState)) {
-				throw new System.Exception(
-					$"The state '{name}' has not been defined yet / doesn't exist"
-				);
-			}
+			StateBase newState = GetState(name);
 
 			if (activeState != null) {
 				activeState.OnExit();
@@ -203,6 +199,16 @@ namespace FSM {
 			ChangeState(startState);
 		}
 
+		public StateBase GetState(string name) {
+			if (! nameToState.TryGetValue(name, out StateBase state)) {
+				throw new System.Exception(
+					$"The state '{name}' has not been defined yet / doesn't exist"
+				);
+			}
+
+			return state;
+		}
+
 		/// <summary>
 		/// Checks if a transition can take place, and if this is the case, transition to the
 		/// "to" state and return true. Otherwise it returns false
@@ -212,13 +218,8 @@ namespace FSM {
 		private bool TryTransition(TransitionBase transition) {
 			if (! transition.ShouldTransition())
 				return false;
-				
-			if (! activeState.needsExitTime || transition.forceInstantly) {
-				ChangeState(transition.to);
-			}
-			else {
-				RequestStateChange(transition.to);
-			}
+			
+			RequestStateChange(transition.to, transition.forceInstantly);
 
 			return true;
 		}
