@@ -314,7 +314,7 @@ The state machine supports two ways of changing states:
            MoveTowardsPlayer(1);
    
            if (DistanceToPlayer() < ownScanningRange)
-               fsm.RequestStateChange("ExtractIntel")
+               fsm.RequestStateChange("ExtractIntel");
    }));
    ```
 
