@@ -339,7 +339,8 @@ namespace FSM {
 
 				if (! (selectedNode is StateMachine)) {
 					throw new System.Exception(
-						$"The state '{name}' is not a StateMachine"
+						$"The state '{name}' is not a StateMachine. "
+						+$"To get this state, use fsm.GetState(\"{name}\")."
 					);
 				}
 
