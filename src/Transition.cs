@@ -1,10 +1,12 @@
 using System;
 
-namespace FSM {
+namespace FSM
+{
 	/// <summary>
 	/// A class used to determin whether the state machine should transition to another state
 	/// </summary>
-	public class Transition : TransitionBase{
+	public class Transition : TransitionBase
+	{
 
 		public Func<Transition, bool> condition;
 
@@ -18,18 +20,19 @@ namespace FSM {
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
 		/// 	=> Forces an instant transition</param>
 		public Transition(
-				string from, 
-				string to, 
+				string from,
+				string to,
 				Func<Transition, bool> condition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
 			this.condition = condition;
 		}
 
-		public override bool ShouldTransition() {
+		public override bool ShouldTransition()
+		{
 			if (condition == null)
 				return true;
-			
+
 			return condition(this);
 		}
 	}

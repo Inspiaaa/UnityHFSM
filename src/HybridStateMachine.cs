@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System;
 
-namespace FSM {
+namespace FSM
+{
 	/// <summary>
 	/// A State-like StateMachine that allows you to run additional functions (companion code)
 	/// with the sub-states.
@@ -34,7 +35,7 @@ namespace FSM {
 		/// 	state change (true).</param>
 		public HybridStateMachine(
 				MonoBehaviour mono,
-				Action<HybridStateMachine> onEnter = null, 
+				Action<HybridStateMachine> onEnter = null,
 				Action<HybridStateMachine> onLogic = null,
 				Action<HybridStateMachine> onExit = null,
 				bool needsExitTime = false) : base(mono, needsExitTime)
@@ -67,6 +68,5 @@ namespace FSM {
 
 			onExit?.Invoke(this);
 		}
-		
 	}
 }

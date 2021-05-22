@@ -2,7 +2,8 @@ using System.Collections;
 using UnityEngine;
 using System;
 
-namespace FSM {
+namespace FSM
+{
 	/// <summary>
 	/// A state that can run a Unity coroutine as its OnLogic method
 	/// </summary>
@@ -33,11 +34,11 @@ namespace FSM {
 		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// state change (true)</param>
 		public CoState(
-				Action<CoState> onEnter = null, 
+				Action<CoState> onEnter = null,
 				Func<CoState, IEnumerator> onLogic = null,
 				Action<CoState> onExit = null,
 				Func<CoState, bool> canExit = null,
-				bool needsExitTime = false) : base(needsExitTime) 
+				bool needsExitTime = false) : base(needsExitTime)
 		{
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
@@ -47,7 +48,8 @@ namespace FSM {
 			this.timer = new Timer();
 		}
 
-		override public void OnEnter() {
+		override public void OnEnter()
+		{
 			timer.Reset();
 
 			onEnter?.Invoke(this);
@@ -55,9 +57,11 @@ namespace FSM {
 			coroutine = null;
 		}
 
-		private IEnumerator LoopCoroutine() {
+		private IEnumerator LoopCoroutine()
+		{
 			IEnumerator routine = onLogic(this);
-			while (true) {
+			while (true)
+			{
 
 				// This checks if the routine needs at least one frame to execute.
 				// If not, LoopCoroutine will wait 1 frame to avoid an infinite 
@@ -76,14 +80,18 @@ namespace FSM {
 			}
 		}
 
-		public override void OnLogic() {
-			if (coroutine == null && onLogic != null) {
+		public override void OnLogic()
+		{
+			if (coroutine == null && onLogic != null)
+			{
 				coroutine = mono.StartCoroutine(LoopCoroutine());
 			}
 		}
 
-		public override void OnExit() {
-			if (coroutine != null) {
+		public override void OnExit()
+		{
+			if (coroutine != null)
+			{
 				mono.StopCoroutine(coroutine);
 				coroutine = null;
 			}
@@ -91,8 +99,10 @@ namespace FSM {
 			onExit?.Invoke(this);
 		}
 
-		public override void RequestExit() {
-			if (!needsExitTime || (canExit != null && canExit(this))) {
+		public override void RequestExit()
+		{
+			if (!needsExitTime || (canExit != null && canExit(this)))
+			{
 				fsm.StateCanExit();
 			}
 		}

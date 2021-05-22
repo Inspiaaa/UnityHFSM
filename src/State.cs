@@ -1,18 +1,20 @@
 using System;
 
-namespace FSM {
+namespace FSM
+{
 	/// <summary>
 	/// The "normal" state class that can run code on Enter, on Logic and on Exit, 
 	/// while also handling the timing of the next state transition
 	/// </summary>
-	public class State : StateBase {
+	public class State : StateBase
+	{
 		private Action<State> onEnter;
 		private Action<State> onLogic;
 		private Action<State> onExit;
 		private Func<State, bool> canExit;
 
 		public Timer timer;
-		
+
 		/// <summary>
 		/// Initialises a new instance of the State class
 		/// </summary>
@@ -27,11 +29,11 @@ namespace FSM {
 		/// 	exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// 	state change (true)</param>
 		public State(
-				Action<State> onEnter = null, 
+				Action<State> onEnter = null,
 				Action<State> onLogic = null,
 				Action<State> onExit = null,
 				Func<State, bool> canExit = null,
-				bool needsExitTime = false) : base(needsExitTime) 
+				bool needsExitTime = false) : base(needsExitTime)
 		{
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
@@ -41,22 +43,27 @@ namespace FSM {
 			this.timer = new Timer();
 		}
 
-		public override void OnEnter() {
+		public override void OnEnter()
+		{
 			timer.Reset();
 
 			onEnter?.Invoke(this);
 		}
 
-		public override void OnLogic() {
+		public override void OnLogic()
+		{
 			onLogic?.Invoke(this);
 		}
 
-		public override void OnExit() {
+		public override void OnExit()
+		{
 			onExit?.Invoke(this);
 		}
 
-		public override void RequestExit() {
-			if (!needsExitTime || canExit != null && canExit(this)) {
+		public override void RequestExit()
+		{
+			if (!needsExitTime || canExit != null && canExit(this))
+			{
 				fsm.StateCanExit();
 			}
 		}

@@ -1,11 +1,13 @@
 using System;
 
-namespace FSM {
+namespace FSM
+{
 	/// <summary>
 	/// A class used to determin whether the state machine should transition to another state
 	/// depending on a dynamically computed delay and an optional condition
 	/// </summary>
-	public class TransitionAfterDynamic : TransitionBase{
+	public class TransitionAfterDynamic : TransitionBase
+	{
 
 		public Func<TransitionAfterDynamic, float> delayCalculator;
 		public Func<TransitionAfterDynamic, bool> condition;
@@ -23,8 +25,8 @@ namespace FSM {
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
 		/// 	=> Forces an instant transition</param>
 		public TransitionAfterDynamic(
-				string from, 
-				string to, 
+				string from,
+				string to,
 				Func<TransitionAfterDynamic, float> delay,
 				Func<TransitionAfterDynamic, bool> condition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
@@ -34,17 +36,19 @@ namespace FSM {
 			this.timer = new Timer();
 		}
 
-		public override void OnEnter() {
+		public override void OnEnter()
+		{
 			timer.Reset();
 		}
 
-		public override bool ShouldTransition() {
+		public override bool ShouldTransition()
+		{
 			if (timer < delayCalculator(this))
 				return false;
 
 			if (condition == null)
 				return true;
-			
+
 			return condition(this);
 		}
 	}
