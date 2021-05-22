@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -77,13 +76,13 @@ namespace FSM {
 			}
 		}
 
-		override public void OnLogic() {
+		public override void OnLogic() {
 			if (coroutine == null && onLogic != null) {
 				coroutine = mono.StartCoroutine(LoopCoroutine());
 			}
 		}
 
-		override public void OnExit() {
+		public override void OnExit() {
 			if (coroutine != null) {
 				mono.StopCoroutine(coroutine);
 				coroutine = null;
@@ -92,7 +91,7 @@ namespace FSM {
 			onExit?.Invoke(this);
 		}
 
-		override public void RequestExit() {
+		public override void RequestExit() {
 			if (!needsExitTime || (canExit != null && canExit(this))) {
 				fsm.StateCanExit();
 			}

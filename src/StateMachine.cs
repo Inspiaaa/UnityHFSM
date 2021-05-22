@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,23 +21,10 @@ namespace FSM {
 		private StateBase activeState = null;
 		private List<TransitionBase> activeTransitions = new List<TransitionBase>();
 
-		public StateBase ActiveState {
-			get {
-				return activeState;
-			}
-		}
+		public StateBase ActiveState => activeState;
+		public string ActiveStateName => activeState.name;
 
-		public string ActiveStateName {
-			get {
-				return activeState.name;
-			}
-		}
-
-		private bool IsRootFSM {
-			get {
-				return fsm == null;
-			}
-		}
+		private bool IsRootFsm => fsm == null;
 
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
@@ -67,7 +53,7 @@ namespace FSM {
 		/// </summary>
 		public override void Init()
 		{
-			if (!IsRootFSM) return;
+			if (!IsRootFsm) return;
 
 			OnEnter();
 		}
@@ -229,7 +215,7 @@ namespace FSM {
 		/// calls the active state's logic function (after the state transition, if
 		/// one occurred).
 		/// </summary>
-		override public void OnLogic() {
+		public override void OnLogic() {
 			if (activeState == null) {
 				throw new System.Exception("The FSM has not been initialised yet! "
 					+ "Call fsm.SetStartState(...) and fsm.OnEnter() or fsm.Init() to initialise");

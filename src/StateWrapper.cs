@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 namespace FSM {
@@ -48,7 +45,7 @@ namespace FSM {
 				this.afterOnExit = afterOnExit;
 			}
 
-			override public void Init() {
+			public override void Init() {
 				state.name = name;
 				state.fsm = fsm;
 				state.mono = mono;
@@ -56,25 +53,25 @@ namespace FSM {
 				state.Init();
 			}
 
-			override public void OnEnter() {
+			public override void OnEnter() {
 				beforeOnEnter?.Invoke(this);
 				state.OnEnter();
 				afterOnEnter?.Invoke(this);
 			}
 
-			override public void OnLogic() {
+			public override void OnLogic() {
 				beforeOnLogic?.Invoke(this);
 				state.OnLogic();
 				afterOnLogic?.Invoke(this);
 			}
 
-			override public void OnExit() {
+			public override void OnExit() {
 				beforeOnExit?.Invoke(this);
 				state.OnExit();
 				afterOnExit?.Invoke(this);
 			}
 
-			override public void RequestExit() {
+			public override void RequestExit() {
 				state.RequestExit();
 			}
 		}
@@ -94,7 +91,6 @@ namespace FSM {
 		/// <summary>
 		/// Initialises a new instance of the StateWrapper class
 		/// </summary>
-		/// <param name="state">The state that should be wrapped</param>
 		public StateWrapper (
 				Action<StateBase> beforeOnEnter = null,
 				Action<StateBase> afterOnEnter = null,

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace FSM {
     public static class TransitionOnKey {
@@ -13,6 +11,7 @@ namespace FSM {
             /// It behaves like Input.GetKey(...).
             /// </summary>
             /// <param name="key">The KeyCode of the key to watch</param>
+            /// <returns></returns>
             public Down(
                     string from, 
                     string to, 
@@ -27,14 +26,14 @@ namespace FSM {
             }
         }
 
-        /// <summary>
-        /// Initialises a new transition that triggers, when a key was just down and is up now.
-        /// It behaves like Input.GetKeyUp(...).
-        /// </summary>
-        /// <param name="key">The KeyCode of the key to watch</param>
         public class Release : TransitionBase {
             private KeyCode keyCode;
 
+            /// <summary>
+            /// Initialises a new transition that triggers, when a key was just down and is up now.
+            /// It behaves like Input.GetKeyUp(...).
+            /// </summary>
+            /// <param name="key">The KeyCode of the key to watch</param>
             public Release(
                     string from, 
                     string to, 
@@ -49,14 +48,14 @@ namespace FSM {
             }
         }
 
-        /// <summary>
-        /// Initialises a new transition that triggers, when a key was just up and is down now.
-        /// It behaves like Input.GetKeyDown(...).
-        /// </summary>
-        /// <param name="key">The KeyCode of the key to watch</param>
         public class Press : TransitionBase {
             private KeyCode keyCode;
 
+            /// <summary>
+            /// Initialises a new transition that triggers, when a key was just up and is down now.
+            /// It behaves like Input.GetKeyDown(...).
+            /// </summary>
+            /// <param name="key">The KeyCode of the key to watch</param>
             public Press(
                     string from, 
                     string to, 
@@ -71,14 +70,14 @@ namespace FSM {
             }
         }
 
-        /// <summary>
-        /// Initialises a new transition that triggers, while a key is up.
-        /// It behaves like ! Input.GetKey(...).
-        /// </summary>
-        /// <param name="key">The KeyCode of the key to watch</param>
         public class Up : TransitionBase {
             private KeyCode keyCode;
 
+            /// <summary>
+            /// Initialises a new transition that triggers, while a key is up.
+            /// It behaves like ! Input.GetKey(...).
+            /// </summary>
+            /// <param name="key">The KeyCode of the key to watch</param>
             public Up(
                     string from, 
                     string to, 

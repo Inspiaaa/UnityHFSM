@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 namespace FSM {
@@ -44,21 +41,21 @@ namespace FSM {
 			this.timer = new Timer();
 		}
 
-		override public void OnEnter() {
+		public override void OnEnter() {
 			timer.Reset();
 
 			onEnter?.Invoke(this);
 		}
 
-		override public void OnLogic() {
+		public override void OnLogic() {
 			onLogic?.Invoke(this);
 		}
 
-		override public void OnExit() {
+		public override void OnExit() {
 			onExit?.Invoke(this);
 		}
 
-		override public void RequestExit() {
+		public override void RequestExit() {
 			if (!needsExitTime || canExit != null && canExit(this)) {
 				fsm.StateCanExit();
 			}
