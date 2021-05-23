@@ -314,16 +314,21 @@ The state machine supports three ways of changing states:
    
    ```csharp
    fsm.AddState("FollowPlayer", new State(
-       onLogic: (state) => {
+       onLogic: (state) =>
+       {
            MoveTowardsPlayer(1);
    
            if (DistanceToPlayer() < ownScanningRange)
+           {
                fsm.RequestStateChange("ExtractIntel");
+           }
        }
    ));
    ```
 
 3. Using "Trigger Transitions": These are normal transitions that are only checked when a certain trigger (an event) is activated.
+   
+   These are really handy when a polling-based solution does not fit or is not efficient enough. Trigger Transitions let you effortlessly leverage the efficiency of event-based transitions, in combination with the full power of the existing high-level transition types.
    
    ```csharp
    fsm.AddTriggerTransition(triggerName, transition);
