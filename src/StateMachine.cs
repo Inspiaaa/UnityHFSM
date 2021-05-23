@@ -386,9 +386,11 @@ namespace FSM
 				}
 			}
 
-			for (int i = 0; i < activeTriggerTransitions.Count; i ++)
+			triggerTransitions = activeTriggerTransitions[trigger];
+			
+			for (int i = 0; i < triggerTransitions.Count; i ++)
 			{
-				TransitionBase transition = activeTriggerTransitions[i];
+				TransitionBase transition = triggerTransitions[i];
 				
 				if (TryTransition(transition))
 					return;
