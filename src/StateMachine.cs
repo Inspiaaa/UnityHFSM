@@ -52,16 +52,6 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Calls OnEnter if it is the root machine, therefore initialising the state machine
-		/// </summary>
-		public override void Init()
-		{
-			if (!IsRootFsm) return;
-
-			OnEnter();
-		}
-
-		/// <summary>
 		/// Checks that all names of states in transitions / the start state refer 
 		/// to existing states and if not, it logs a warning.
 		/// It is can be rather helpful and time saving, when you are debugging larger
@@ -144,30 +134,6 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Requests a state change, respecting the <c>needsExitTime</c> property of the active state
-		/// </summary>
-		/// <param name="name">The name / identifier of the target state</param>
-		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
-		/// therefore forcing an immediate state change</param>
-		public void RequestStateChange(string name, bool forceInstantly = false)
-		{
-			if (!activeState.needsExitTime || forceInstantly)
-			{
-				ChangeState(name);
-			}
-			else
-			{
-				pendingState = name;
-				activeState.RequestExit();
-				/**
-				 * If it can exit, the activeState would call
-				 * -> state.fsm.StateCanExit() which in turn would call
-				 * -> fsm.ChangeState(...) 
-				 */
-			}
-		}
-
-		/// <summary>
 		/// Instantly changes to the target state
 		/// </summary>
 		/// <param name="name">The name / identifier of the active state</param>
@@ -199,24 +165,27 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Initialises the state machine and must be called before OnLogic is called.
-		/// It sets the activeState to the selected startState.
+		/// Requests a state change, respecting the <c>needsExitTime</c> property of the active state
 		/// </summary>
-		public override void OnEnter()
+		/// <param name="name">The name / identifier of the target state</param>
+		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
+		/// therefore forcing an immediate state change</param>
+		public void RequestStateChange(string name, bool forceInstantly = false)
 		{
-			ChangeState(startState);
-		}
-
-		public StateBase GetState(string name)
-		{
-			if (!nameToState.TryGetValue(name, out StateBase state))
+			if (!activeState.needsExitTime || forceInstantly)
 			{
-				throw new System.Exception(
-					$"The state '{name}' has not been defined yet / doesn't exist"
-				);
+				ChangeState(name);
 			}
-
-			return state;
+			else
+			{
+				pendingState = name;
+				activeState.RequestExit();
+				/**
+				 * If it can exit, the activeState would call
+				 * -> state.fsm.StateCanExit() which in turn would call
+				 * -> fsm.ChangeState(...) 
+				 */
+			}
 		}
 
 		/// <summary>
@@ -233,6 +202,34 @@ namespace FSM
 			RequestStateChange(transition.to, transition.forceInstantly);
 
 			return true;
+		}
+
+		/// <summary>
+		/// Defines the entry point of the state machine
+		/// </summary>
+		/// <param name="name">The name / identifier of the start state</param>
+		public void SetStartState(string name)
+		{
+			startState = name;
+		}
+
+		/// <summary>
+		/// Calls OnEnter if it is the root machine, therefore initialising the state machine
+		/// </summary>
+		public override void Init()
+		{
+			if (!IsRootFsm) return;
+
+			OnEnter();
+		}
+		
+		/// <summary>
+		/// Initialises the state machine and must be called before OnLogic is called.
+		/// It sets the activeState to the selected startState.
+		/// </summary>
+		public override void OnEnter()
+		{
+			ChangeState(startState);
 		}
 
 		/// <summary>
@@ -310,15 +307,6 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Defines the entry point of the state machine
-		/// </summary>
-		/// <param name="name">The name / identifier of the start state</param>
-		public void SetStartState(string name)
-		{
-			startState = name;
-		}
-
-		/// <summary>
 		/// Adds a new transition between two states
 		/// </summary>
 		/// <param name="transition">The transition instance</param>
@@ -350,6 +338,18 @@ namespace FSM
 			transition.Init();
 
 			transitionsFromAny.Add(transition);
+		}
+
+		public StateBase GetState(string name)
+		{
+			if (!nameToState.TryGetValue(name, out StateBase state))
+			{
+				throw new System.Exception(
+					$"The state '{name}' has not been defined yet / doesn't exist"
+				);
+			}
+
+			return state;
 		}
 
 		public StateMachine this[string name]
