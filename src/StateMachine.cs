@@ -16,27 +16,72 @@ namespace FSM
 	/// </summary>
 	public class StateMachine : StateBase
 	{
+		// TODO: Make methods for throwing common errors
+
+		/// <summary>
+		/// A bundle of a state together with the outgoing transitions and trigger transitions.
+		/// It's useful, as you only need to do one Dictionary lookup for these three items.
+		/// </summary>
+		private class StateBundle
+		{
+			// By default, these fields are all null and only get a value assigned when you need it
+			// => Lazy evaluation => Memory efficient, when you only need a subset of features
+			public StateBase state;
+			public List<TransitionBase> transitions;
+			public Dictionary<string, List<TransitionBase>> triggerToTransitions;
+
+			public void AddTransition(TransitionBase t)
+			{
+				if (transitions == null)
+				{
+					transitions = new List<TransitionBase>();
+				}
+
+				transitions.Add(t);
+			}
+
+			public void AddTriggerTransition(string trigger, TransitionBase transition) {
+				if (triggerToTransitions == null)
+				{
+					triggerToTransitions = new Dictionary<string, List<TransitionBase>>();
+				}
+
+				List<TransitionBase> transitionsOfTrigger;
+				
+				if (! triggerToTransitions.TryGetValue(trigger, out transitionsOfTrigger))
+				{
+					transitionsOfTrigger = new List<TransitionBase>();
+					triggerToTransitions.Add(trigger, transitionsOfTrigger);
+				}
+
+				transitionsOfTrigger.Add(transition);
+			}
+		}
+
+		// A cached empty list of transitions (For improved readability, less GC)
+		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
+		private static readonly Dictionary<string, List<TransitionBase>> noTriggerTransitions 
+			= new Dictionary<string, List<TransitionBase>>();
 
 		private string startState = null;
 		private string pendingState = null;
 
+		private Dictionary<string, StateBundle> nameToStateBundle 
+			= new Dictionary<string, StateBundle>();
+
 		private StateBase activeState = null;
-		private List<TransitionBase> activeTransitions = new List<TransitionBase>();
+		private List<TransitionBase> activeTransitions = noTransitions;
+		private Dictionary<string, List<TransitionBase>> activeTriggerTransitions = noTriggerTransitions;
+
+		private List<TransitionBase> transitionsFromAny
+			= new List<TransitionBase>();
+		private Dictionary<string, List<TransitionBase>> triggerTransitionsFromAny
+			= new Dictionary<string, List<TransitionBase>>();
 
 		public StateBase ActiveState => activeState;
 		public string ActiveStateName => activeState.name;
 
 		private bool IsRootFsm => fsm == null;
-
-		// A cached empty list of transitions (For improved readability, less GC)
-		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
-
-		private Dictionary<string, StateBase> nameToState
-			= new Dictionary<string, StateBase>();
-		private Dictionary<string, List<TransitionBase>> fromNameToTransitions
-			= new Dictionary<string, List<TransitionBase>>();
-
-		private List<TransitionBase> transitionsFromAny = new List<TransitionBase>();
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
@@ -51,55 +96,7 @@ namespace FSM
 			this.mono = mono;
 		}
 
-		/// <summary>
-		/// Checks that all names of states in transitions / the start state refer 
-		/// to existing states and if not, it logs a warning.
-		/// It is can be rather helpful and time saving, when you are debugging larger
-		/// state machines and want to make sure that all transitions are set up correctly.
-		/// </summary>
-		public void Validate()
-		{
-			// Check that all transitions refer to real states
-			foreach (List<TransitionBase> transitions in fromNameToTransitions.Values)
-			{
-				foreach (TransitionBase t in transitions)
-				{
-					bool fromStateExists = nameToState.ContainsKey(t.from);
-					bool toStateExists = nameToState.ContainsKey(t.to);
-
-					if (fromStateExists && toStateExists) continue;
-
-					string errorMessage =
-						"The '{0}' state that the " + $"{t.GetType()} ('{t.from}' --> '{t.to}') "
-						+ "is referring to does not exist {1}";
-
-					if (!fromStateExists)
-					{
-						Debug.LogWarning(string.Format(errorMessage,
-							"from",
-							"and can create an unexpected behaviour later, when the fsm does not transition. "
-						));
-					}
-
-					if (!toStateExists)
-					{
-						Debug.LogWarning(string.Format(errorMessage,
-							"to",
-							"and can cause an error later."
-						));
-					}
-				}
-			}
-
-			// Check that the start state is an actual state
-			if (!nameToState.ContainsKey(startState))
-			{
-				Debug.LogWarning(
-					$"The start state '{startState}' does not exist and will "
-					+ "cause an error. (Typo?)"
-				);
-			}
-		}
+		// TODO: Maybe re-add Validate()
 
 		/// <summary>
 		/// Notifies the state machine that the state can cleanly exit,
@@ -139,28 +136,27 @@ namespace FSM
 		/// <param name="name">The name / identifier of the active state</param>
 		private void ChangeState(string name)
 		{
-			StateBase newState = GetState(name);
-
 			if (activeState != null)
 			{
 				activeState.OnExit();
 			}
 
-			activeState = newState;
+			// TODO: Throw error when nameToStateBundle[name] does not exist
+			StateBundle bundle = nameToStateBundle[name];
+			// TODO: Throw error when bundle.state is null => Create a new method for logging errors
+			activeState = bundle.state;
 			activeState.OnEnter();
 
-			if (fromNameToTransitions.TryGetValue(name, out List<TransitionBase> currentTransitions))
-			{
-				activeTransitions = currentTransitions;
-
-				for (int i = 0; i < activeTransitions.Count; i++)
-				{
-					activeTransitions[i].OnEnter();
-				}
-			}
-			else
+			activeTransitions = bundle.transitions;
+			if (activeTransitions == null)
 			{
 				activeTransitions = noTransitions;
+			}
+
+			activeTriggerTransitions = bundle.triggerToTransitions;
+			if (activeTriggerTransitions == null)
+			{
+				activeTriggerTransitions = noTriggerTransitions;
 			}
 		}
 
@@ -255,10 +251,7 @@ namespace FSM
 					continue;
 
 				if (TryTransition(transition))
-				{
-					activeState.OnLogic();
-					return;
-				}
+					break;
 			}
 
 			// Try the "normal" transitions that transition from one specific state to another
@@ -267,10 +260,7 @@ namespace FSM
 				TransitionBase transition = activeTransitions[i];
 
 				if (TryTransition(transition))
-				{
-					activeState.OnLogic();
-					return;
-				}
+					break;
 			}
 
 			activeState.OnLogic();
@@ -283,6 +273,17 @@ namespace FSM
 				activeState.OnExit();
 				activeState = null;
 			}
+		}
+
+		private StateBundle GetOrCreateStateBundle(string name) {
+			StateBundle bundle;
+
+			if (! nameToStateBundle.TryGetValue(name, out bundle)) {
+				bundle = new StateBundle();
+				nameToStateBundle.Add(name, bundle);
+			}
+
+			return bundle;
 		}
 
 		/// <summary>
@@ -298,12 +299,21 @@ namespace FSM
 
 			state.Init();
 
-			nameToState[name] = state;
+			StateBundle bundle = GetOrCreateStateBundle(name);
+			bundle.state = state;
 
-			if (nameToState.Count == 1 && startState == null)
+			if (nameToStateBundle.Count == 1 && startState == null)
 			{
 				SetStartState(name);
 			}
+		}
+
+		private void InitTransition(TransitionBase transition)
+		{
+			transition.fsm = this;
+			transition.mono = mono;
+
+			transition.Init();
 		}
 
 		/// <summary>
@@ -312,17 +322,10 @@ namespace FSM
 		/// <param name="transition">The transition instance</param>
 		public void AddTransition(TransitionBase transition)
 		{
-			if (!fromNameToTransitions.ContainsKey(transition.from))
-			{
-				fromNameToTransitions[transition.from] = new List<TransitionBase>();
-			}
+			InitTransition(transition);
 
-			transition.fsm = this;
-			transition.mono = mono;
-
-			transition.Init();
-
-			fromNameToTransitions[transition.from].Add(transition);
+			StateBundle bundle = GetOrCreateStateBundle(transition.from);
+			bundle.AddTransition(transition);
 		}
 
 		/// <summary>
@@ -332,40 +335,88 @@ namespace FSM
 		/// left empty, as it has no meaning in this context.</param>
 		public void AddTransitionFromAny(TransitionBase transition)
 		{
-			transition.fsm = this;
-			transition.mono = mono;
-
-			transition.Init();
+			InitTransition(transition);
 
 			transitionsFromAny.Add(transition);
 		}
 
+		public void AddTriggerTransition(string trigger, TransitionBase transition)
+		{
+			InitTransition(transition);
+
+			StateBundle bundle = GetOrCreateStateBundle(transition.from);
+			bundle.AddTriggerTransition(trigger, transition);
+		}
+
+		public void AddTriggerTransitionFromAny(string trigger, TransitionBase transition)
+		{
+			InitTransition(transition);
+
+			List<TransitionBase> transitionsOfTrigger;
+
+			if (!triggerTransitionsFromAny.TryGetValue(trigger, out transitionsOfTrigger)) {
+				transitionsOfTrigger = new List<TransitionBase>();
+				triggerTransitionsFromAny.Add(trigger, transitionsOfTrigger);
+			}
+
+			transitionsOfTrigger.Add(transition);
+		}
+
+		public void Trigger(string trigger)
+		{
+			if (activeState == null)
+			{
+				throw new System.Exception("The FSM has not been initialised yet! "
+					+ "Call fsm.SetStartState(...) and fsm.OnEnter() or fsm.Init() to initialise");
+			}
+
+			List<TransitionBase> triggerTransitions;
+
+			if (triggerTransitionsFromAny.TryGetValue(trigger, out triggerTransitions))
+			{
+				for (int i = 0; i < triggerTransitions.Count; i ++)
+				{
+					TransitionBase transition = triggerTransitions[i];
+
+					if (transition.to == activeState.name)
+						continue;
+					
+					if (TryTransition(transition))
+						return;
+				}
+			}
+
+			for (int i = 0; i < activeTriggerTransitions.Count; i ++)
+			{
+				TransitionBase transition = activeTriggerTransitions[i];
+				
+				if (TryTransition(transition))
+					return;
+			}
+			
+		}
+
 		public StateBase GetState(string name)
 		{
-			if (!nameToState.TryGetValue(name, out StateBase state))
+			StateBundle bundle;
+
+			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
 			{
 				throw new System.Exception(
 					$"The state '{name}' has not been defined yet / doesn't exist"
 				);
 			}
 
-			return state;
+			return bundle.state;
 		}
 
 		public StateMachine this[string name]
 		{
 			get
 			{
-				if (!nameToState.ContainsKey(name))
-				{
-					throw new System.Exception(
-						$"The state '{name}' has not been defined yet / doesn't exist"
-					);
-				}
+				StateBase state = GetState(name);
 
-				StateBase selectedNode = nameToState[name];
-
-				if (!(selectedNode is StateMachine))
+				if (!(state is StateMachine))
 				{
 					throw new System.Exception(
 						$"The state '{name}' is not a StateMachine. "
@@ -373,7 +424,7 @@ namespace FSM
 					);
 				}
 
-				return (StateMachine)selectedNode;
+				return (StateMachine)state;
 			}
 		}
 	}
