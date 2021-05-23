@@ -292,9 +292,9 @@ But when is the right time for the state machine to finally change states? This 
 
 ## State Change Patterns
 
-The state machine supports two ways of changing states:
+The state machine supports three ways of changing states:
 
-1. Using `Transition` objects as described earlier
+1. Using `Transition` objects as described earlier. You can even have multiple transitions that connect the same two states. They are checked on every OnLogic call and can be seen as a type of polling.
    
    ```csharp
    fsm.AddTransition( new Transition(
@@ -304,7 +304,7 @@ The state machine supports two ways of changing states:
    ));
    ```
 
-2. Calling the `RequestStateChange` method: Instead of using Transition objects to manage transitions, each state can individually also manage its own transitions by directly calling the `RequestStateChange` method
+2. Calling the `RequestStateChange` method: Instead of using Transition objects to manage state changes, each state can individually also manage its own transitions by directly calling the `RequestStateChange` method.
    
    ```csharp
    fsm.RequestStateChange(state, forceInstantly: false);
@@ -323,6 +323,27 @@ The state machine supports two ways of changing states:
    ));
    ```
 
+3. Using "Trigger Transitions": These are normal transitions that are only checked when a certain trigger (an event) is activated.
+   
+   ```csharp
+   fsm.AddTriggerTransition(triggerName, transition);
+   ```
+   
+   **Example**
+   
+   ```csharp
+   // Flappy Bird Example
+   fsm.AddTriggerTransition(
+       "OnCollision",
+       new Transition("Alive", "Dead")
+   );
+   
+   // Later
+   fsm.Trigger("OnCollision");
+   ```
+
+Therefore UnityHFSM supports both polling-based and event-based transitions, as well as the feature to bypass the concept of transitions all together. That's pretty cool.
+
 There is also a slight variation of the `Transition` state change behaviour, that allows you to change to a specific state from any other state (a "global" transition as opposed to a "local" / "direct" transition). They have the same `forceInstantly` / `needsExitTime` handling as normal transitions.
 
 ```csharp
@@ -331,6 +352,12 @@ fsm.AddTransitionFromAny( new Transition(
     to,
     condition 
 ));
+
+// For Trigger Transitions
+fsm.AddTriggerTransitionFromAny(
+    triggerName,
+    transition
+);
 ```
 
 **Example**
@@ -341,6 +368,12 @@ fsm.AddTransitionFromAny( new Transition(
     "Dead",
     t => (health <= 0)
 ));
+
+// For Trigger Transitions
+fsm.AddTriggerTransitionFromAny(
+    "OnDamage",
+    new Transition("", "Dead", t => (health <= 0))
+);
 ```
 
 ## Control flow of OnLogic
