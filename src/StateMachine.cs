@@ -21,6 +21,7 @@ namespace FSM
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
 		/// It's useful, as you only need to do one Dictionary lookup for these three items.
+		/// => Much better performance
 		/// </summary>
 		private class StateBundle
 		{
@@ -59,9 +60,9 @@ namespace FSM
 		}
 
 		// A cached empty list of transitions (For improved readability, less GC)
-		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>();
+		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>(0);
 		private static readonly Dictionary<string, List<TransitionBase>> noTriggerTransitions 
-			= new Dictionary<string, List<TransitionBase>>();
+			= new Dictionary<string, List<TransitionBase>>(0);
 
 		private string startState = null;
 		private string pendingState = null;
@@ -95,8 +96,6 @@ namespace FSM
 		{
 			this.mono = mono;
 		}
-
-		// TODO: Maybe re-add Validate()
 
 		/// <summary>
 		/// Notifies the state machine that the state can cleanly exit,
@@ -203,7 +202,7 @@ namespace FSM
 
 		/// <summary>
 		/// Checks if a transition can take place, and if this is the case, transition to the
-		/// "to" state and return true. Otherwise it returns false
+		/// "to" state and return true. Otherwise it returns false.
 		/// </summary>
 		/// <param name="transition"></param>
 		/// <returns></returns>
@@ -301,10 +300,19 @@ namespace FSM
 			if (activeState != null)
 			{
 				activeState.OnExit();
+				// By setting the activeState to null, the state's onExit method won't be called
+				// a second time when the state machine enters again (and changes to the start state)
 				activeState = null;
 			}
 		}
 
+		/// <summary>
+		/// Gets the StateBundle belonging to the <c>name</c> state "slot" if it exists.
+		/// Otherwise it will create a new StateBundle, that will be added to the Dictionary,
+		/// and return the newly created instance.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
 		private StateBundle GetOrCreateStateBundle(string name) {
 			StateBundle bundle;
 
@@ -317,7 +325,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Adds a new node / state to the state machine
+		/// Adds a new node / state to the state machine.
 		/// </summary>
 		/// <param name="name">The name / identifier of the new state</param>
 		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c></param>
@@ -338,6 +346,10 @@ namespace FSM
 			}
 		}
 
+		/// <summary>
+		/// Initialises a transition, i.e. sets its fields, like mono and fsm, and then calls its Init method.
+		/// </summary>
+		/// <param name="transition"></param>
 		private void InitTransition(TransitionBase transition)
 		{
 			transition.fsm = this;
@@ -347,7 +359,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Adds a new transition between two states
+		/// Adds a new transition between two states.
 		/// </summary>
 		/// <param name="transition">The transition instance</param>
 		public void AddTransition(TransitionBase transition)
@@ -370,6 +382,12 @@ namespace FSM
 			transitionsFromAny.Add(transition);
 		}
 
+		/// <summary>
+		/// Adds a new trigger transition between two states that is only checked 
+		/// when the specified trigger is activated.
+		/// </summary>
+		/// <param name="trigger">The name / identifier of the trigger</param>
+		/// <param name="transition">The transition instance, e.g. Transition, TransitionAfter, ...</param>
 		public void AddTriggerTransition(string trigger, TransitionBase transition)
 		{
 			InitTransition(transition);
@@ -378,6 +396,13 @@ namespace FSM
 			bundle.AddTriggerTransition(trigger, transition);
 		}
 
+		/// <summary>
+		/// Adds a new trigger transition that can happen from any possible state, but is only
+		/// checked when the specified trigger is activated.
+		/// </summary>
+		/// <param name="trigger">The name / identifier of the trigger</param>
+		/// <param name="transition">The transition instance; The "from" field can be
+		/// left empty, as it has no meaning in this context.</param>
 		public void AddTriggerTransitionFromAny(string trigger, TransitionBase transition)
 		{
 			InitTransition(transition);
@@ -392,6 +417,11 @@ namespace FSM
 			transitionsOfTrigger.Add(transition);
 		}
 
+		/// <summary>
+		/// Activates the specified trigger, checking all targeted trigger transitions to see whether
+		/// a transition should occur.
+		/// </summary>
+		/// <param name="trigger">The name / identifier of the trigger</param>
 		public void Trigger(string trigger)
 		{
 			if (activeState == null)
