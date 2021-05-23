@@ -449,31 +449,3 @@ Simply inherit from the base class `StateBase` and override the methods you need
 ```
 
 More documentation coming soon...
-
-### Roadmap
-
-- [ ] Getting started / Installation guide
-
-**v1.6**
-
-- [x] HybridStateMachine for less code duplication
-
-- [x] State wrappers for running companion code with states
-
-- [x] Docstring documentation of HybridStateMachine
-
-- [ ] Docstring documentation of StateWrapper
-
-- [ ] Documentation for avoiding duplicate code by using the HybridStateMachine
-
-- [x] Improve code examples -> first FSM example with move towards player can be more concise
-
-**v1.7**
-
-- [ ] Dynamic state removal
-
-- [ ] More demos
-
-- [ ] Documentation for re-using state machines (by using functions to create FSMs)
-
-- [ ] Documentation of dynamically created state machines (and their use, e.g. wall jump -> has the player unlocked this ability? -> Don't add transitions if not)
