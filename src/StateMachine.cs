@@ -152,11 +152,28 @@ namespace FSM
 			{
 				activeTransitions = noTransitions;
 			}
+			else
+			{
+				for (int i = 0; i < activeTransitions.Count; i ++)
+				{
+					activeTransitions[i].OnEnter();
+				}
+			}
 
 			activeTriggerTransitions = bundle.triggerToTransitions;
 			if (activeTriggerTransitions == null)
 			{
 				activeTriggerTransitions = noTriggerTransitions;
+			}
+			else
+			{
+				foreach (List<TransitionBase> transitions in activeTriggerTransitions.Values)
+				{
+					for (int i = 0; i < transitions.Count; i ++)
+					{
+						transitions[i].OnEnter();
+					}
+				}
 			}
 		}
 
@@ -226,6 +243,19 @@ namespace FSM
 		public override void OnEnter()
 		{
 			ChangeState(startState);
+
+			for (int i = 0; i < transitionsFromAny.Count; i ++)
+			{
+				transitionsFromAny[i].OnEnter();
+			}
+
+			foreach (List<TransitionBase> transitions in triggerTransitionsFromAny.Values)
+			{
+				for (int i = 0; i < transitions.Count; i ++)
+				{
+					transitions[i].OnEnter();
+				}
+			}
 		}
 
 		/// <summary>
