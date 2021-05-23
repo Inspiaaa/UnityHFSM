@@ -110,13 +110,15 @@ public class EnemyController : MonoBehaviour
 #### Adding states
 
 ```csharp
-    float DistanceToPlayer() {
+    float DistanceToPlayer()
+    {
         // This implementation is an example and may differ for your scene setup
         Vector3 player = PlayerController.Instance.transform.position;
         return Vector2.Distance(transform.position, player);
     }
 
-    void MoveTowardsPlayer(float speed) {
+    void MoveTowardsPlayer(float speed)
+    {
         // This implementation is an example and may differ for your scene setup
         Vector3 player = PlayerController.Instance.transform.position;
         transform.position = Vector2.MoveTowards(transform.position, player, speed * Time.deltaTime);
@@ -232,7 +234,8 @@ So that you can see a visual difference, the enemy should be spinning when it en
 #### Adding States and Transitions
 
 ```csharp
-    void RotateAtSpeed(float speed) {
+    void RotateAtSpeed(float speed)
+    {
         transform.eulerAngles += new Vector3(0, 0, speed * Time.deltaTime);
     }
 
@@ -244,7 +247,8 @@ So that you can see a visual difference, the enemy should be spinning when it en
         fsm.AddState("ExtractIntel", extractIntel);
 
         extractIntel.AddState("SendData", new State(
-            onLogic: (state) => {
+            onLogic: (state) =>
+            {
                 // When the state has been active for more than 5 seconds,
                 // notify the fsm that the state can cleanly exit
                 if (state.timer > 5)
@@ -315,7 +319,8 @@ The state machine supports two ways of changing states:
    
            if (DistanceToPlayer() < ownScanningRange)
                fsm.RequestStateChange("ExtractIntel");
-   }));
+       }
+   ));
    ```
 
 There is also a slight variation of the `Transition` state change behaviour, that allows you to change to a specific state from any other state (a "global" transition as opposed to a "local" / "direct" transition). They have the same `forceInstantly` / `needsExitTime` handling as normal transitions.
@@ -371,14 +376,17 @@ As a result of a [limitation of the C# language](https://stackoverflow.com/quest
 In this example, we can replace the `SendData` state with a more advanced one, which makes the spy turn in one direction for two seconds, and the in the other direction for the same duration.
 
 ```csharp
-    IEnumerator SendData(CoState state) {
-        while (state.timer.Elapsed < 2) {
+    IEnumerator SendData(CoState state)
+    {
+        while (state.timer.Elapsed < 2)
+        {
             RotateAtSpeed(100f);
             // Wait until the next frame
             yield return null;
         }
 
-        while (state.timer.Elapsed < 4) {
+        while (state.timer.Elapsed < 4)
+        {
             RotateAtSpeed(-100f);
             yield return null;
         }
@@ -414,7 +422,8 @@ Simply inherit from the base class `StateBase` and override the methods you need
     class CustomSendData : StateBase {
         // Important: The constructor must call StateBase's constructor (here: base(...))
         // because it declares whether the state needsExitTime
-        public CustomSendData() : base(needsExitTime: false) {
+        public CustomSendData() : base(needsExitTime: false)
+        {
             // Optional initialisation code here
         }
 
