@@ -140,9 +140,13 @@ namespace FSM
 				activeState.OnExit();
 			}
 
-			// TODO: Throw error when nameToStateBundle[name] does not exist
-			StateBundle bundle = nameToStateBundle[name];
-			// TODO: Throw error when bundle.state is null => Create a new method for logging errors
+			StateBundle bundle;
+
+			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
+			{
+				throw new FSM.Exceptions.StateNotFoundException(name, "Switching states");
+			}
+
 			activeState = bundle.state;
 			activeState.OnEnter();
 
@@ -266,8 +270,9 @@ namespace FSM
 		{
 			if (activeState == null)
 			{
-				throw new System.Exception("The FSM has not been initialised yet! "
-					+ "Call fsm.SetStartState(...) and fsm.OnEnter() or fsm.Init() to initialise");
+				throw new FSM.Exceptions.StateMachineNotInitializedException(
+					"Running OnLogic"
+				);
 			}
 
 			// Try the "global" transitions that can transition from any state
@@ -426,8 +431,9 @@ namespace FSM
 		{
 			if (activeState == null)
 			{
-				throw new System.Exception("The FSM has not been initialised yet! "
-					+ "Call fsm.SetStartState(...) and fsm.OnEnter() or fsm.Init() to initialise");
+				throw new FSM.Exceptions.StateMachineNotInitializedException(
+					"Checking all trigger transitions of the active state"
+				);
 			}
 
 			List<TransitionBase> triggerTransitions;
@@ -464,9 +470,7 @@ namespace FSM
 
 			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw new System.Exception(
-					$"The state '{name}' has not been defined yet / doesn't exist"
-				);
+				throw new FSM.Exceptions.StateNotFoundException(name, "Getting a state");
 			}
 
 			return bundle.state;
@@ -480,9 +484,13 @@ namespace FSM
 
 				if (!(state is StateMachine))
 				{
-					throw new System.Exception(
-						$"The state '{name}' is not a StateMachine. "
-						+ $"To get this state, use fsm.GetState(\"{name}\")."
+					throw new System.InvalidOperationException(
+						FSM.Exceptions.ExceptionFormatter.Format(
+							context: "Getting a nested state machine with the indexer",
+							problem: "The selected state is not a state machine.",
+							solution: "This method is only there for quickly accessing a nested state machine. "
+								+ $"To get the selected state, use GetState(\"{name}\")."
+						)
 					);
 				}
 
