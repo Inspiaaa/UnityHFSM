@@ -1,3 +1,5 @@
+![HFSM for Unity](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/Banner.jpg)
+
 # Finite State Machine for Unity
 
 ![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)

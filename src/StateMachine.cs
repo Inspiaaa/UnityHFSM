@@ -23,7 +23,7 @@ namespace FSM
 		/// </summary>
 		private class StateBundle
 		{
-			// By default, these fields are all null and only get a value assigned when you need it
+			// By default, these fields are all null and only get a value when you need them
 			// => Lazy evaluation => Memory efficient, when you only need a subset of features
 			public StateBase state;
 			public List<TransitionBase> transitions;
