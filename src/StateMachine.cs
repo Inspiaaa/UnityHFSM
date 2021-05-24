@@ -16,8 +16,6 @@ namespace FSM
 	/// </summary>
 	public class StateMachine : StateBase
 	{
-		// TODO: Make methods for throwing common errors
-
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
 		/// It's useful, as you only need to do one Dictionary lookup for these three items.
@@ -79,8 +77,21 @@ namespace FSM
 		private Dictionary<string, List<TransitionBase>> triggerTransitionsFromAny
 			= new Dictionary<string, List<TransitionBase>>();
 
-		public StateBase ActiveState => activeState;
-		public string ActiveStateName => activeState.name;
+		public StateBase ActiveState
+		{
+			get
+			{
+				if (activeState == null)
+				{
+					throw new FSM.Exceptions.StateMachineNotInitializedException(
+						"Trying to get the active state"
+					);
+				}
+
+				return activeState;
+			}
+		}
+		public string ActiveStateName => ActiveState.name;
 
 		private bool IsRootFsm => fsm == null;
 
