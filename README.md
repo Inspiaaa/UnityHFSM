@@ -1,8 +1,12 @@
 ![HFSM for Unity](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/Banner.jpg)
 
-# Finite State Machine for Unity
-
-![](https://img.shields.io/badge/Unity3D-C%23-blue.svg?style=for-the-badge&logo=unity)
+<p align="center">
+  <img src="https://img.shields.io/badge/Unity-C%23-blue.svg?&logo=unity" />
+  <a href="https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE" alt="GitHub license">
+    <img src="https://img.shields.io/github/license/Inspiaaa/UnityHFSM.svg" /></a>
+  <a href="https://github.com/Inspiaaa/UnityHFSM/blob/releases" alt="GitHub release">
+    <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
+</p>
 
 A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
 
