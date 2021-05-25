@@ -18,8 +18,6 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 - [Timing of state changes](#timing-of-state-changes)
 
-- [Installation](#installation)
-
 - [Multiple state change patterns](#state-change-patterns)
 
 - [Control flow of OnLogic](#control-flow-of-onlogic)
@@ -51,6 +49,12 @@ It has a special focus on the temporal aspects of state transitions, making it i
 - It is **not a component** (MonoBehaviour) and therefore has a **low overhead**
 
 - By being hierarchical, it can reduce the amount of duplicate code between states
+
+---
+
+## Installation
+
+To get started, download the latest version of UnityHFSM from the [Releases](https://github.com/Inspiaaa/UnityHFSM/releases) page. Simply extract the zip file and put the folder anywhere in your `Assets` folder. Et voilà, you're ready to go!
 
 ## Example
 
@@ -297,10 +301,6 @@ But when is the right time for the state machine to finally change states? This 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
 ![](https://raw.githubusercontent.com/LavaAfterburner/UnityHFSM/master/diagrams/StateChangeFlowchart.jpg)
-
-## Installation
-
-To get started, download the latest version of UnityHFSM from the [Releases](https://github.com/Inspiaaa/UnityHFSM/releases) page. Simply extract the zip file and put the folder anywhere in your `Assets` folder. Et voilà, you're ready to go!
 
 ## State Change Patterns
 
