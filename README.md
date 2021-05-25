@@ -56,6 +56,8 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 To get started, download the latest version of UnityHFSM from the [Releases](https://github.com/Inspiaaa/UnityHFSM/releases) page. Simply extract the zip file and put the folder anywhere in your `Assets` folder. Et voilà, you're ready to go!
 
+---
+
 ## Example
 
 ## Simple State Machine
