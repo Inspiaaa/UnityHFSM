@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/Unity-C%23-blue.svg?&logo=unity" />
   <a href="https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE" alt="GitHub license">
     <img src="https://img.shields.io/github/license/Inspiaaa/UnityHFSM.svg" /></a>
-  <a href="https://github.com/Inspiaaa/UnityHFSM/blob/releases" alt="GitHub release">
+  <a href="https://github.com/Inspiaaa/UnityHFSM/releases" alt="GitHub release">
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
 </p>
 
