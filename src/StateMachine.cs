@@ -14,7 +14,7 @@ namespace FSM
 	/// A finite state machine that can also be used as a state of a parent state machine to create
 	/// a hierarchy (-> hierarchical state machine)
 	/// </summary>
-	public class StateMachine : StateBase
+	public class StateMachine : StateBase, ITriggerable
 	{
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
@@ -438,7 +438,8 @@ namespace FSM
 		/// a transition should occur.
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
-		public void Trigger(string trigger)
+		/// <returns>True when a transition occurred, otherwise false</returns>
+		private bool TryTrigger(string trigger)
 		{
 			if (activeState == null)
 			{
@@ -459,7 +460,7 @@ namespace FSM
 						continue;
 					
 					if (TryTransition(transition))
-						return;
+						return true;
 				}
 			}
 
@@ -470,9 +471,33 @@ namespace FSM
 				TransitionBase transition = triggerTransitions[i];
 				
 				if (TryTransition(transition))
-					return;
+					return true;
 			}
 			
+			return false;
+		}
+
+		/// <summary>
+		/// Activates the specified trigger in all active states of the hierarchy, checking all targeted 
+		/// trigger transitions to see whether a transition should occur.
+		/// </summary>
+		/// <param name="trigger">The name / identifier of the trigger</param>
+		public void Trigger(string trigger)
+		{
+			// If a transition occurs, then the trigger should not be activated
+			// in the new active state, that the state machine just switched to.
+			if (TryTrigger(trigger)) return;
+
+			(activeState as ITriggerable)?.Trigger(trigger);
+		}
+
+		/// <summary>
+		/// Only activates the specified trigger locally in this state machine.
+		/// </summary>
+		/// <param name="trigger">The name / identifier of the trigger</param>
+		public void TriggerLocally(string trigger)
+		{
+			TryTrigger(trigger);
 		}
 
 		public StateBase GetState(string name)

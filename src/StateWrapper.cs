@@ -9,7 +9,7 @@ namespace FSM
 	/// </summary>
 	public class StateWrapper
 	{
-		public class WrappedState : StateBase
+		public class WrappedState : StateBase, ITriggerable
 		{
 			private Action<StateBase>
 				beforeOnEnter,
@@ -80,6 +80,11 @@ namespace FSM
 			public override void RequestExit()
 			{
 				state.RequestExit();
+			}
+
+			public void Trigger(string trigger)
+			{
+				(state as ITriggerable)?.Trigger(trigger);
 			}
 		}
 
