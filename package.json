@@ -6,5 +6,11 @@
   "author": {
     "email": "lavaafterburner@gmail.com",
     "name": "Inspiaaa"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Sample",
+      "path": "Samples~"
+    }
+  ]
 }
