@@ -158,7 +158,7 @@ public class EnemyController : MonoBehaviour
         // This configures the entry point of the state machine
         fsm.SetStartState("FollowPlayer");
         // Initialises the state machine and must be called before OnLogic() is called
-        fsm.Init()
+        fsm.Init();
     }
 ```
 
@@ -449,7 +449,6 @@ In this example, we can replace the `SendData` state with a more advanced one, w
         // Because needsExitTime is true, we have to tell the FSM when it can
         // safely exit the state
         state.fsm.StateCanExit();
-        yield break;
     }
 
     void Start()
