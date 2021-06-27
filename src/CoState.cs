@@ -7,12 +7,12 @@ namespace FSM
 	/// <summary>
 	/// A state that can run a Unity coroutine as its OnLogic method
 	/// </summary>
-	public class CoState : StateBase
+	public class CoState<TEvent> : StateBase<TEvent>
 	{
-		private Action<CoState> onEnter;
-		private Func<CoState, IEnumerator> onLogic;
-		private Action<CoState> onExit;
-		private Func<CoState, bool> canExit;
+		private Action<CoState<TEvent>> onEnter;
+		private Func<CoState<TEvent>, IEnumerator> onLogic;
+		private Action<CoState<TEvent>> onExit;
+		private Func<CoState<TEvent>, bool> canExit;
 
 		public Timer timer;
 		private Coroutine coroutine;
@@ -34,10 +34,10 @@ namespace FSM
 		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// state change (true)</param>
 		public CoState(
-				Action<CoState> onEnter = null,
-				Func<CoState, IEnumerator> onLogic = null,
-				Action<CoState> onExit = null,
-				Func<CoState, bool> canExit = null,
+				Action<CoState<TEvent>> onEnter = null,
+				Func<CoState<TEvent>, IEnumerator> onLogic = null,
+				Action<CoState<TEvent>> onExit = null,
+				Func<CoState<TEvent>, bool> canExit = null,
 				bool needsExitTime = false) : base(needsExitTime)
 		{
 			this.onEnter = onEnter;
@@ -106,5 +106,9 @@ namespace FSM
 				fsm.StateCanExit();
 			}
 		}
+	}
+
+	public class CoState : CoState<string>
+	{
 	}
 }

@@ -11,11 +11,11 @@ namespace FSM
 	/// duplicate code.
 	/// The HybridStateMachine can also be seen as a StateWrapper around a normal StateMachine.
 	/// </summary>
-	public class HybridStateMachine : StateMachine
+	public class HybridStateMachine<TEvent> : StateMachine<TEvent>
 	{
-		private Action<HybridStateMachine> onEnter;
-		private Action<HybridStateMachine> onLogic;
-		private Action<HybridStateMachine> onExit;
+		private Action<HybridStateMachine<TEvent>> onEnter;
+		private Action<HybridStateMachine<TEvent>> onLogic;
+		private Action<HybridStateMachine<TEvent>> onExit;
 
 		public Timer timer;
 
@@ -35,9 +35,9 @@ namespace FSM
 		/// 	state change (true).</param>
 		public HybridStateMachine(
 				MonoBehaviour mono,
-				Action<HybridStateMachine> onEnter = null,
-				Action<HybridStateMachine> onLogic = null,
-				Action<HybridStateMachine> onExit = null,
+				Action<HybridStateMachine<TEvent>> onEnter = null,
+				Action<HybridStateMachine<TEvent>> onLogic = null,
+				Action<HybridStateMachine<TEvent>> onExit = null,
 				bool needsExitTime = false) : base(mono, needsExitTime)
 		{
 			this.onEnter = onEnter;
@@ -67,6 +67,18 @@ namespace FSM
 			base.OnExit();
 
 			onExit?.Invoke(this);
+		}
+	}
+
+	public class HybridStateMachine : HybridStateMachine<string>
+	{
+		public HybridStateMachine(
+			MonoBehaviour mono,
+			Action<HybridStateMachine<string>> onEnter = null,
+			Action<HybridStateMachine<string>> onLogic = null,
+			Action<HybridStateMachine<string>> onExit = null,
+			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
+		{
 		}
 	}
 }

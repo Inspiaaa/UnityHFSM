@@ -5,14 +5,14 @@ namespace FSM
 	/// <summary>
 	/// The base class of all transitions
 	/// </summary>
-	public class TransitionBase
+	public class TransitionBase<TEvent>
 	{
-		public string from;
-		public string to;
+		public TEvent from;
+		public TEvent to;
 
 		public bool forceInstantly;
 
-		public StateMachine fsm;
+		public StateMachine<TEvent> fsm;
 		public MonoBehaviour mono;
 
 		/// <summary>
@@ -22,7 +22,7 @@ namespace FSM
 		/// <param name="to">The name / identifier of the next state</param>
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
 		/// 	=> Forces an instant transition</param>
-		public TransitionBase(string from, string to, bool forceInstantly = false)
+		public TransitionBase(TEvent from, TEvent to, bool forceInstantly = false)
 		{
 			this.from = from;
 			this.to = to;
@@ -52,6 +52,13 @@ namespace FSM
 		public virtual bool ShouldTransition()
 		{
 			return true;
+		}
+	}
+
+	public class TransitionBase : TransitionBase<string>
+	{
+		public TransitionBase(string @from, string to, bool forceInstantly = false) : base(@from, to, forceInstantly)
+		{
 		}
 	}
 }

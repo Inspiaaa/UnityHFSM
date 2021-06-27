@@ -7,9 +7,9 @@ namespace FSM
 	/// before and after the wrapped state's code.
 	/// It does not interfere with the wrapped state's timing / needsExitTime / ... behaviour.
 	/// </summary>
-	public class StateWrapper
+	public class StateWrapper<TEvent>
 	{
-		public class WrappedState : StateBase, ITriggerable
+		public class WrappedState : StateBase, ITriggerable<TEvent>
 		{
 			private Action<StateBase>
 				beforeOnEnter,
@@ -82,9 +82,9 @@ namespace FSM
 				state.RequestExit();
 			}
 
-			public void Trigger(string trigger)
+			public void Trigger(TEvent trigger)
 			{
-				(state as ITriggerable)?.Trigger(trigger);
+				(state as ITriggerable<TEvent>)?.Trigger(trigger);
 			}
 		}
 
@@ -135,5 +135,9 @@ namespace FSM
 				afterOnExit
 			);
 		}
+	}
+
+	public class StateWrapper : StateWrapper<string>
+	{
 	}
 }

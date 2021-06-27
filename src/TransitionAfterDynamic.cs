@@ -6,11 +6,11 @@ namespace FSM
 	/// A class used to determin whether the state machine should transition to another state
 	/// depending on a dynamically computed delay and an optional condition
 	/// </summary>
-	public class TransitionAfterDynamic : TransitionBase
+	public class TransitionAfterDynamic<TEvent> : TransitionBase<TEvent>
 	{
 
-		public Func<TransitionAfterDynamic, float> delayCalculator;
-		public Func<TransitionAfterDynamic, bool> condition;
+		public Func<TransitionAfterDynamic<TEvent>, float> delayCalculator;
+		public Func<TransitionAfterDynamic<TEvent>, bool> condition;
 		public Timer timer;
 
 		/// <summary>
@@ -25,10 +25,10 @@ namespace FSM
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
 		/// 	=> Forces an instant transition</param>
 		public TransitionAfterDynamic(
-				string from,
-				string to,
-				Func<TransitionAfterDynamic, float> delay,
-				Func<TransitionAfterDynamic, bool> condition = null,
+				TEvent from,
+				TEvent to,
+				Func<TransitionAfterDynamic<TEvent>, float> delay,
+				Func<TransitionAfterDynamic<TEvent>, bool> condition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
 			this.delayCalculator = delay;
@@ -50,6 +50,18 @@ namespace FSM
 				return true;
 
 			return condition(this);
+		}
+	}
+
+	public class TransitionAfterDynamic : TransitionAfterDynamic<string>
+	{
+		public TransitionAfterDynamic(
+			string @from,
+			string to,
+			Func<TransitionAfterDynamic<string>, float> delay,
+			Func<TransitionAfterDynamic<string>, bool> condition = null,
+			bool forceInstantly = false) : base(@from, to, delay, condition, forceInstantly)
+		{
 		}
 	}
 }

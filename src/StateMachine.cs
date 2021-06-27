@@ -14,7 +14,7 @@ namespace FSM
 	/// A finite state machine that can also be used as a state of a parent state machine to create
 	/// a hierarchy (-> hierarchical state machine)
 	/// </summary>
-	public class StateMachine : StateBase, ITriggerable
+	public class StateMachine<TEvent> : StateBase<TEvent>, ITriggerable<TEvent>
 	{
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
@@ -25,31 +25,31 @@ namespace FSM
 		{
 			// By default, these fields are all null and only get a value when you need them
 			// => Lazy evaluation => Memory efficient, when you only need a subset of features
-			public StateBase state;
-			public List<TransitionBase> transitions;
-			public Dictionary<string, List<TransitionBase>> triggerToTransitions;
+			public StateBase<TEvent> state;
+			public List<TransitionBase<TEvent>> transitions;
+			public Dictionary<TEvent, List<TransitionBase<TEvent>>> triggerToTransitions;
 
-			public void AddTransition(TransitionBase t)
+			public void AddTransition(TransitionBase<TEvent> t)
 			{
 				if (transitions == null)
 				{
-					transitions = new List<TransitionBase>();
+					transitions = new List<TransitionBase<TEvent>>();
 				}
 
 				transitions.Add(t);
 			}
 
-			public void AddTriggerTransition(string trigger, TransitionBase transition) {
+			public void AddTriggerTransition(TEvent trigger, TransitionBase<TEvent> transition) {
 				if (triggerToTransitions == null)
 				{
-					triggerToTransitions = new Dictionary<string, List<TransitionBase>>();
+					triggerToTransitions = new Dictionary<TEvent, List<TransitionBase<TEvent>>>();
 				}
 
-				List<TransitionBase> transitionsOfTrigger;
+				List<TransitionBase<TEvent>> transitionsOfTrigger;
 				
 				if (! triggerToTransitions.TryGetValue(trigger, out transitionsOfTrigger))
 				{
-					transitionsOfTrigger = new List<TransitionBase>();
+					transitionsOfTrigger = new List<TransitionBase<TEvent>>();
 					triggerToTransitions.Add(trigger, transitionsOfTrigger);
 				}
 
@@ -58,26 +58,26 @@ namespace FSM
 		}
 
 		// A cached empty list of transitions (For improved readability, less GC)
-		private static readonly List<TransitionBase> noTransitions = new List<TransitionBase>(0);
-		private static readonly Dictionary<string, List<TransitionBase>> noTriggerTransitions 
-			= new Dictionary<string, List<TransitionBase>>(0);
+		private static readonly List<TransitionBase<TEvent>> noTransitions = new List<TransitionBase<TEvent>>(0);
+		private static readonly Dictionary<TEvent, List<TransitionBase<TEvent>>> noTriggerTransitions
+			= new Dictionary<TEvent, List<TransitionBase<TEvent>>>(0);
 
-		private string startState = null;
-		private string pendingState = null;
+		private TEvent startState = default;
+		private TEvent pendingState = default;
 
-		private Dictionary<string, StateBundle> nameToStateBundle 
-			= new Dictionary<string, StateBundle>();
+		private Dictionary<TEvent, StateBundle> nameToStateBundle
+			= new Dictionary<TEvent, StateBundle>();
 
-		private StateBase activeState = null;
-		private List<TransitionBase> activeTransitions = noTransitions;
-		private Dictionary<string, List<TransitionBase>> activeTriggerTransitions = noTriggerTransitions;
+		private StateBase<TEvent> activeState = null;
+		private List<TransitionBase<TEvent>> activeTransitions = noTransitions;
+		private Dictionary<TEvent, List<TransitionBase<TEvent>>> activeTriggerTransitions = noTriggerTransitions;
 
-		private List<TransitionBase> transitionsFromAny
-			= new List<TransitionBase>();
-		private Dictionary<string, List<TransitionBase>> triggerTransitionsFromAny
-			= new Dictionary<string, List<TransitionBase>>();
+		private List<TransitionBase<TEvent>> transitionsFromAny
+			= new List<TransitionBase<TEvent>>();
+		private Dictionary<TEvent, List<TransitionBase<TEvent>>> triggerTransitionsFromAny
+			= new Dictionary<TEvent, List<TransitionBase<TEvent>>>();
 
-		public StateBase ActiveState
+		public StateBase<TEvent> ActiveState
 		{
 			get
 			{
@@ -91,7 +91,7 @@ namespace FSM
 				return activeState;
 			}
 		}
-		public string ActiveStateName => ActiveState.name;
+		public TEvent ActiveStateName => ActiveState.name;
 
 		private bool IsRootFsm => fsm == null;
 
@@ -117,7 +117,7 @@ namespace FSM
 			if (pendingState != null)
 			{
 				ChangeState(pendingState);
-				pendingState = null;
+				pendingState = default;
 			}
 
 			if (fsm != null)
@@ -144,7 +144,7 @@ namespace FSM
 		/// Instantly changes to the target state
 		/// </summary>
 		/// <param name="name">The name / identifier of the active state</param>
-		private void ChangeState(string name)
+		private void ChangeState(TEvent name)
 		{
 			if (activeState != null)
 			{
@@ -155,7 +155,7 @@ namespace FSM
 
 			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw new FSM.Exceptions.StateNotFoundException(name, "Switching states");
+				throw new FSM.Exceptions.StateNotFoundException<TEvent>(name, "Switching states");
 			}
 
 			activeState = bundle.state;
@@ -181,7 +181,7 @@ namespace FSM
 			}
 			else
 			{
-				foreach (List<TransitionBase> transitions in activeTriggerTransitions.Values)
+				foreach (List<TransitionBase<TEvent>> transitions in activeTriggerTransitions.Values)
 				{
 					for (int i = 0; i < transitions.Count; i ++)
 					{
@@ -197,7 +197,7 @@ namespace FSM
 		/// <param name="name">The name / identifier of the target state</param>
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
 		/// therefore forcing an immediate state change</param>
-		public void RequestStateChange(string name, bool forceInstantly = false)
+		public void RequestStateChange(TEvent name, bool forceInstantly = false)
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
@@ -221,7 +221,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="transition"></param>
 		/// <returns></returns>
-		private bool TryTransition(TransitionBase transition)
+		private bool TryTransition(TransitionBase<TEvent> transition)
 		{
 			if (!transition.ShouldTransition())
 				return false;
@@ -235,7 +235,7 @@ namespace FSM
 		/// Defines the entry point of the state machine
 		/// </summary>
 		/// <param name="name">The name / identifier of the start state</param>
-		public void SetStartState(string name)
+		public void SetStartState(TEvent name)
 		{
 			startState = name;
 		}
@@ -263,7 +263,7 @@ namespace FSM
 				transitionsFromAny[i].OnEnter();
 			}
 
-			foreach (List<TransitionBase> transitions in triggerTransitionsFromAny.Values)
+			foreach (List<TransitionBase<TEvent>> transitions in triggerTransitionsFromAny.Values)
 			{
 				for (int i = 0; i < transitions.Count; i ++)
 				{
@@ -289,10 +289,10 @@ namespace FSM
 			// Try the "global" transitions that can transition from any state
 			for (int i = 0; i < transitionsFromAny.Count; i++)
 			{
-				TransitionBase transition = transitionsFromAny[i];
+				TransitionBase<TEvent> transition = transitionsFromAny[i];
 
 				// Don't transition to the "to" state, if that state is already the active state
-				if (transition.to == activeState.name)
+				if (transition.to.Equals(activeState.name))
 					continue;
 
 				if (TryTransition(transition))
@@ -302,7 +302,7 @@ namespace FSM
 			// Try the "normal" transitions that transition from one specific state to another
 			for (int i = 0; i < activeTransitions.Count; i++)
 			{
-				TransitionBase transition = activeTransitions[i];
+				TransitionBase<TEvent> transition = activeTransitions[i];
 
 				if (TryTransition(transition))
 					break;
@@ -329,7 +329,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		private StateBundle GetOrCreateStateBundle(string name) {
+		private StateBundle GetOrCreateStateBundle(TEvent name) {
 			StateBundle bundle;
 
 			if (! nameToStateBundle.TryGetValue(name, out bundle)) {
@@ -345,7 +345,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="name">The name / identifier of the new state</param>
 		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c></param>
-		public void AddState(string name, StateBase state)
+		public void AddState(TEvent name, StateBase<TEvent> state)
 		{
 			state.fsm = this;
 			state.name = name;
@@ -366,7 +366,7 @@ namespace FSM
 		/// Initialises a transition, i.e. sets its fields, like mono and fsm, and then calls its Init method.
 		/// </summary>
 		/// <param name="transition"></param>
-		private void InitTransition(TransitionBase transition)
+		private void InitTransition(TransitionBase<TEvent> transition)
 		{
 			transition.fsm = this;
 			transition.mono = mono;
@@ -378,7 +378,7 @@ namespace FSM
 		/// Adds a new transition between two states.
 		/// </summary>
 		/// <param name="transition">The transition instance</param>
-		public void AddTransition(TransitionBase transition)
+		public void AddTransition(TransitionBase<TEvent> transition)
 		{
 			InitTransition(transition);
 
@@ -391,7 +391,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="transition">The transition instance; The "from" field can be
 		/// left empty, as it has no meaning in this context.</param>
-		public void AddTransitionFromAny(TransitionBase transition)
+		public void AddTransitionFromAny(TransitionBase<TEvent> transition)
 		{
 			InitTransition(transition);
 
@@ -404,7 +404,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
 		/// <param name="transition">The transition instance, e.g. Transition, TransitionAfter, ...</param>
-		public void AddTriggerTransition(string trigger, TransitionBase transition)
+		public void AddTriggerTransition(TEvent trigger, TransitionBase<TEvent> transition)
 		{
 			InitTransition(transition);
 
@@ -419,14 +419,14 @@ namespace FSM
 		/// <param name="trigger">The name / identifier of the trigger</param>
 		/// <param name="transition">The transition instance; The "from" field can be
 		/// left empty, as it has no meaning in this context.</param>
-		public void AddTriggerTransitionFromAny(string trigger, TransitionBase transition)
+		public void AddTriggerTransitionFromAny(TEvent trigger, TransitionBase<TEvent> transition)
 		{
 			InitTransition(transition);
 
-			List<TransitionBase> transitionsOfTrigger;
+			List<TransitionBase<TEvent>> transitionsOfTrigger;
 
 			if (!triggerTransitionsFromAny.TryGetValue(trigger, out transitionsOfTrigger)) {
-				transitionsOfTrigger = new List<TransitionBase>();
+				transitionsOfTrigger = new List<TransitionBase<TEvent>>();
 				triggerTransitionsFromAny.Add(trigger, transitionsOfTrigger);
 			}
 
@@ -439,7 +439,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
 		/// <returns>True when a transition occurred, otherwise false</returns>
-		private bool TryTrigger(string trigger)
+		private bool TryTrigger(TEvent trigger)
 		{
 			if (activeState == null)
 			{
@@ -448,15 +448,15 @@ namespace FSM
 				);
 			}
 
-			List<TransitionBase> triggerTransitions;
+			List<TransitionBase<TEvent>> triggerTransitions;
 
 			if (triggerTransitionsFromAny.TryGetValue(trigger, out triggerTransitions))
 			{
 				for (int i = 0; i < triggerTransitions.Count; i ++)
 				{
-					TransitionBase transition = triggerTransitions[i];
+					TransitionBase<TEvent> transition = triggerTransitions[i];
 
-					if (transition.to == activeState.name)
+					if (transition.to.Equals(activeState.name))
 						continue;
 					
 					if (TryTransition(transition))
@@ -468,7 +468,7 @@ namespace FSM
 			
 			for (int i = 0; i < triggerTransitions.Count; i ++)
 			{
-				TransitionBase transition = triggerTransitions[i];
+				TransitionBase<TEvent> transition = triggerTransitions[i];
 				
 				if (TryTransition(transition))
 					return true;
@@ -482,41 +482,41 @@ namespace FSM
 		/// trigger transitions to see whether a transition should occur.
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
-		public void Trigger(string trigger)
+		public void Trigger(TEvent trigger)
 		{
 			// If a transition occurs, then the trigger should not be activated
 			// in the new active state, that the state machine just switched to.
 			if (TryTrigger(trigger)) return;
 
-			(activeState as ITriggerable)?.Trigger(trigger);
+			(activeState as ITriggerable<TEvent>)?.Trigger(trigger);
 		}
 
 		/// <summary>
 		/// Only activates the specified trigger locally in this state machine.
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
-		public void TriggerLocally(string trigger)
+		public void TriggerLocally(TEvent trigger)
 		{
 			TryTrigger(trigger);
 		}
 
-		public StateBase GetState(string name)
+		public StateBase<TEvent> GetState(TEvent name)
 		{
 			StateBundle bundle;
 
 			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw new FSM.Exceptions.StateNotFoundException(name, "Getting a state");
+				throw new FSM.Exceptions.StateNotFoundException<TEvent>(name, "Getting a state");
 			}
 
 			return bundle.state;
 		}
 
-		public StateMachine this[string name]
+		public StateMachine<TEvent> this[TEvent name]
 		{
 			get
 			{
-				StateBase state = GetState(name);
+				StateBase<TEvent> state = GetState(name);
 
 				if (!(state is StateMachine))
 				{
@@ -530,8 +530,15 @@ namespace FSM
 					);
 				}
 
-				return (StateMachine)state;
+				return (StateMachine<TEvent>)state;
 			}
+		}
+	}
+
+	public class StateMachine : StateMachine<string>
+	{
+		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
+		{
 		}
 	}
 }
