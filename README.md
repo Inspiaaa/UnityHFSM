@@ -56,7 +56,23 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 ## Installation
 
+### Unity Package
+
 To get started, download the latest version of UnityHFSM from the [Releases](https://github.com/Inspiaaa/UnityHFSM/releases) page. Simply extract the zip file and put the folder anywhere in your `Assets` folder. Et voilà, you're ready to go!
+
+### UPM Package
+
+<details>
+<summary>Add from GitHub | <em>no updates through PackMan</em></summary>
+
+You can also add it directly from GitHub on Unity 2019.4+. Note that you won't be able to receive updates through Package Manager this way, you'll have to update manually.
+
+- open Package Manager
+- click <kbd>+</kbd>
+- select <kbd>Add from Git URL</kbd>
+- paste `https://github.com/Inspiaaa/UnityHFSM.git`
+- click <kbd>Add</kbd>
+</details>
 
 ---
 
