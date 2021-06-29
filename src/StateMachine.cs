@@ -518,7 +518,7 @@ namespace FSM
 			{
 				StateBase<TEvent> state = GetState(name);
 
-				if (!(state is StateMachine))
+				if (!(state is StateMachine<TEvent>))
 				{
 					throw new System.InvalidOperationException(
 						FSM.Exceptions.ExceptionFormatter.Format(
