@@ -71,5 +71,13 @@ namespace FSM
 
 	public class State : State<string>
 	{
+		public State(
+			Action<State<string>> onEnter = null,
+			Action<State<string>> onLogic = null,
+			Action<State<string>> onExit = null,
+			Func<State<string>, bool> canExit = null,
+			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+		{
+		}
 	}
 }

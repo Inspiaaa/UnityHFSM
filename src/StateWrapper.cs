@@ -139,5 +139,19 @@ namespace FSM
 
 	public class StateWrapper : StateWrapper<string>
 	{
+		public StateWrapper(
+			Action<StateBase<string>> beforeOnEnter = null,
+			Action<StateBase<string>> afterOnEnter = null,
+
+			Action<StateBase<string>> beforeOnLogic = null,
+			Action<StateBase<string>> afterOnLogic = null,
+
+			Action<StateBase<string>> beforeOnExit = null,
+			Action<StateBase<string>> afterOnExit = null) : base(
+			beforeOnEnter, afterOnEnter,
+			beforeOnLogic, afterOnLogic,
+			beforeOnExit, afterOnExit)
+		{
+		}
 	}
 }

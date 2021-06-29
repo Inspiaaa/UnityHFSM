@@ -110,5 +110,13 @@ namespace FSM
 
 	public class CoState : CoState<string>
 	{
+		public CoState(
+			Action<CoState<string>> onEnter = null,
+			Func<CoState<string>, IEnumerator> onLogic = null,
+			Action<CoState<string>> onExit = null,
+			Func<CoState<string>, bool> canExit = null,
+			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+		{
+		}
 	}
 }
