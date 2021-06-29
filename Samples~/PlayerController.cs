@@ -2,19 +2,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController Instance { get; private set; }
-
-    PlayerController()
+    private static PlayerController instance;
+    
+    public static PlayerController Instance
     {
-        if (Instance == null)
+        get
         {
-            Instance = this;
+            if (instance == null)
+            {
+                instance = FindObjectOfType<PlayerController>();
+            }
+
+            return instance;
         }
     }
 
     void Awake()
     {
-        if (this != Instance)
+        if (this != instance)
         {
             Destroy(gameObject);
         }
