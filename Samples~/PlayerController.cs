@@ -4,26 +4,26 @@ namespace FSM.Samples
 {
     public class PlayerController : MonoBehaviour
     {
-        private static PlayerController instance;
-
-        public static PlayerController Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindObjectOfType<PlayerController>();
-                }
-
-                return instance;
-            }
-        }
+        public static PlayerController Instance { get; private set; }
 
         void Awake()
         {
-            if (this != Instance)
+            if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(gameObject);
+                Instance = this;
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
             }
         }
     }
