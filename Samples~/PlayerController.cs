@@ -1,27 +1,30 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+namespace FSM.Samples
 {
-    private static PlayerController instance;
-    
-    public static PlayerController Instance
+    public class PlayerController : MonoBehaviour
     {
-        get
+        private static PlayerController instance;
+
+        public static PlayerController Instance
         {
-            if (instance == null)
+            get
             {
-                instance = FindObjectOfType<PlayerController>();
+                if (instance == null)
+                {
+                    instance = FindObjectOfType<PlayerController>();
+                }
+
+                return instance;
             }
-
-            return instance;
         }
-    }
 
-    void Awake()
-    {
-        if (this != instance)
+        void Awake()
         {
-            Destroy(gameObject);
+            if (this != Instance)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
