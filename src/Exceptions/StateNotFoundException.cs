@@ -3,10 +3,10 @@ using System;
 namespace FSM.Exceptions
 {
 	[Serializable]
-	public class StateNotFoundException<TEvent> : Exception
+	public class StateNotFoundException<TState> : Exception
 	{
 		private static string Format(
-			TEvent stateName,
+			TState stateName,
 			string context, 
 			string problem, 
 			string solution)
@@ -27,7 +27,7 @@ namespace FSM.Exceptions
 		}
 
 		public StateNotFoundException(
-			TEvent stateName,
+			TState stateName,
 			string context = null,
 			string problem = null,
 			string solution = null) : base(Format(stateName, context, problem, solution))

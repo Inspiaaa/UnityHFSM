@@ -4,7 +4,7 @@ namespace FSM
 {
 	public static class TransitionOnKey
 	{
-		public class Down<TEvent> : TransitionBase<TEvent>
+		public class Down<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -15,8 +15,8 @@ namespace FSM
 			/// <param name="key">The KeyCode of the key to watch</param>
 			/// <returns></returns>
 			public Down(
-					TEvent from,
-					TEvent to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -30,7 +30,7 @@ namespace FSM
 			}
 		}
 
-		public class Release<TEvent> : TransitionBase<TEvent>
+		public class Release<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -40,8 +40,8 @@ namespace FSM
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch</param>
 			public Release(
-					TEvent from,
-					TEvent to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -55,7 +55,7 @@ namespace FSM
 			}
 		}
 
-		public class Press<TEvent> : TransitionBase<TEvent>
+		public class Press<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -65,8 +65,8 @@ namespace FSM
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch</param>
 			public Press(
-					TEvent from,
-					TEvent to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -80,7 +80,7 @@ namespace FSM
 			}
 		}
 
-		public class Up<TEvent> : TransitionBase<TEvent>
+		public class Up<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -90,8 +90,8 @@ namespace FSM
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch</param>
 			public Up(
-					TEvent from,
-					TEvent to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -105,7 +105,7 @@ namespace FSM
 			}
 		}
 
-		public class Down : Down<string>
+		public class Down : Down<string, string>
 		{
 			public Down(
 				string @from,
@@ -116,7 +116,7 @@ namespace FSM
 			}
 		}
 
-		public class Release : Release<string>
+		public class Release : Release<string, string>
 		{
 			public Release(
 				string @from,
@@ -127,7 +127,7 @@ namespace FSM
 			}
 		}
 
-		public class Press : Press<string>
+		public class Press : Press<string, string>
 		{
 			public Press(
 				string @from,
@@ -138,7 +138,7 @@ namespace FSM
 			}
 		}
 
-		public class Up : Up<string>
+		public class Up : Up<string, string>
 		{
 			public Up(
 				string @from,

@@ -6,11 +6,11 @@ namespace FSM
 	/// A class used to determin whether the state machine should transition to another state
 	/// depending on a delay and an optional condition
 	/// </summary>
-	public class TransitionAfter<TEvent> : TransitionBase<TEvent>
+	public class TransitionAfter<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 	{
 
 		public float delay;
-		public Func<TransitionAfter<TEvent>, bool> condition;
+		public Func<TransitionAfter<TStateId, TEvent>, bool> condition;
 		public Timer timer;
 
 		/// <summary>
@@ -25,10 +25,10 @@ namespace FSM
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
 		/// 	=> Forces an instant transition</param>
 		public TransitionAfter(
-				TEvent from,
-				TEvent to,
+				TStateId from,
+				TStateId to,
 				float delay,
-				Func<TransitionAfter<TEvent>, bool> condition = null,
+				Func<TransitionAfter<TStateId, TEvent>, bool> condition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
 			this.delay = delay;
@@ -53,13 +53,13 @@ namespace FSM
 		}
 	}
 
-	public class TransitionAfter : TransitionAfter<string>
+	public class TransitionAfter : TransitionAfter<string, string>
 	{
 		public TransitionAfter(
 			string @from,
 			string to,
 			float delay,
-			Func<TransitionAfter<string>, bool> condition = null,
+			Func<TransitionAfter<string, string>, bool> condition = null,
 			bool forceInstantly = false) : base(@from, to, delay, condition, forceInstantly)
 		{
 		}

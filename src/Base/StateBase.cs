@@ -5,12 +5,12 @@ namespace FSM
 	/// <summary>
 	/// The base class of all states
 	/// </summary>
-	public class StateBase<TEvent>
+	public class StateBase<TStateId, TEvent>
 	{
 		public bool needsExitTime;
-		public TEvent name;
+		public TStateId name;
 
-		public StateMachine<TEvent> fsm;
+		public StateMachine<TStateId, TEvent> fsm;
 		public MonoBehaviour mono;
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace FSM
 		}
 	}
 
-	public class StateBase : StateBase<string>
+	public class StateBase : StateBase<string, string>
 	{
 		public StateBase(bool needsExitTime) : base(needsExitTime)
 		{
