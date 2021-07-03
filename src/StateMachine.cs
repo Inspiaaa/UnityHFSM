@@ -62,7 +62,7 @@ namespace FSM
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId, TEvent>>> noTriggerTransitions
 			= new Dictionary<TEvent, List<TransitionBase<TStateId, TEvent>>>(0);
 
-		private TStateId startState = default;
+		private (TStateId state, bool hasState) startState = (default, false);
 		private (TStateId state, bool isPending) pendingState = (default, false);
 
 		private Dictionary<TStateId, StateBundle> nameToStateBundle
@@ -237,7 +237,7 @@ namespace FSM
 		/// <param name="name">The name / identifier of the start state</param>
 		public void SetStartState(TStateId name)
 		{
-			startState = name;
+			startState = (name, true);
 		}
 
 		/// <summary>
@@ -256,7 +256,7 @@ namespace FSM
 		/// </summary>
 		public override void OnEnter()
 		{
-			ChangeState(startState);
+			ChangeState(startState.state);
 
 			for (int i = 0; i < transitionsFromAny.Count; i ++)
 			{
@@ -356,7 +356,7 @@ namespace FSM
 			StateBundle bundle = GetOrCreateStateBundle(name);
 			bundle.state = state;
 
-			if (nameToStateBundle.Count == 1 && startState == null)
+			if (nameToStateBundle.Count == 1 && !startState.hasState)
 			{
 				SetStartState(name);
 			}
