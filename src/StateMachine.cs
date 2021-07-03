@@ -63,7 +63,7 @@ namespace FSM
 			= new Dictionary<TEvent, List<TransitionBase<TStateId, TEvent>>>(0);
 
 		private TStateId startState = default;
-		private TStateId pendingState = default;
+		private (TStateId state, bool isPending) pendingState = (default, false);
 
 		private Dictionary<TStateId, StateBundle> nameToStateBundle
 			= new Dictionary<TStateId, StateBundle>();
@@ -114,10 +114,10 @@ namespace FSM
 		/// </summary>
 		public void StateCanExit()
 		{
-			if (pendingState != null)
+			if (pendingState.isPending)
 			{
-				ChangeState(pendingState);
-				pendingState = default;
+				ChangeState(pendingState.state);
+				pendingState = (default, false);
 			}
 
 			if (fsm != null)
@@ -205,7 +205,7 @@ namespace FSM
 			}
 			else
 			{
-				pendingState = name;
+				pendingState = (name, true);
 				activeState.RequestExit();
 				/**
 				 * If it can exit, the activeState would call
