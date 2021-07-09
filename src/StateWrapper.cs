@@ -7,11 +7,11 @@ namespace FSM
 	/// before and after the wrapped state's code.
 	/// It does not interfere with the wrapped state's timing / needsExitTime / ... behaviour.
 	/// </summary>
-	public class StateWrapper
+	public class StateWrapper<TStateId, TEvent>
 	{
-		public class WrappedState : StateBase, ITriggerable
+		public class WrappedState : StateBase<TStateId, TEvent>, ITriggerable<TEvent>
 		{
-			private Action<StateBase>
+			private Action<StateBase<TStateId, TEvent>>
 				beforeOnEnter,
 				afterOnEnter,
 
@@ -21,19 +21,19 @@ namespace FSM
 				beforeOnExit,
 				afterOnExit;
 
-			private StateBase state;
+			private StateBase<TStateId, TEvent> state;
 
 			public WrappedState(
-					StateBase state,
+					StateBase<TStateId, TEvent> state,
 
-					Action<StateBase> beforeOnEnter = null,
-					Action<StateBase> afterOnEnter = null,
+					Action<StateBase<TStateId, TEvent>> beforeOnEnter = null,
+					Action<StateBase<TStateId, TEvent>> afterOnEnter = null,
 
-					Action<StateBase> beforeOnLogic = null,
-					Action<StateBase> afterOnLogic = null,
+					Action<StateBase<TStateId, TEvent>> beforeOnLogic = null,
+					Action<StateBase<TStateId, TEvent>> afterOnLogic = null,
 
-					Action<StateBase> beforeOnExit = null,
-					Action<StateBase> afterOnExit = null) : base(state.needsExitTime)
+					Action<StateBase<TStateId, TEvent>> beforeOnExit = null,
+					Action<StateBase<TStateId, TEvent>> afterOnExit = null) : base(state.needsExitTime)
 			{
 				this.state = state;
 
@@ -82,15 +82,15 @@ namespace FSM
 				state.RequestExit();
 			}
 
-			public void Trigger(string trigger)
+			public void Trigger(TEvent trigger)
 			{
-				(state as ITriggerable)?.Trigger(trigger);
+				(state as ITriggerable<TEvent>)?.Trigger(trigger);
 			}
 		}
 
-		private StateBase state;
+		private StateBase<TStateId, TEvent> state;
 
-		private Action<StateBase>
+		private Action<StateBase<TStateId, TEvent>>
 			beforeOnEnter,
 			afterOnEnter,
 
@@ -104,14 +104,14 @@ namespace FSM
 		/// Initialises a new instance of the StateWrapper class
 		/// </summary>
 		public StateWrapper(
-				Action<StateBase> beforeOnEnter = null,
-				Action<StateBase> afterOnEnter = null,
+				Action<StateBase<TStateId, TEvent>> beforeOnEnter = null,
+				Action<StateBase<TStateId, TEvent>> afterOnEnter = null,
 
-				Action<StateBase> beforeOnLogic = null,
-				Action<StateBase> afterOnLogic = null,
+				Action<StateBase<TStateId, TEvent>> beforeOnLogic = null,
+				Action<StateBase<TStateId, TEvent>> afterOnLogic = null,
 
-				Action<StateBase> beforeOnExit = null,
-				Action<StateBase> afterOnExit = null)
+				Action<StateBase<TStateId, TEvent>> beforeOnExit = null,
+				Action<StateBase<TStateId, TEvent>> afterOnExit = null)
 		{
 			this.beforeOnEnter = beforeOnEnter;
 			this.afterOnEnter = afterOnEnter;
@@ -123,7 +123,7 @@ namespace FSM
 			this.afterOnExit = afterOnExit;
 		}
 
-		public WrappedState Wrap(StateBase state)
+		public WrappedState Wrap(StateBase<TStateId, TEvent> state)
 		{
 			return new WrappedState(
 				state,
@@ -134,6 +134,24 @@ namespace FSM
 				beforeOnExit,
 				afterOnExit
 			);
+		}
+	}
+
+	public class StateWrapper : StateWrapper<string, string>
+	{
+		public StateWrapper(
+			Action<StateBase<string, string>> beforeOnEnter = null,
+			Action<StateBase<string, string>> afterOnEnter = null,
+
+			Action<StateBase<string, string>> beforeOnLogic = null,
+			Action<StateBase<string, string>> afterOnLogic = null,
+
+			Action<StateBase<string, string>> beforeOnExit = null,
+			Action<StateBase<string, string>> afterOnExit = null) : base(
+			beforeOnEnter, afterOnEnter,
+			beforeOnLogic, afterOnLogic,
+			beforeOnExit, afterOnExit)
+		{
 		}
 	}
 }

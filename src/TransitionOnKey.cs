@@ -4,7 +4,7 @@ namespace FSM
 {
 	public static class TransitionOnKey
 	{
-		public class Down : TransitionBase
+		public class Down<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -15,8 +15,8 @@ namespace FSM
 			/// <param name="key">The KeyCode of the key to watch</param>
 			/// <returns></returns>
 			public Down(
-					string from,
-					string to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -30,7 +30,7 @@ namespace FSM
 			}
 		}
 
-		public class Release : TransitionBase
+		public class Release<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -40,8 +40,8 @@ namespace FSM
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch</param>
 			public Release(
-					string from,
-					string to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -55,7 +55,7 @@ namespace FSM
 			}
 		}
 
-		public class Press : TransitionBase
+		public class Press<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -65,8 +65,8 @@ namespace FSM
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch</param>
 			public Press(
-					string from,
-					string to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -80,7 +80,7 @@ namespace FSM
 			}
 		}
 
-		public class Up : TransitionBase
+		public class Up<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
 		{
 			private KeyCode keyCode;
 
@@ -90,8 +90,8 @@ namespace FSM
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch</param>
 			public Up(
-					string from,
-					string to,
+					TStateId from,
+					TStateId to,
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
@@ -102,6 +102,50 @@ namespace FSM
 			public override bool ShouldTransition()
 			{
 				return !Input.GetKey(keyCode);
+			}
+		}
+
+		public class Down : Down<string, string>
+		{
+			public Down(
+				string @from,
+				string to,
+				KeyCode key,
+				bool forceInstantly = false) : base(@from, to, key, forceInstantly)
+			{
+			}
+		}
+
+		public class Release : Release<string, string>
+		{
+			public Release(
+				string @from,
+				string to,
+				KeyCode key,
+				bool forceInstantly = false) : base(@from, to, key, forceInstantly)
+			{
+			}
+		}
+
+		public class Press : Press<string, string>
+		{
+			public Press(
+				string @from,
+				string to,
+				KeyCode key,
+				bool forceInstantly = false) : base(@from, to, key, forceInstantly)
+			{
+			}
+		}
+
+		public class Up : Up<string, string>
+		{
+			public Up(
+				string @from,
+				string to,
+				KeyCode key,
+				bool forceInstantly = false) : base(@from, to, key, forceInstantly)
+			{
 			}
 		}
 	}

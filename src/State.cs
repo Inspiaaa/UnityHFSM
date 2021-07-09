@@ -6,12 +6,12 @@ namespace FSM
 	/// The "normal" state class that can run code on Enter, on Logic and on Exit, 
 	/// while also handling the timing of the next state transition
 	/// </summary>
-	public class State : StateBase
+	public class State<TStateId, TEvent> : StateBase<TStateId, TEvent>
 	{
-		private Action<State> onEnter;
-		private Action<State> onLogic;
-		private Action<State> onExit;
-		private Func<State, bool> canExit;
+		private Action<State<TStateId, TEvent>> onEnter;
+		private Action<State<TStateId, TEvent>> onLogic;
+		private Action<State<TStateId, TEvent>> onExit;
+		private Func<State<TStateId, TEvent>, bool> canExit;
 
 		public Timer timer;
 
@@ -29,10 +29,10 @@ namespace FSM
 		/// 	exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// 	state change (true)</param>
 		public State(
-				Action<State> onEnter = null,
-				Action<State> onLogic = null,
-				Action<State> onExit = null,
-				Func<State, bool> canExit = null,
+				Action<State<TStateId, TEvent>> onEnter = null,
+				Action<State<TStateId, TEvent>> onLogic = null,
+				Action<State<TStateId, TEvent>> onExit = null,
+				Func<State<TStateId, TEvent>, bool> canExit = null,
 				bool needsExitTime = false) : base(needsExitTime)
 		{
 			this.onEnter = onEnter;
@@ -66,6 +66,18 @@ namespace FSM
 			{
 				fsm.StateCanExit();
 			}
+		}
+	}
+
+	public class State : State<string, string>
+	{
+		public State(
+			Action<State<string, string>> onEnter = null,
+			Action<State<string, string>> onLogic = null,
+			Action<State<string, string>> onExit = null,
+			Func<State<string, string>, bool> canExit = null,
+			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+		{
 		}
 	}
 }
