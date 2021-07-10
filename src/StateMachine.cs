@@ -158,20 +158,10 @@ namespace FSM
 				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Switching states");
 			}
 
-			activeState = bundle.state;
-			activeState.OnEnter();
-
 			activeTransitions = bundle.transitions;
 			if (activeTransitions == null)
 			{
 				activeTransitions = noTransitions;
-			}
-			else
-			{
-				for (int i = 0; i < activeTransitions.Count; i ++)
-				{
-					activeTransitions[i].OnEnter();
-				}
 			}
 
 			activeTriggerTransitions = bundle.triggerToTransitions;
@@ -179,14 +169,20 @@ namespace FSM
 			{
 				activeTriggerTransitions = noTriggerTransitions;
 			}
-			else
+
+			activeState = bundle.state;
+			activeState.OnEnter();
+
+			for (int i = 0; i < activeTransitions.Count; i++)
 			{
-				foreach (List<TransitionBase<TStateId, TEvent>> transitions in activeTriggerTransitions.Values)
+				activeTransitions[i].OnEnter();
+			}
+
+			foreach (List<TransitionBase<TStateId, TEvent>> transitions in activeTriggerTransitions.Values)
+			{
+				for (int i = 0; i < transitions.Count; i++)
 				{
-					for (int i = 0; i < transitions.Count; i ++)
-					{
-						transitions[i].OnEnter();
-					}
+					transitions[i].OnEnter();
 				}
 			}
 		}
