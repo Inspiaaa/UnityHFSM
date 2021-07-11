@@ -464,14 +464,15 @@ namespace FSM
 				}
 			}
 
-			triggerTransitions = activeTriggerTransitions[trigger];
-
-			for (int i = 0; i < triggerTransitions.Count; i ++)
+			if (activeTriggerTransitions.TryGetValue(trigger, out triggerTransitions))
 			{
-				TransitionBase<TStateId, TEvent> transition = triggerTransitions[i];
-				
-				if (TryTransition(transition))
-					return true;
+				for (int i = 0; i < triggerTransitions.Count; i ++)
+				{
+					TransitionBase<TStateId, TEvent> transition = triggerTransitions[i];
+
+					if (TryTransition(transition))
+						return true;
+				}
 			}
 			
 			return false;
