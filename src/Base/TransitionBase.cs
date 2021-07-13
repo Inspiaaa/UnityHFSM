@@ -5,14 +5,14 @@ namespace FSM
 	/// <summary>
 	/// The base class of all transitions
 	/// </summary>
-	public class TransitionBase<TStateId, TEvent>
+	public class TransitionBase<TStateId>
 	{
 		public TStateId from;
 		public TStateId to;
 
 		public bool forceInstantly;
 
-		public StateMachine<TStateId, TEvent> fsm;
+		public IStateMachine<TStateId> fsm;
 		public MonoBehaviour mono;
 
 		/// <summary>
@@ -55,7 +55,7 @@ namespace FSM
 		}
 	}
 
-	public class TransitionBase : TransitionBase<string, string>
+	public class TransitionBase : TransitionBase<string>
 	{
 		public TransitionBase(string @from, string to, bool forceInstantly = false) : base(@from, to, forceInstantly)
 		{
