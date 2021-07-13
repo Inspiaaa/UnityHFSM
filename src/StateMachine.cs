@@ -14,7 +14,10 @@ namespace FSM
 	/// A finite state machine that can also be used as a state of a parent state machine to create
 	/// a hierarchy (-> hierarchical state machine)
 	/// </summary>
-	public class StateMachine<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, ITriggerable<TEvent>, IStateMachine<TStateId>
+	public class StateMachine<TOwnId, TStateId, TEvent> : 
+		StateBase<TOwnId>, 
+		ITriggerable<TEvent>, 
+		IStateMachine<TStateId>
 	{
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
@@ -58,7 +61,8 @@ namespace FSM
 		}
 
 		// A cached empty list of transitions (For improved readability, less GC)
-		private static readonly List<TransitionBase<TStateId>> noTransitions = new List<TransitionBase<TStateId>>(0);
+		private static readonly List<TransitionBase<TStateId>> noTransitions 
+			= new List<TransitionBase<TStateId>>(0);
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> noTriggerTransitions
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
