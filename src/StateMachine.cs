@@ -69,6 +69,7 @@ namespace FSM
 		private (TStateId state, bool hasState) startState = (default, false);
 		private (TStateId state, bool isPending) pendingState = (default, false);
 
+		// Central storage of states
 		private Dictionary<TStateId, StateBundle> nameToStateBundle
 			= new Dictionary<TStateId, StateBundle>();
 
