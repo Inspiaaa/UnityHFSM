@@ -9,9 +9,9 @@ namespace FSM
 	/// </summary>
 	public class StateWrapper<TStateId, TEvent>
 	{
-		public class WrappedState : StateBase<TStateId, TEvent>, ITriggerable<TEvent>
+		public class WrappedState : StateBase<TStateId>, ITriggerable<TEvent>
 		{
-			private Action<StateBase<TStateId, TEvent>>
+			private Action<StateBase<TStateId>>
 				beforeOnEnter,
 				afterOnEnter,
 
@@ -21,19 +21,19 @@ namespace FSM
 				beforeOnExit,
 				afterOnExit;
 
-			private StateBase<TStateId, TEvent> state;
+			private StateBase<TStateId> state;
 
 			public WrappedState(
-					StateBase<TStateId, TEvent> state,
+					StateBase<TStateId> state,
 
-					Action<StateBase<TStateId, TEvent>> beforeOnEnter = null,
-					Action<StateBase<TStateId, TEvent>> afterOnEnter = null,
+					Action<StateBase<TStateId>> beforeOnEnter = null,
+					Action<StateBase<TStateId>> afterOnEnter = null,
 
-					Action<StateBase<TStateId, TEvent>> beforeOnLogic = null,
-					Action<StateBase<TStateId, TEvent>> afterOnLogic = null,
+					Action<StateBase<TStateId>> beforeOnLogic = null,
+					Action<StateBase<TStateId>> afterOnLogic = null,
 
-					Action<StateBase<TStateId, TEvent>> beforeOnExit = null,
-					Action<StateBase<TStateId, TEvent>> afterOnExit = null) : base(state.needsExitTime)
+					Action<StateBase<TStateId>> beforeOnExit = null,
+					Action<StateBase<TStateId>> afterOnExit = null) : base(state.needsExitTime)
 			{
 				this.state = state;
 
@@ -88,9 +88,9 @@ namespace FSM
 			}
 		}
 
-		private StateBase<TStateId, TEvent> state;
+		private StateBase<TStateId> state;
 
-		private Action<StateBase<TStateId, TEvent>>
+		private Action<StateBase<TStateId>>
 			beforeOnEnter,
 			afterOnEnter,
 
@@ -104,14 +104,14 @@ namespace FSM
 		/// Initialises a new instance of the StateWrapper class
 		/// </summary>
 		public StateWrapper(
-				Action<StateBase<TStateId, TEvent>> beforeOnEnter = null,
-				Action<StateBase<TStateId, TEvent>> afterOnEnter = null,
+				Action<StateBase<TStateId>> beforeOnEnter = null,
+				Action<StateBase<TStateId>> afterOnEnter = null,
 
-				Action<StateBase<TStateId, TEvent>> beforeOnLogic = null,
-				Action<StateBase<TStateId, TEvent>> afterOnLogic = null,
+				Action<StateBase<TStateId>> beforeOnLogic = null,
+				Action<StateBase<TStateId>> afterOnLogic = null,
 
-				Action<StateBase<TStateId, TEvent>> beforeOnExit = null,
-				Action<StateBase<TStateId, TEvent>> afterOnExit = null)
+				Action<StateBase<TStateId>> beforeOnExit = null,
+				Action<StateBase<TStateId>> afterOnExit = null)
 		{
 			this.beforeOnEnter = beforeOnEnter;
 			this.afterOnEnter = afterOnEnter;
@@ -123,7 +123,7 @@ namespace FSM
 			this.afterOnExit = afterOnExit;
 		}
 
-		public WrappedState Wrap(StateBase<TStateId, TEvent> state)
+		public WrappedState Wrap(StateBase<TStateId> state)
 		{
 			return new WrappedState(
 				state,
@@ -140,14 +140,14 @@ namespace FSM
 	public class StateWrapper : StateWrapper<string, string>
 	{
 		public StateWrapper(
-			Action<StateBase<string, string>> beforeOnEnter = null,
-			Action<StateBase<string, string>> afterOnEnter = null,
+			Action<StateBase<string>> beforeOnEnter = null,
+			Action<StateBase<string>> afterOnEnter = null,
 
-			Action<StateBase<string, string>> beforeOnLogic = null,
-			Action<StateBase<string, string>> afterOnLogic = null,
+			Action<StateBase<string>> beforeOnLogic = null,
+			Action<StateBase<string>> afterOnLogic = null,
 
-			Action<StateBase<string, string>> beforeOnExit = null,
-			Action<StateBase<string, string>> afterOnExit = null) : base(
+			Action<StateBase<string>> beforeOnExit = null,
+			Action<StateBase<string>> afterOnExit = null) : base(
 			beforeOnEnter, afterOnEnter,
 			beforeOnLogic, afterOnLogic,
 			beforeOnExit, afterOnExit)

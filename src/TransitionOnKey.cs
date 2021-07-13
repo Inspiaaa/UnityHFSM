@@ -4,7 +4,7 @@ namespace FSM
 {
 	public static class TransitionOnKey
 	{
-		public class Down<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
+		public class Down<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
@@ -30,7 +30,7 @@ namespace FSM
 			}
 		}
 
-		public class Release<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
+		public class Release<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
@@ -55,7 +55,7 @@ namespace FSM
 			}
 		}
 
-		public class Press<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
+		public class Press<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
@@ -80,7 +80,7 @@ namespace FSM
 			}
 		}
 
-		public class Up<TStateId, TEvent> : TransitionBase<TStateId, TEvent>
+		public class Up<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
@@ -105,7 +105,7 @@ namespace FSM
 			}
 		}
 
-		public class Down : Down<string, string>
+		public class Down : Down<string>
 		{
 			public Down(
 				string @from,
@@ -116,7 +116,7 @@ namespace FSM
 			}
 		}
 
-		public class Release : Release<string, string>
+		public class Release : Release<string>
 		{
 			public Release(
 				string @from,
@@ -127,7 +127,7 @@ namespace FSM
 			}
 		}
 
-		public class Press : Press<string, string>
+		public class Press : Press<string>
 		{
 			public Press(
 				string @from,
@@ -138,7 +138,7 @@ namespace FSM
 			}
 		}
 
-		public class Up : Up<string, string>
+		public class Up : Up<string>
 		{
 			public Up(
 				string @from,
