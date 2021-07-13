@@ -11,11 +11,11 @@ namespace FSM
 	/// duplicate code.
 	/// The HybridStateMachine can also be seen as a StateWrapper around a normal StateMachine.
 	/// </summary>
-	public class HybridStateMachine<TStateId, TEvent> : StateMachine<TStateId, TEvent>
+	public class HybridStateMachine<TOwnId, TStateId, TEvent> : StateMachine<TOwnId, TStateId, TEvent>
 	{
-		private Action<HybridStateMachine<TStateId, TEvent>> onEnter;
-		private Action<HybridStateMachine<TStateId, TEvent>> onLogic;
-		private Action<HybridStateMachine<TStateId, TEvent>> onExit;
+		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onEnter;
+		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onLogic;
+		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onExit;
 
 		public Timer timer;
 
@@ -35,9 +35,9 @@ namespace FSM
 		/// 	state change (true).</param>
 		public HybridStateMachine(
 				MonoBehaviour mono,
-				Action<HybridStateMachine<TStateId, TEvent>> onEnter = null,
-				Action<HybridStateMachine<TStateId, TEvent>> onLogic = null,
-				Action<HybridStateMachine<TStateId, TEvent>> onExit = null,
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onEnter = null,
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onLogic = null,
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onExit = null,
 				bool needsExitTime = false) : base(mono, needsExitTime)
 		{
 			this.onEnter = onEnter;
@@ -70,13 +70,37 @@ namespace FSM
 		}
 	}
 
-	public class HybridStateMachine : HybridStateMachine<string, string>
+	public class HybridStateMachine<TStateId, TEvent> : HybridStateMachine<TStateId, TStateId, TEvent>
 	{
 		public HybridStateMachine(
 			MonoBehaviour mono,
-			Action<HybridStateMachine<string, string>> onEnter = null,
-			Action<HybridStateMachine<string, string>> onLogic = null,
-			Action<HybridStateMachine<string, string>> onExit = null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onEnter = null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onLogic = null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onExit = null,
+			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
+		{
+		}
+	}
+
+	public class HybridStateMachine<TStateId> : HybridStateMachine<TStateId, TStateId, string>
+	{
+		public HybridStateMachine(
+			MonoBehaviour mono,
+			Action<HybridStateMachine<TStateId, TStateId, string>> onEnter = null,
+			Action<HybridStateMachine<TStateId, TStateId, string>> onLogic = null,
+			Action<HybridStateMachine<TStateId, TStateId, string>> onExit = null,
+			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
+		{
+		}
+	}
+
+	public class HybridStateMachine : HybridStateMachine<string, string, string>
+	{
+		public HybridStateMachine(
+			MonoBehaviour mono,
+			Action<HybridStateMachine<string, string, string>> onEnter = null,
+			Action<HybridStateMachine<string, string, string>> onLogic = null,
+			Action<HybridStateMachine<string, string, string>> onExit = null,
 			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
 		{
 		}

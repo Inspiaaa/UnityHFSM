@@ -14,7 +14,7 @@ namespace FSM
 	/// A finite state machine that can also be used as a state of a parent state machine to create
 	/// a hierarchy (-> hierarchical state machine)
 	/// </summary>
-	public class StateMachine<TStateId, TEvent> : StateBase<TStateId>, ITriggerable<TEvent>, IStateMachine<TStateId>
+	public class StateMachine<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, ITriggerable<TEvent>, IStateMachine<TStateId>
 	{
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
@@ -512,12 +512,12 @@ namespace FSM
 			return bundle.state;
 		}
 
-		public StateMachine<string, string> this[TStateId name]
+		public StateMachine<string, string, string> this[TStateId name]
 		{
 			get
 			{
 				StateBase<TStateId> state = GetState(name);
-				StateMachine<string, string> subFsm = state as StateMachine<string, string>;
+				StateMachine<string, string, string> subFsm = state as StateMachine<string, string, string>;
 
 				if (subFsm == null)
 				{
@@ -536,7 +536,21 @@ namespace FSM
 		}
 	}
 
-	public class StateMachine : StateMachine<string, string>
+	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
+	{
+		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
+		{
+		}
+	}
+
+	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
+	{
+		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
+		{
+		}
+	}
+
+	public class StateMachine : StateMachine<string, string, string>
 	{
 		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
 		{
