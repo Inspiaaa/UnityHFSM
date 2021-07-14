@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /**
  * Hierarchichal finite state machine for Unity 
@@ -535,6 +536,81 @@ namespace FSM
 
 				return subFsm;
 			}
+		}
+	
+		// "Shortcut" methods
+		// These are meant to reduce the boilerplate code required by the user for simple
+		// states and transitions.
+		// They do this by creating a new State / Transition instance in the background
+		// and then setting the desired fields.
+
+		/// <summary>
+		/// Shortcut method for adding a regular state.
+		/// It creates a new State() instance under the hood. => See State for more information.
+		/// </summary>
+		public void AddState(
+			TStateId name, 
+			Action<State<TStateId>> onEnter = null, 
+			Action<State<TStateId>> onLogic = null,
+			Action<State<TStateId>> onExit = null,
+			Func<State<TStateId>, bool> canExit = null,
+			bool needsExitTime = false)
+		{
+			AddState(name, new State<TStateId>(onEnter, onLogic, onExit, canExit, needsExitTime));
+		}
+
+		/// <summary>
+		/// Shortcut method for adding a regular transition.
+		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// </summary>
+		public void AddTransition(
+			TStateId from, 
+			TStateId to, 
+			Func<Transition<TStateId>, bool> condition = null, 
+			bool forceInstantly = false)
+		{
+			AddTransition(new Transition<TStateId>(from, to, condition, forceInstantly));
+		}
+
+		/// <summary>
+		/// Shortcut method for adding a regular transition that can happen from any state.
+		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// </summary>
+		public void AddTransitionFromAny(
+			TStateId to, 
+			Func<Transition<TStateId>, bool> condition = null, 
+			bool forceInstantly = false)
+		{
+			AddTransition(new Transition<TStateId>(default, to, condition, forceInstantly));
+		}
+
+		/// <summary>
+		/// Shortcut method for adding a new trigger transition between two states that is only checked 
+		/// when the specified trigger is activated.
+		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// </summary>
+		public void AddTriggerTransition(
+			TEvent trigger,
+			TStateId from, 
+			TStateId to, 
+			Func<Transition<TStateId>, bool> condition = null, 
+			bool forceInstantly = false)
+		{
+			AddTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
+		}
+
+		// <summary>
+		/// Shortcut method for adding a new trigger transition that can happen from any possible state, but is only
+		/// checked when the specified trigger is activated.
+		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// </summary>
+		public void AddTriggerTransitionFromAny(
+			TEvent trigger,
+			TStateId to, 
+			Func<Transition<TStateId>, bool> condition = null, 
+			bool forceInstantly = false)
+		{
+			AddTriggerTransitionFromAny(trigger, new Transition<TStateId>(default, to, condition, forceInstantly));
 		}
 	}
 
