@@ -3,7 +3,7 @@ using System;
 namespace FSM
 {
 	/// <summary>
-	/// The "normal" state class that can run code on Enter, on Logic and on Exit, 
+	/// The "normal" state class that can run code on Enter, on Logic and on Exit,
 	/// while also handling the timing of the next state transition
 	/// </summary>
 	public class State<TStateId> : StateBase<TStateId>

@@ -19,10 +19,10 @@ namespace FSM
 		/// <param name="from">The name / identifier of the active state</param>
 		/// <param name="to">The name / identifier of the next state</param>
 		/// <param name="delay">The delay that must elapse before the transition can occur</param>
-		/// <param name="condition">A function that returns true if the state machine 
-		/// 	should transition to the <c>to</c> state. 
+		/// <param name="condition">A function that returns true if the state machine
+		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
-		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
+		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
 		/// 	=> Forces an instant transition</param>
 		public TransitionAfter(
 				TStateId from,

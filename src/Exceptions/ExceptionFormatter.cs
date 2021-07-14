@@ -4,8 +4,8 @@ namespace FSM.Exceptions
 	public static class ExceptionFormatter
 	{
 		public static string Format(
-			string context = null, 
-			string problem = null, 
+			string context = null,
+			string problem = null,
 			string solution = null)
 		{
 			string message = "\n";
@@ -24,7 +24,7 @@ namespace FSM.Exceptions
 			{
 				message += "Solution: " + solution + "\n";
 			}
-			
+
 			return message;
 		}
 	}

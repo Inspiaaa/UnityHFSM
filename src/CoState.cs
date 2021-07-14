@@ -64,7 +64,7 @@ namespace FSM
 			{
 
 				// This checks if the routine needs at least one frame to execute.
-				// If not, LoopCoroutine will wait 1 frame to avoid an infinite 
+				// If not, LoopCoroutine will wait 1 frame to avoid an infinite
 				// loop which will crash Unity
 				if (routine.MoveNext())
 					yield return routine.Current;

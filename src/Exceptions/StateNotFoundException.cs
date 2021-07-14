@@ -7,8 +7,8 @@ namespace FSM.Exceptions
 	{
 		private static string Format(
 			TState stateName,
-			string context, 
-			string problem, 
+			string context,
+			string problem,
 			string solution)
 		{
 			if (problem == null)

@@ -20,7 +20,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="from">The name / identifier of the active state</param>
 		/// <param name="to">The name / identifier of the next state</param>
-		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true 
+		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
 		/// 	=> Forces an instant transition</param>
 		public TransitionBase(TStateId from, TStateId to, bool forceInstantly = false)
 		{
@@ -30,7 +30,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to initialise the transition, after values like mono and fsm have been set 
+		/// Called to initialise the transition, after values like mono and fsm have been set
 		/// </summary>
 		public virtual void Init()
 		{

@@ -7,7 +7,7 @@ namespace FSM.Exceptions
 	{
 		public static string Format(
 			string context,
-			string problem, 
+			string problem,
 			string solution)
 		{
 			if (problem == null)

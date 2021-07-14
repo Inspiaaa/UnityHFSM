@@ -3,9 +3,9 @@ using UnityEngine;
 using System;
 
 /**
- * Hierarchichal finite state machine for Unity 
+ * Hierarchichal finite state machine for Unity
  * by Inspiaaa
- * 
+ *
  * Version: 1.7.2
  */
 
@@ -15,9 +15,9 @@ namespace FSM
 	/// A finite state machine that can also be used as a state of a parent state machine to create
 	/// a hierarchy (-> hierarchical state machine)
 	/// </summary>
-	public class StateMachine<TOwnId, TStateId, TEvent> : 
-		StateBase<TOwnId>, 
-		ITriggerable<TEvent>, 
+	public class StateMachine<TOwnId, TStateId, TEvent> :
+		StateBase<TOwnId>,
+		ITriggerable<TEvent>,
 		IStateMachine<TStateId>
 	{
 		/// <summary>
@@ -50,7 +50,7 @@ namespace FSM
 				}
 
 				List<TransitionBase<TStateId>> transitionsOfTrigger;
-				
+
 				if (! triggerToTransitions.TryGetValue(trigger, out transitionsOfTrigger))
 				{
 					transitionsOfTrigger = new List<TransitionBase<TStateId>>();
@@ -62,7 +62,7 @@ namespace FSM
 		}
 
 		// A cached empty list of transitions (For improved readability, less GC)
-		private static readonly List<TransitionBase<TStateId>> noTransitions 
+		private static readonly List<TransitionBase<TStateId>> noTransitions
 			= new List<TransitionBase<TStateId>>(0);
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> noTriggerTransitions
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
@@ -212,7 +212,7 @@ namespace FSM
 				/**
 				 * If it can exit, the activeState would call
 				 * -> state.fsm.StateCanExit() which in turn would call
-				 * -> fsm.ChangeState(...) 
+				 * -> fsm.ChangeState(...)
 				 */
 			}
 		}
@@ -251,7 +251,7 @@ namespace FSM
 
 			OnEnter();
 		}
-		
+
 		/// <summary>
 		/// Initialises the state machine and must be called before OnLogic is called.
 		/// It sets the activeState to the selected startState.
@@ -275,7 +275,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Runs one logic step. It does at most one transition itself and 
+		/// Runs one logic step. It does at most one transition itself and
 		/// calls the active state's logic function (after the state transition, if
 		/// one occurred).
 		/// </summary>
@@ -401,7 +401,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Adds a new trigger transition between two states that is only checked 
+		/// Adds a new trigger transition between two states that is only checked
 		/// when the specified trigger is activated.
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
@@ -460,28 +460,28 @@ namespace FSM
 
 					if (transition.to.Equals(activeState.name))
 						continue;
-					
+
 					if (TryTransition(transition))
 						return true;
 				}
 			}
 
 			if (activeTriggerTransitions.TryGetValue(trigger, out triggerTransitions))
-			{	
+			{
 				for (int i = 0; i < triggerTransitions.Count; i ++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
-					
+
 					if (TryTransition(transition))
 						return true;
 				}
 			}
-			
+
 			return false;
 		}
 
 		/// <summary>
-		/// Activates the specified trigger in all active states of the hierarchy, checking all targeted 
+		/// Activates the specified trigger in all active states of the hierarchy, checking all targeted
 		/// trigger transitions to see whether a transition should occur.
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
@@ -537,7 +537,7 @@ namespace FSM
 				return subFsm;
 			}
 		}
-	
+
 		// "Shortcut" methods
 		// These are meant to reduce the boilerplate code required by the user for simple
 		// states and transitions.
@@ -549,8 +549,8 @@ namespace FSM
 		/// It creates a new State() instance under the hood. => See State for more information.
 		/// </summary>
 		public void AddState(
-			TStateId name, 
-			Action<State<TStateId>> onEnter = null, 
+			TStateId name,
+			Action<State<TStateId>> onEnter = null,
 			Action<State<TStateId>> onLogic = null,
 			Action<State<TStateId>> onExit = null,
 			Func<State<TStateId>, bool> canExit = null,
@@ -564,9 +564,9 @@ namespace FSM
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
 		/// </summary>
 		public void AddTransition(
-			TStateId from, 
-			TStateId to, 
-			Func<Transition<TStateId>, bool> condition = null, 
+			TStateId from,
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
 			AddTransition(new Transition<TStateId>(from, to, condition, forceInstantly));
@@ -577,23 +577,23 @@ namespace FSM
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
 		/// </summary>
 		public void AddTransitionFromAny(
-			TStateId to, 
-			Func<Transition<TStateId>, bool> condition = null, 
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
 			AddTransition(new Transition<TStateId>(default, to, condition, forceInstantly));
 		}
 
 		/// <summary>
-		/// Shortcut method for adding a new trigger transition between two states that is only checked 
+		/// Shortcut method for adding a new trigger transition between two states that is only checked
 		/// when the specified trigger is activated.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
 		/// </summary>
 		public void AddTriggerTransition(
 			TEvent trigger,
-			TStateId from, 
-			TStateId to, 
-			Func<Transition<TStateId>, bool> condition = null, 
+			TStateId from,
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
 			AddTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
@@ -606,8 +606,8 @@ namespace FSM
 		/// </summary>
 		public void AddTriggerTransitionFromAny(
 			TEvent trigger,
-			TStateId to, 
-			Func<Transition<TStateId>, bool> condition = null, 
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
 			AddTriggerTransitionFromAny(trigger, new Transition<TStateId>(default, to, condition, forceInstantly));
