@@ -8,7 +8,9 @@
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
 </p>
 
-A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**. 
+
+Thanks to overloading, it minimises boilerplate code while still supporting **generics**.
 
 It has a special focus on the temporal aspects of state transitions, making it ideal for timing and synchronisation sensitive problems.
 
