@@ -126,10 +126,7 @@ namespace FSM
 				pendingState = (default, false);
 			}
 
-			if (fsm != null)
-			{
-				fsm.StateCanExit();
-			}
+			fsm?.StateCanExit();
 		}
 
 		public override void RequestExit()
@@ -140,10 +137,7 @@ namespace FSM
 				return;
 			}
 
-			if (fsm != null)
-			{
-				fsm.StateCanExit();
-			}
+			fsm?.StateCanExit();
 		}
 
 		/// <summary>
@@ -152,10 +146,7 @@ namespace FSM
 		/// <param name="name">The name / identifier of the active state</param>
 		private void ChangeState(TStateId name)
 		{
-			if (activeState != null)
-			{
-				activeState.OnExit();
-			}
+			activeState?.OnExit();
 
 			StateBundle bundle;
 
@@ -164,17 +155,8 @@ namespace FSM
 				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Switching states");
 			}
 
-			activeTransitions = bundle.transitions;
-			if (activeTransitions == null)
-			{
-				activeTransitions = noTransitions;
-			}
-
-			activeTriggerTransitions = bundle.triggerToTransitions;
-			if (activeTriggerTransitions == null)
-			{
-				activeTriggerTransitions = noTriggerTransitions;
-			}
+			activeTransitions = bundle.transitions ?? noTransitions;
+			activeTriggerTransitions = bundle.triggerToTransitions ?? noTriggerTransitions;
 
 			activeState = bundle.state;
 			activeState.OnEnter();
