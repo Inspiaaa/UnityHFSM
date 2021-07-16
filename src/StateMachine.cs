@@ -539,14 +539,17 @@ namespace FSM
 		}
 
 		// "Shortcut" methods
-		// These are meant to reduce the boilerplate code required by the user for simple
+		// - These are meant to reduce the boilerplate code required by the user for simple
 		// states and transitions.
-		// They do this by creating a new State / Transition instance in the background
+		// - They do this by creating a new State / Transition instance in the background
 		// and then setting the desired fields.
+		// - They can also optimise certain cases for you by choosing the best type,
+		// such as a StateBase for an empty state instead of a State instance.
 
 		/// <summary>
 		/// Shortcut method for adding a regular state.
 		/// It creates a new State() instance under the hood. => See State for more information.
+		/// For empty states with no logic it creates a new StateBase for optimal performance.
 		/// </summary>
 		public void AddState(
 			TStateId name,
@@ -556,12 +559,32 @@ namespace FSM
 			Func<State<TStateId>, bool> canExit = null,
 			bool needsExitTime = false)
 		{
+			// Optimise for empty states
+			if (onEnter == null && onLogic == null && onExit == null && canExit == null)
+			{
+				AddState(name, new StateBase<TStateId>(needsExitTime));
+				return;
+			}
+
 			AddState(name, new State<TStateId>(onEnter, onLogic, onExit, canExit, needsExitTime));
+		}
+
+		private TransitionBase<TStateId> GetOptimizedTransition(
+			TStateId from,
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition = null,
+			bool forceInstantly = false)
+		{
+			if (condition == null)
+				return new TransitionBase<TStateId>(from, to, forceInstantly);
+
+			return new Transition<TStateId>(from, to, condition, forceInstantly);
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a regular transition.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
 		public void AddTransition(
 			TStateId from,
@@ -569,25 +592,27 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTransition(new Transition<TStateId>(from, to, condition, forceInstantly));
+			AddTransition(GetOptimizedTransition(from, to, condition, forceInstantly));
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a regular transition that can happen from any state.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
 		public void AddTransitionFromAny(
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTransition(new Transition<TStateId>(default, to, condition, forceInstantly));
+			AddTransition(GetOptimizedTransition(default, to, condition, forceInstantly));
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a new trigger transition between two states that is only checked
 		/// when the specified trigger is activated.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
 		public void AddTriggerTransition(
 			TEvent trigger,
@@ -596,13 +621,14 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
+			AddTriggerTransition(trigger, GetOptimizedTransition(from, to, condition, forceInstantly));
 		}
 
 		// <summary>
 		/// Shortcut method for adding a new trigger transition that can happen from any possible state, but is only
 		/// checked when the specified trigger is activated.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
 		public void AddTriggerTransitionFromAny(
 			TEvent trigger,
@@ -610,7 +636,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTriggerTransitionFromAny(trigger, new Transition<TStateId>(default, to, condition, forceInstantly));
+			AddTriggerTransitionFromAny(trigger, GetOptimizedTransition(default, to, condition, forceInstantly));
 		}
 	}
 
