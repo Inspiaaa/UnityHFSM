@@ -545,7 +545,12 @@ namespace FSM
 			AddState(name, new State<TStateId>(onEnter, onLogic, onExit, canExit, needsExitTime));
 		}
 
-		private TransitionBase<TStateId> GetOptimizedTransition(
+		/// <summary>
+		/// Creates the most efficient transition type possible for the given parameters.
+		/// It creates a Transition instance when a condition is specified and otherwise
+		/// it returns a TransitionBase.
+		/// </summary>
+		private TransitionBase<TStateId> CreateOptimizedTransition(
 			TStateId from,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
@@ -568,7 +573,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTransition(GetOptimizedTransition(from, to, condition, forceInstantly));
+			AddTransition(CreateOptimizedTransition(from, to, condition, forceInstantly));
 		}
 
 		/// <summary>
@@ -581,7 +586,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTransition(GetOptimizedTransition(default, to, condition, forceInstantly));
+			AddTransition(CreateOptimizedTransition(default, to, condition, forceInstantly));
 		}
 
 		/// <summary>
@@ -597,7 +602,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTriggerTransition(trigger, GetOptimizedTransition(from, to, condition, forceInstantly));
+			AddTriggerTransition(trigger, CreateOptimizedTransition(from, to, condition, forceInstantly));
 		}
 
 		// <summary>
@@ -612,7 +617,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTriggerTransitionFromAny(trigger, GetOptimizedTransition(default, to, condition, forceInstantly));
+			AddTriggerTransitionFromAny(trigger, CreateOptimizedTransition(default, to, condition, forceInstantly));
 		}
 	}
 
