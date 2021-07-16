@@ -35,19 +35,13 @@ namespace FSM
 
 			public void AddTransition(TransitionBase<TStateId> t)
 			{
-				if (transitions == null)
-				{
-					transitions = new List<TransitionBase<TStateId>>();
-				}
-
+				transitions = transitions ?? new List<TransitionBase<TStateId>>();
 				transitions.Add(t);
 			}
 
 			public void AddTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition) {
-				if (triggerToTransitions == null)
-				{
-					triggerToTransitions = new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
-				}
+				triggerToTransitions = triggerToTransitions
+					?? new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
 				List<TransitionBase<TStateId>> transitionsOfTrigger;
 
