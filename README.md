@@ -71,7 +71,10 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
 - Open Package Manager (<kbd>Window</kbd> > <kbd>Package Manager</kbd>)
 - Click <kbd>+</kbd>
 - Select <kbd>Add from Git URL</kbd>
-- Paste `https://github.com/Inspiaaa/UnityHFSM.git`
+- Paste
+  - `https://github.com/Inspiaaa/UnityHFSM.git#upm` for the latest stable release (**recommended**)
+  - `https://github.com/Inspiaaa/UnityHFSM.git` for the development version
+  - `https://github.com/Inspiaaa/UnityHFSM.git#v1.8.0` for a specific version (`v1.8.0` here)
 - Click <kbd>Add</kbd>
 - Tip: If you're using VSCode and you're not getting any IntelliSense, you may have to regenerate the `.csproj` project files (<kbd>Edit</kbd> > <kbd>Preferences</kbd> > <kbd>External Tools</kbd> > <kbd>Regenerate project files</kbd>)
 
