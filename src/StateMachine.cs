@@ -98,14 +98,13 @@ namespace FSM
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
 		/// </summary>
-		/// <param name="mono">The MonoBehaviour of the script that created the state machine</param>
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true).</param>
-		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
 		{
-			this.mono = mono;
+
 		}
 
 		/// <summary>
@@ -327,8 +326,6 @@ namespace FSM
 		{
 			state.fsm = this;
 			state.name = name;
-			state.mono = mono;
-
 			state.Init();
 
 			StateBundle bundle = GetOrCreateStateBundle(name);
@@ -347,8 +344,6 @@ namespace FSM
 		private void InitTransition(TransitionBase<TStateId> transition)
 		{
 			transition.fsm = this;
-			transition.mono = mono;
-
 			transition.Init();
 		}
 
@@ -623,21 +618,21 @@ namespace FSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
+		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
 		{
 		}
 	}
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
+		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
 		{
 		}
 	}
 
 	public class StateMachine : StateMachine<string, string, string>
 	{
-		public StateMachine(MonoBehaviour mono, bool needsExitTime = true) : base(mono, needsExitTime)
+		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
 		{
 		}
 	}

@@ -11,7 +11,6 @@ namespace FSM
 		public TStateId name;
 
 		public IStateMachine<TStateId> fsm;
-		public MonoBehaviour mono;
 
 		/// <summary>
 		/// Initialises a new instance of the BaseState class

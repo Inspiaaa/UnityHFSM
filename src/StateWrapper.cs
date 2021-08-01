@@ -51,7 +51,6 @@ namespace FSM
 			{
 				state.name = name;
 				state.fsm = fsm;
-				state.mono = mono;
 
 				state.Init();
 			}

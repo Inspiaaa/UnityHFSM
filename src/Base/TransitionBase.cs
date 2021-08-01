@@ -13,7 +13,6 @@ namespace FSM
 		public bool forceInstantly;
 
 		public IStateMachine<TStateId> fsm;
-		public MonoBehaviour mono;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionBase class

@@ -9,6 +9,8 @@ namespace FSM
 	/// </summary>
 	public class CoState<TStateId> : StateBase<TStateId>
 	{
+		private MonoBehaviour mono;
+
 		private Action<CoState<TStateId>> onEnter;
 		private Func<CoState<TStateId>, IEnumerator> onLogic;
 		private Action<CoState<TStateId>> onExit;
@@ -20,6 +22,7 @@ namespace FSM
 		/// <summary>
 		/// Initialises a new instance of the CoState class
 		/// </summary>
+		/// <param name="mono">The MonoBehaviour of the script that should run the coroutine.</param>
 		/// <param name="onEnter">A function that is called when the state machine enters this state</param>
 		/// <param name="onLogic">A coroutine that is run while this state is active
 		/// 	It runs independently from the parent state machine's OnLogic(), because it is handled by Unity.
@@ -34,12 +37,14 @@ namespace FSM
 		/// exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// state change (true)</param>
 		public CoState(
+				MonoBehaviour mono,
 				Action<CoState<TStateId>> onEnter = null,
 				Func<CoState<TStateId>, IEnumerator> onLogic = null,
 				Action<CoState<TStateId>> onExit = null,
 				Func<CoState<TStateId>, bool> canExit = null,
 				bool needsExitTime = false) : base(needsExitTime)
 		{
+			this.mono = mono;
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
 			this.onExit = onExit;
@@ -111,11 +116,12 @@ namespace FSM
 	public class CoState : CoState<string>
 	{
 		public CoState(
+			MonoBehaviour mono,
 			Action<CoState<string>> onEnter = null,
 			Func<CoState<string>, IEnumerator> onLogic = null,
 			Action<CoState<string>> onExit = null,
 			Func<CoState<string>, bool> canExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, canExit, needsExitTime)
 		{
 		}
 	}

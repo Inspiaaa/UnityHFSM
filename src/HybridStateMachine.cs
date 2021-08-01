@@ -34,11 +34,10 @@ namespace FSM
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true).</param>
 		public HybridStateMachine(
-				MonoBehaviour mono,
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onEnter = null,
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onLogic = null,
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onExit = null,
-				bool needsExitTime = false) : base(mono, needsExitTime)
+				bool needsExitTime = false) : base(needsExitTime)
 		{
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
@@ -77,7 +76,7 @@ namespace FSM
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onLogic = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onExit = null,
-			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
+			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
 		{
 		}
 	}
@@ -85,11 +84,10 @@ namespace FSM
 	public class HybridStateMachine<TStateId> : HybridStateMachine<TStateId, TStateId, string>
 	{
 		public HybridStateMachine(
-			MonoBehaviour mono,
 			Action<HybridStateMachine<TStateId, TStateId, string>> onEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, string>> onLogic = null,
 			Action<HybridStateMachine<TStateId, TStateId, string>> onExit = null,
-			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
+			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
 		{
 		}
 	}
@@ -97,11 +95,10 @@ namespace FSM
 	public class HybridStateMachine : HybridStateMachine<string, string, string>
 	{
 		public HybridStateMachine(
-			MonoBehaviour mono,
 			Action<HybridStateMachine<string, string, string>> onEnter = null,
 			Action<HybridStateMachine<string, string, string>> onLogic = null,
 			Action<HybridStateMachine<string, string, string>> onExit = null,
-			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, needsExitTime)
+			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
 		{
 		}
 	}
