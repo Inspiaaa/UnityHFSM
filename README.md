@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://github.com/Inspiaaa/UnityHFSM">
     <img src="https://img.shields.io/badge/Unity-C%23-blue.svg?&logo=unity" /></a>
-  <a href="https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE" alt="GitHub license">
+  <a href="https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE.md" alt="GitHub license">
     <img src="https://img.shields.io/badge/License-MIT-green.svg" /></a>
   <a href="https://github.com/Inspiaaa/UnityHFSM/releases" alt="GitHub release">
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
