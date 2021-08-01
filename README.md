@@ -67,11 +67,12 @@ To get started, download the latest version of UnityHFSM from the [Releases](htt
 
 You can also add it directly from GitHub on Unity 2019.4+. Note that you won't be able to receive updates through Package Manager this way, you'll have to update manually.
 
-- open Package Manager
-- click <kbd>+</kbd>
-- select <kbd>Add from Git URL</kbd>
-- paste `https://github.com/Inspiaaa/UnityHFSM.git`
-- click <kbd>Add</kbd>
+- Open Package Manager (<kbd>Window</kbd> > <kbd>Package Manager</kbd>)
+- Click <kbd>+</kbd>
+- Select <kbd>Add from Git URL</kbd>
+- Paste `https://github.com/Inspiaaa/UnityHFSM.git`
+- Click <kbd>Add</kbd>
+
 </details>
 
 ---
