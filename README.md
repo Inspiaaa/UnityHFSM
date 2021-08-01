@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
 </p>
 
-A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**. 
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
 
 Thanks to overloading, it minimises boilerplate code while still supporting **generics**.
 
@@ -92,7 +92,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
 - Initialise the state machine
 
 - Add states:
-  
+
   ```csharp
   fsm.AddState( new State(
       onEnter,
@@ -102,7 +102,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
   ```
 
 - Add transitions
-  
+
   ```csharp
   fsm.AddTransition( new Transition(
       from,
@@ -112,7 +112,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
   ```
 
 - Run the state machine
-  
+
   ```csharp
   void Update {
       fsm.OnLogic()
@@ -135,7 +135,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        fsm = new StateMachine(this);
+        fsm = new StateMachine();
     }
 }
 ```
@@ -189,19 +189,19 @@ Although this example is using lambda expressions for the states' logic, you can
         // ...
 
         fsm.AddTransition(new Transition(
-            "ExtractIntel", 
+            "ExtractIntel",
             "FollowPlayer",
             (transition) => DistanceToPlayer() > ownScanningRange
         ));
 
         fsm.AddTransition(new Transition(
-            "FollowPlayer", 
+            "FollowPlayer",
             "ExtractIntel",
             (transition) => DistanceToPlayer() < ownScanningRange
         ));
 
         fsm.AddTransition(new Transition(
-            "ExtractIntel", 
+            "ExtractIntel",
             "FleeFromPlayer",
             (transition) => DistanceToPlayer() < playerScanningRange
         ));
@@ -217,7 +217,7 @@ Although this example is using lambda expressions for the states' logic, you can
 #### Initialising and running the state machine
 
 ```csharp
-    void Start() 
+    void Start()
     {
         // ...
 
@@ -254,10 +254,10 @@ So that you can see a visual difference, the enemy should be spinning when it en
     void Start()
     {
         // This is the main state machine
-        fsm = new StateMachine(this);
+        fsm = new StateMachine();
 
         // This is the nested state machine
-        StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
+        StateMachine extractIntel = new StateMachine(needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
 
         // ...
@@ -274,9 +274,9 @@ So that you can see a visual difference, the enemy should be spinning when it en
 
     void Start()
     {
-        fsm = new StateMachine(this);
+        fsm = new StateMachine();
 
-        StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
+        StateMachine extractIntel = new StateMachine(needsExitTime: false);
         fsm.AddState("ExtractIntel", extractIntel);
 
         extractIntel.AddState("SendData", new State(
@@ -313,7 +313,7 @@ What is `fsm.StateCanExit()` and `needsExitTime`? (See the next paragraph below)
 
 ## Timing of state changes
 
-When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transition has the `forceInstantly`  property set to true). This is very useful when you do not want an action to be interrupted before it has ended, like in this case. 
+When needsExitTime is set to false, the state can exit any time (because of a transition), regardless of its state (Get it? :) ).  If it is set to true this cannot happen (unless a transition has the `forceInstantly`  property set to true). This is very useful when you do not want an action to be interrupted before it has ended, like in this case.
 
 But when is the right time for the state machine to finally change states? This is where the `fsm.StateCanExit()` method comes in and another argument for the `State` constructor: `canExit`.  `fsm.StateCanExit()` notifies the state machine that the state can cleanly exit.
 
@@ -328,7 +328,7 @@ But when is the right time for the state machine to finally change states? This 
 The state machine supports three ways of changing states:
 
 1. Using `Transition` objects as described earlier. You can even have multiple transitions that connect the same two states. They are checked on every OnLogic call and can be seen as a type of polling.
-   
+
    ```csharp
    fsm.AddTransition( new Transition(
        from,
@@ -338,19 +338,19 @@ The state machine supports three ways of changing states:
    ```
 
 2. Calling the `RequestStateChange` method: Instead of using Transition objects to manage state changes, each state can individually also manage its own transitions by directly calling the `RequestStateChange` method.
-   
+
    ```csharp
    fsm.RequestStateChange(state, forceInstantly: false);
    ```
-   
+
    **Example**
-   
+
    ```csharp
    fsm.AddState("FollowPlayer", new State(
        onLogic: (state) =>
        {
            MoveTowardsPlayer(1);
-   
+
            if (DistanceToPlayer() < ownScanningRange)
            {
                fsm.RequestStateChange("ExtractIntel");
@@ -360,22 +360,22 @@ The state machine supports three ways of changing states:
    ```
 
 3. Using "Trigger Transitions": These are normal transitions that are only checked when a certain trigger (an event) is activated.
-   
+
    These are really handy when a polling-based solution does not fit or is not efficient enough. Trigger Transitions let you effortlessly leverage the efficiency of event-based transitions, in combination with the full power of the existing high-level transition types.
-   
+
    ```csharp
    fsm.AddTriggerTransition(triggerName, transition);
    ```
-   
+
    **Example**
-   
+
    ```csharp
    // Flappy Bird Example
    fsm.AddTriggerTransition(
        "OnCollision",
        new Transition("Alive", "Dead")
    );
-   
+
    // Later
    fsm.Trigger("OnCollision");
    ```
@@ -388,7 +388,7 @@ There is also a slight variation of the `Transition` state change behaviour, tha
 fsm.AddTransitionFromAny( new Transition(
     from,
     to,
-    condition 
+    condition
 ));
 
 // For Trigger Transitions
@@ -472,6 +472,7 @@ In this example, we can replace the `SendData` state with a more advanced one, w
     {
         // ...
         extractIntel.AddState("SendData", new CoState(
+            this,   // Pass in the MonoBehaviour that should run the coroutine
             onLogic: SendData,
             needsExitTime: true
         ));
@@ -489,23 +490,27 @@ This is also how `CoState`, `TransitionAfter`, ... have been implemented interna
 Simply inherit from the base class `StateBase` and override the methods you need.
 
 ```csharp
-    class CustomSendData : StateBase {
+    class CustomSendData : StateBase
+    {
+        MonoBehaviour mono;
+
         // Important: The constructor must call StateBase's constructor (here: base(...))
         // because it declares whether the state needsExitTime
-        public CustomSendData() : base(needsExitTime: false)
+        public CustomSendData(MonoBehaviour mono) : base(needsExitTime: false)
         {
-            // Optional initialisation code here
+            // We need to have access to the MonoBehaviour so that we can rotate it.
+            // => Keep a reference
+            this.mono = mono;
         }
 
         public override void OnEnter()
         {
-            // Write your code for OnEnter here
-            // If you don't have any, you can just leave this entire method override out
+            // Write your code for OnEnter here.
+            // If you don't have any, you can just leave this entire method override out.
         }
 
         public override void OnLogic()
         {
-            // The MonoBehaviour can be accessed from inside the state with this.mono or simply mono
             this.mono.transform.eulerAngles += new Vector3(0, 0, 100 * Time.deltaTime);
         }
     }
@@ -513,7 +518,7 @@ Simply inherit from the base class `StateBase` and override the methods you need
     void Start()
     {
         // ...
-        extractIntel.AddState("SendData", new CustomSendData());
+        extractIntel.AddState("SendData", new CustomSendData(this));
         // ...
     }
 ```
