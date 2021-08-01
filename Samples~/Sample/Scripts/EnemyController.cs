@@ -29,7 +29,7 @@ namespace FSM.Samples
             transform.eulerAngles += new Vector3(0, 0, speed * Time.deltaTime);
         }
 
-        IEnumerator SendData(CoState state)
+        IEnumerator SendData(CoState<string> state)
         {
             while (state.timer.Elapsed < 2)
             {
@@ -52,10 +52,10 @@ namespace FSM.Samples
 
         void Start()
         {
-            fsm = new StateMachine(this);
+            fsm = new StateMachine();
 
             // This is the nested state machine
-            StateMachine extractIntel = new StateMachine(this, needsExitTime: false);
+            StateMachine extractIntel = new StateMachine(needsExitTime: false);
             fsm.AddState("ExtractIntel", extractIntel);
 
             extractIntel.AddState("SendData", new State(
@@ -76,12 +76,13 @@ namespace FSM.Samples
 
             // Unity Coroutines
             // extractIntel.AddState("SendData", new CoState(
+            //     this
             //     onLogic: SendData,
             //     needsExitTime: true
             // ));
 
             // Class based architecture
-            // extractIntel.AddState("SendData", new CustomSendData());
+            // extractIntel.AddState("SendData", new CustomSendData(this));
 
             extractIntel.AddState("CollectData", new State(
                 onLogic: (state) =>
@@ -113,8 +114,6 @@ namespace FSM.Samples
 
             // This configures the entry point of the state machine
             fsm.SetStartState("FollowPlayer");
-            // Initialises the state machine and must be called before OnLogic() is called
-            // fsm.Init();
 
             fsm.AddTransition(new Transition(
                 "ExtractIntel",
@@ -136,6 +135,7 @@ namespace FSM.Samples
                 "ExtractIntel",
                 (transition) => DistanceToPlayer() > playerScanningRange));
 
+            // Initialises the state machine and must be called before OnLogic() is called
             fsm.Init();
         }
 

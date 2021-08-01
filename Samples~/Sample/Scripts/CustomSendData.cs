@@ -5,11 +5,15 @@ namespace FSM.Samples
 {
     class CustomSendData : StateBase
     {
+        MonoBehaviour mono;
+
         // Important: The constructor must call StateBase's constructor (here: base(...))
         // because it declares whether the state needsExitTime
-        public CustomSendData() : base(needsExitTime: false)
+        public CustomSendData(MonoBehaviour mono) : base(needsExitTime: false)
         {
-            // Optional initialisation code here
+            // We need to have access to the MonoBehaviour so that we can rotate it.
+            // => Keep a reference
+            this.mono = mono;
         }
 
         public override void OnEnter()
@@ -20,7 +24,6 @@ namespace FSM.Samples
 
         public override void OnLogic()
         {
-            // The MonoBehaviour can be accessed from inside the state with this.mono or simply mono
             this.mono.transform.eulerAngles += new Vector3(0, 0, 100 * Time.deltaTime);
         }
     }
