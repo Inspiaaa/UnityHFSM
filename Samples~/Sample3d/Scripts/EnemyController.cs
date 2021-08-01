@@ -58,7 +58,7 @@ namespace FSM.Samples
             StateMachine extractIntel = new StateMachine(needsExitTime: false);
             fsm.AddState("ExtractIntel", extractIntel);
 
-            extractIntel.AddState("SendData", new State(
+            extractIntel.AddState("SendData",
                 onLogic: (state) =>
                 {
                     // When the state has been active for more than 5 seconds,
@@ -72,7 +72,7 @@ namespace FSM.Samples
                 // This means the state won't instantly exit when a transition should happen
                 // but instead the state machine waits until it is given permission to change state
                 needsExitTime: true
-            ));
+            );
 
             // Unity Coroutines
             // extractIntel.AddState("SendData", new CoState(
@@ -84,20 +84,20 @@ namespace FSM.Samples
             // Class based architecture
             // extractIntel.AddState("SendData", new CustomSendData(this));
 
-            extractIntel.AddState("CollectData", new State(
+            extractIntel.AddState("CollectData",
                 onLogic: (state) =>
                 {
                     if (state.timer > 5) state.fsm.StateCanExit();
                 },
                 needsExitTime: true
-            ));
+            );
 
             // A transition without a condition
-            extractIntel.AddTransition(new Transition("SendData", "CollectData"));
-            extractIntel.AddTransition(new Transition("CollectData", "SendData"));
+            extractIntel.AddTransition("SendData", "CollectData");
+            extractIntel.AddTransition("CollectData", "SendData");
             extractIntel.SetStartState("CollectData");
 
-            fsm.AddState("FollowPlayer", new State(
+            fsm.AddState("FollowPlayer",
                 onLogic: (state) =>
                 {
                     MoveTowardsPlayer(1);
@@ -106,34 +106,34 @@ namespace FSM.Samples
                         fsm.RequestStateChange("ExtractIntel");
                     }
                 }
-            ));
+            );
 
-            fsm.AddState("FleeFromPlayer", new State(
+            fsm.AddState("FleeFromPlayer",
                 onLogic: (state) => MoveTowardsPlayer(-1)
-            ));
+            );
 
             // This configures the entry point of the state machine
             fsm.SetStartState("FollowPlayer");
 
-            fsm.AddTransition(new Transition(
+            fsm.AddTransition(
                 "ExtractIntel",
                 "FollowPlayer",
-                (transition) => DistanceToPlayer() > ownScanningRange));
+                (transition) => DistanceToPlayer() > ownScanningRange);
 
-            fsm.AddTransition(new Transition(
+            fsm.AddTransition(
                 "FollowPlayer",
                 "ExtractIntel",
-                (transition) => DistanceToPlayer() < ownScanningRange));
+                (transition) => DistanceToPlayer() < ownScanningRange);
 
-            fsm.AddTransition(new Transition(
+            fsm.AddTransition(
                 "ExtractIntel",
                 "FleeFromPlayer",
-                (transition) => DistanceToPlayer() < playerScanningRange));
+                (transition) => DistanceToPlayer() < playerScanningRange);
 
-            fsm.AddTransition(new Transition(
+            fsm.AddTransition(
                 "FleeFromPlayer",
                 "ExtractIntel",
-                (transition) => DistanceToPlayer() > playerScanningRange));
+                (transition) => DistanceToPlayer() > playerScanningRange);
 
             // Initialises the state machine and must be called before OnLogic() is called
             fsm.Init();
