@@ -6,6 +6,7 @@
   "version": "1.7.2",
   "license": "MIT",
   "keywords": ["fsm", "hierarchical", "state-machine"],
+  "documentationUrl": "https://github.com/Inspiaaa/UnityHFSM",
 
   "author": {
     "name": "Inspiaaa",
