@@ -1,9 +1,10 @@
 ![HFSM for Unity](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5f7b75c48c74b72bb43ee63af20741192f89a679/diagrams/Banner.jpg)
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Unity-C%23-blue.svg?&logo=unity" />
+  <a href="https://github.com/Inspiaaa/UnityHFSM">
+    <img src="https://img.shields.io/badge/Unity-C%23-blue.svg?&logo=unity" /></a>
   <a href="https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE" alt="GitHub license">
-    <img src="https://img.shields.io/github/license/Inspiaaa/UnityHFSM.svg" /></a>
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" /></a>
   <a href="https://github.com/Inspiaaa/UnityHFSM/releases" alt="GitHub release">
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
 </p>
@@ -72,6 +73,7 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
 - Select <kbd>Add from Git URL</kbd>
 - Paste `https://github.com/Inspiaaa/UnityHFSM.git`
 - Click <kbd>Add</kbd>
+- Tip: If you're using VSCode and you're not getting any IntelliSense, you may have to regenerate the `.csproj` project files (<kbd>Edit</kbd> > <kbd>Preferences</kbd> > <kbd>External Tools</kbd> > <kbd>Regenerate project files</kbd>)
 
 </details>
 
