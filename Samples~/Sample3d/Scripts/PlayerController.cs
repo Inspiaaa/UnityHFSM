@@ -6,9 +6,10 @@ namespace FSM.Samples
     public class PlayerController : MonoBehaviour
     {
         public static PlayerController Instance { get; private set; }
-        [SerializeField] private float speed = 2;
+
+        [SerializeField]
+        private float speed = 2;
         private Rigidbody rb;
-        private Vector3 movement;
 
         private void Awake()
         {
@@ -28,23 +29,15 @@ namespace FSM.Samples
             rb = GetComponent<Rigidbody>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            movement = new Vector3(
+            Vector3 playerInput = new Vector3(
                 Input.GetAxis("Horizontal"),
                 0f,
                 Input.GetAxis("Vertical")
             );
-        }
 
-        private void FixedUpdate()
-        {
-            Moving();
-        }
-
-        private void Moving()
-        {
-            rb.velocity = movement * speed;
+            rb.velocity = playerInput * speed;
         }
 
         private void OnDestroy()
