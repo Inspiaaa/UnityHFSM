@@ -4,7 +4,7 @@
   "description": "A simple yet powerful class based hierarchical finite state machine for Unity3D",
 
   "version": "1.7.2",
-  "licenseUrl": "https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE"
+  "licenseUrl": "https://github.com/Inspiaaa/UnityHFSM/blob/master/LICENSE",
   "keywords": ["fsm", "hierarchical", "state-machine"],
 
   "author": {
