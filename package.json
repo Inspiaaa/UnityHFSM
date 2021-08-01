@@ -1,0 +1,16 @@
+{
+  "name": "com.inspiaaa.unityhfsm",
+  "displayName": "UnityHFSM",
+  "version": "1.7.2",
+  "description": "A simple yet powerful class based hierarchical finite state machine for Unity3D",
+  "author": {
+    "email": "lavaafterburner@gmail.com",
+    "name": "Inspiaaa"
+  },
+  "samples": [
+    {
+      "displayName": "Sample",
+      "path": "Samples~/Sample"
+    }
+  ]
+}
