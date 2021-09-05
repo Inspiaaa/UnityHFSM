@@ -592,7 +592,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTransition(CreateOptimizedTransition(default, to, condition, forceInstantly));
+			AddTransitionFromAny(CreateOptimizedTransition(default, to, condition, forceInstantly));
 		}
 
 		/// <summary>
