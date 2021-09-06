@@ -288,6 +288,17 @@ namespace FSM
 			activeState.OnLogic();
 		}
 
+		public override void OnCommand<TCommand>(TCommand command = default)
+		{
+			if (activeState == null)
+			{
+				throw new FSM.Exceptions.StateMachineNotInitializedException(
+					"Running OnCommand"
+				);
+			}
+			activeState.OnCommand(command);
+		}
+
 		public override void OnExit()
 		{
 			if (activeState != null)
