@@ -66,6 +66,7 @@ namespace FSM
 		}
 
 		private IEqualityComparer<TEvent> eventComparer;
+		private IEqualityComparer<TStateId> stateIdComparer;
 		
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase<TStateId>> noTransitions
@@ -120,6 +121,7 @@ namespace FSM
 		public StateMachine(bool needsExitTime = true, IEqualityComparer<TStateId> stateIdComparer = null, IEqualityComparer<TEvent> eventComparer = null) : base(needsExitTime)
 		{
 			this.eventComparer = eventComparer;
+			this.stateIdComparer = stateIdComparer;
 			nameToStateBundle = stateIdComparer == null
 				? new Dictionary<TStateId, StateBundle>()
 				: new Dictionary<TStateId, StateBundle>(stateIdComparer);
@@ -287,8 +289,17 @@ namespace FSM
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
 
 				// Don't transition to the "to" state, if that state is already the active state
-				if (transition.to.Equals(activeState.name))
-					continue;
+				if (stateIdComparer != null)
+				{
+					if (stateIdComparer.Equals(transition.to, activeState.name))
+						continue;
+				}
+				else
+				{
+					if (transition.to.Equals(activeState.name))
+						continue;	
+				}
+				
 
 				if (TryTransition(transition))
 					break;
@@ -458,8 +469,16 @@ namespace FSM
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
-					if (transition.to.Equals(activeState.name))
-						continue;
+					if (stateIdComparer != null)
+					{
+						if (stateIdComparer.Equals(transition.to, activeState.name))
+							continue;
+					}
+					else
+					{
+						if (transition.to.Equals(activeState.name))
+							continue;	
+					}
 
 					if (TryTransition(transition))
 						return true;
