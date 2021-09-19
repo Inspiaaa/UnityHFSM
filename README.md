@@ -7,6 +7,8 @@
     <img src="https://img.shields.io/badge/License-MIT-green.svg" /></a>
   <a href="https://github.com/Inspiaaa/UnityHFSM/releases" alt="GitHub release">
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
+  <a href="https://openupm.com/packages/com.inspiaaa.unityhfsm/">
+    <img src="https://img.shields.io/npm/v/com.inspiaaa.unityhfsm?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
 </p>
 
 A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
@@ -62,6 +64,24 @@ It has a special focus on the temporal aspects of state transitions, making it i
 To get started, download the latest version of UnityHFSM from the [Releases](https://github.com/Inspiaaa/UnityHFSM/releases) page. Simply extract the zip file and put the folder anywhere in your `Assets` folder. Et voilà, you're ready to go!
 
 ### UPM Package
+
+<details>
+<summary>Add from OpenUPM <em>| via scoped registry</em></summary>
+
+To add OpenUPM to your project:
+
+- Open `Edit/Project Settings/Package Manager`
+- Add a new Scoped Registry:
+```
+Name: OpenUPM
+URL:  https://package.openupm.com/
+Scope(s): com.inspiaaa.unityhfsm
+```
+- Click <kbd>Save</kbd>
+- Open Package Manager
+- Select ``My Registries`` in dropdown top left
+- Select ``UnityHFSM`` and click ``Install``
+</details>
 
 <details>
 <summary>Add from GitHub | <em>no updates through PackMan</em></summary>
