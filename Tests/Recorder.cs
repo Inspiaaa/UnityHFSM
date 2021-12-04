@@ -6,36 +6,36 @@ using FSM;
 
 namespace FSM.Tests
 {
-    public class Recorder {
+    public class Recorder<TStateId> {
         private enum RecordedAction {
             ENTER, LOGIC, EXIT
         }
 
         public class RecorderQuery {
-            private Recorder recorder;
+            private Recorder<TStateId> recorder;
 
-            public RecorderQuery(Recorder recorder) {
+            public RecorderQuery(Recorder<TStateId> recorder) {
                 this.recorder = recorder;
             }
 
-            private void CheckNext((string state, RecordedAction action) step) {
+            private void CheckNext((TStateId state, RecordedAction action) step) {
                 if (recorder.recordedSteps.Count == 0) {
                     Assert.Fail($"No recorded steps left. {step} has not happened yet.");
                 }
                 Assert.AreEqual(recorder.recordedSteps.Dequeue(), step);
             }
 
-            public RecorderQuery Enter(string stateName) {
+            public RecorderQuery Enter(TStateId stateName) {
                 CheckNext((stateName, RecordedAction.ENTER));
                 return this;
             }
 
-            public RecorderQuery Logic(string stateName) {
+            public RecorderQuery Logic(TStateId stateName) {
                 CheckNext((stateName, RecordedAction.LOGIC));
                 return this;
             }
 
-            public RecorderQuery Exit(string stateName) {
+            public RecorderQuery Exit(TStateId stateName) {
                 CheckNext((stateName, RecordedAction.EXIT));
                 return this;
             }
@@ -53,28 +53,28 @@ namespace FSM.Tests
             }
         }
 
-        private Queue<(string state, RecordedAction action)> recordedSteps;
-        private StateWrapper tracker;
+        private Queue<(TStateId state, RecordedAction action)> recordedSteps;
+        private StateWrapper<TStateId, string> tracker;
 
         // Fluent interface for checking the validity of the steps
         public RecorderQuery Check => new RecorderQuery(this);
 
-        public StateBase<string> TrackedState => Track(new StateBase<string>(false));
+        public StateBase<TStateId> TrackedState => Track(new StateBase<TStateId>(false));
 
         public Recorder() {
-            recordedSteps = new Queue<(string state, RecordedAction action)>();
-            tracker = new StateWrapper(
+            recordedSteps = new Queue<(TStateId state, RecordedAction action)>();
+            tracker = new StateWrapper<TStateId, string>(
                 beforeOnEnter: s => RecordEnter(s.name),
                 beforeOnLogic: s => RecordLogic(s.name),
                 beforeOnExit: s => RecordExit(s.name)
             );
         }
 
-        public void RecordEnter(string state) => recordedSteps.Enqueue((state, RecordedAction.ENTER));
-        public void RecordLogic(string state) => recordedSteps.Enqueue((state, RecordedAction.LOGIC));
-        public void RecordExit(string state) => recordedSteps.Enqueue((state, RecordedAction.EXIT));
+        public void RecordEnter(TStateId state) => recordedSteps.Enqueue((state, RecordedAction.ENTER));
+        public void RecordLogic(TStateId state) => recordedSteps.Enqueue((state, RecordedAction.LOGIC));
+        public void RecordExit(TStateId state) => recordedSteps.Enqueue((state, RecordedAction.EXIT));
 
-        public StateBase<string> Track(StateBase<string> state) {
+        public StateBase<TStateId> Track(StateBase<TStateId> state) {
             return tracker.Wrap(state);
         }
 
@@ -92,5 +92,9 @@ namespace FSM.Tests
         public void DiscardAll() {
             recordedSteps.Clear();
         }
+    }
+
+    public class Recorder : Recorder<string> {
+
     }
 }
