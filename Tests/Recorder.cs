@@ -22,7 +22,7 @@ namespace FSM.Tests
                 if (recorder.recordedSteps.Count == 0) {
                     Assert.Fail($"No recorded steps left. {step} has not happened yet.");
                 }
-                Assert.AreEqual(recorder.recordedSteps.Dequeue(), step);
+                Assert.AreEqual(step, recorder.recordedSteps.Dequeue());
             }
 
             public RecorderQuery Enter(TStateId stateName) {

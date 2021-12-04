@@ -24,7 +24,7 @@ namespace FSM.Tests
 
             fsm.Init();
             recorder.Check.Enter("A").All();
-            Assert.AreEqual(fsm.ActiveStateName, "A");
+            Assert.AreEqual("A", fsm.ActiveStateName);
 
             fsm.OnLogic();
             recorder.Check.Logic("A").All();
@@ -35,7 +35,7 @@ namespace FSM.Tests
             fsm.AddState("A");
             fsm.AddState("B");
             fsm.Init();
-            Assert.AreEqual(fsm.ActiveStateName, "A");
+            Assert.AreEqual("A", fsm.ActiveStateName);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace FSM.Tests
             fsm.AddState("B");
             fsm.SetStartState("B");
             fsm.Init();
-            Assert.AreEqual(fsm.ActiveStateName, "B");
+            Assert.AreEqual("B", fsm.ActiveStateName);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace FSM.Tests
             fsm.AddState("A");
             fsm.AddState("B");
             fsm.Init();
-            Assert.AreEqual(fsm.ActiveStateName, "B");
+            Assert.AreEqual("B", fsm.ActiveStateName);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace FSM.Tests
             fsm.OnLogic();
             fsm.SetStartState("B");
             fsm.OnLogic();
-            Assert.AreEqual(fsm.ActiveStateName, "A");
+            Assert.AreEqual("A", fsm.ActiveStateName);
         }
 
         [Test]
