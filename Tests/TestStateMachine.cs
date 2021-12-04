@@ -8,11 +8,17 @@ namespace FSM.Tests
 {
     public class TestStateMachine
     {
+        private Recorder recorder;
+        private StateMachine fsm;
+
+        [SetUp]
+        public void Setup() {
+            recorder = new Recorder();
+            fsm = new StateMachine();
+        }
+
         [Test]
         public void TestStartup() {
-            var recorder = new Recorder();
-            var fsm = new StateMachine();
-
             fsm.AddState("A", recorder.Track(new State()));
             recorder.Check.Empty();
 
@@ -26,8 +32,6 @@ namespace FSM.Tests
 
         [Test]
         public void TestDirectTransitionWithCondition() {
-            var recorder = new Recorder();
-            var fsm = new StateMachine();
             bool condition = false;
 
             fsm.AddState("A", recorder.TrackedState);
@@ -49,9 +53,6 @@ namespace FSM.Tests
 
         [Test]
         public void TestTransitionWithExitTime() {
-            var recorder = new Recorder();
-            var fsm = new StateMachine();
-
             fsm.AddState("A", recorder.Track(new State(needsExitTime: true, canExit: state => true)));
             fsm.AddState("B", recorder.TrackedState);
             fsm.AddTransition("A", "B");
