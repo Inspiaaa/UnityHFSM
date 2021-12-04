@@ -18,7 +18,7 @@ namespace FSM.Tests
 
             fsm.Init();
             recorder.Check.Enter("A").All();
-            Assert.Equals(fsm.ActiveStateName, "A");
+            Assert.AreEqual(fsm.ActiveStateName, "A");
 
             fsm.OnLogic();
             recorder.Check.Logic("A").All();
