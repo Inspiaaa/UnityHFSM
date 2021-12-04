@@ -1,0 +1,15 @@
+classDiagram
+    class TransitionBase
+    TransitionBase <|-- StringTransitionBase
+
+    TransitionBase <|-- Transition
+    Transition <|-- StringTransition
+
+    TransitionBase <|-- TransitionAfter
+    TransitionAfter <|-- StringTransitionAfter
+
+    TransitionBase <|-- TransitionAfterDynamic
+    TransitionAfterDynamic <|-- StringTransitionDynamic
+
+    TransitionBase <|-- TransitionOnKey
+    TransitionOnKey <|-- StringTransitionOnKey
