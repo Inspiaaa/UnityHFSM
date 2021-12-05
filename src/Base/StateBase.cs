@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FSM
@@ -11,6 +13,8 @@ namespace FSM
 		public TStateId name;
 
 		public IStateMachine<TStateId> fsm;
+
+		private Dictionary<Type, Delegate> commandHandlers;
 
 		/// <summary>
 		/// Initialises a new instance of the BaseState class
@@ -44,6 +48,35 @@ namespace FSM
 		/// </summary>
 		public virtual void OnLogic() {
 
+		}
+
+		/// <summary>
+		/// Set command handler
+		/// </summary>
+		/// <param name="handler">Handler delegate</param>
+		/// <typeparam name="TCommand">Type of command</typeparam>
+		protected void SetCommandHandler<TCommand>(Action<TCommand> handler)
+		{
+			if (commandHandlers == null)
+			{
+				commandHandlers = new Dictionary<Type, Delegate>();
+			}
+
+			commandHandlers[typeof(TCommand)] = handler;
+		}
+
+		/// <summary>
+		/// Called when state is active and fsm was call OnCommand
+		/// </summary>
+		/// <param name="command"></param>
+		/// <typeparam name="TCommand"></typeparam>
+		public virtual void OnCommand<TCommand>(TCommand command = default)
+		{
+			if (commandHandlers != null)
+			{
+				commandHandlers.TryGetValue(typeof(TCommand), out var commandHandler);
+				(commandHandler as Action<TCommand>)?.Invoke(command);
+			}
 		}
 
 		/// <summary>

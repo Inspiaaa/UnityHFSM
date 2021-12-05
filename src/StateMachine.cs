@@ -32,6 +32,12 @@ namespace FSM
 			public StateBase<TStateId> state;
 			public List<TransitionBase<TStateId>> transitions;
 			public Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerToTransitions;
+			private IEqualityComparer<TEvent> eventComparer;
+
+			public StateBundle(IEqualityComparer<TEvent> eventComparer)
+			{
+				this.eventComparer = eventComparer;
+			}
 
 			public void AddTransition(TransitionBase<TStateId> t)
 			{
@@ -40,8 +46,12 @@ namespace FSM
 			}
 
 			public void AddTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition) {
-				triggerToTransitions = triggerToTransitions
-					?? new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
+				if (triggerToTransitions == null)
+				{
+					triggerToTransitions = eventComparer == null
+						? new Dictionary<TEvent, List<TransitionBase<TStateId>>>()
+						: new Dictionary<TEvent, List<TransitionBase<TStateId>>>(eventComparer);
+				}
 
 				List<TransitionBase<TStateId>> transitionsOfTrigger;
 
@@ -55,6 +65,9 @@ namespace FSM
 			}
 		}
 
+		private IEqualityComparer<TEvent> eventComparer;
+		private IEqualityComparer<TStateId> stateIdComparer;
+		
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase<TStateId>> noTransitions
 			= new List<TransitionBase<TStateId>>(0);
@@ -65,8 +78,7 @@ namespace FSM
 		private (TStateId state, bool isPending) pendingState = (default, false);
 
 		// Central storage of states
-		private Dictionary<TStateId, StateBundle> nameToStateBundle
-			= new Dictionary<TStateId, StateBundle>();
+		private Dictionary<TStateId, StateBundle> nameToStateBundle; 
 
 		private StateBase<TStateId> activeState = null;
 		private List<TransitionBase<TStateId>> activeTransitions = noTransitions;
@@ -102,9 +114,17 @@ namespace FSM
 		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true).</param>
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		/// <param name="stateIdComparer">Comparer which will be used for lookup by state id.
+		///		Recommended for struct typed TStateId or custom lookup logic.</param>
+		/// <param name="eventComparer">Comparer which will be used for lookup by event.
+		///		Recommended for struct typed TEvent or custom lookup logic.</param>
+		public StateMachine(bool needsExitTime = true, IEqualityComparer<TStateId> stateIdComparer = null, IEqualityComparer<TEvent> eventComparer = null) : base(needsExitTime)
 		{
-
+			this.eventComparer = eventComparer;
+			this.stateIdComparer = stateIdComparer;
+			nameToStateBundle = stateIdComparer == null
+				? new Dictionary<TStateId, StateBundle>()
+				: new Dictionary<TStateId, StateBundle>(stateIdComparer);
 		}
 
 		/// <summary>
@@ -281,8 +301,17 @@ namespace FSM
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
 
 				// Don't transition to the "to" state, if that state is already the active state
-				if (transition.to.Equals(activeState.name))
-					continue;
+				if (stateIdComparer != null)
+				{
+					if (stateIdComparer.Equals(transition.to, activeState.name))
+						continue;
+				}
+				else
+				{
+					if (transition.to.Equals(activeState.name))
+						continue;	
+				}
+				
 
 				if (TryTransition(transition))
 					break;
@@ -298,6 +327,17 @@ namespace FSM
 			}
 
 			activeState.OnLogic();
+		}
+
+		public override void OnCommand<TCommand>(TCommand command = default)
+		{
+			if (activeState == null)
+			{
+				throw new FSM.Exceptions.StateMachineNotInitializedException(
+					"Running OnCommand"
+				);
+			}
+			activeState.OnCommand(command);
 		}
 
 		public override void OnExit()
@@ -322,7 +362,7 @@ namespace FSM
 			StateBundle bundle;
 
 			if (! nameToStateBundle.TryGetValue(name, out bundle)) {
-				bundle = new StateBundle();
+				bundle = new StateBundle(eventComparer);
 				nameToStateBundle.Add(name, bundle);
 			}
 
@@ -441,8 +481,16 @@ namespace FSM
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
-					if (transition.to.Equals(activeState.name))
-						continue;
+					if (stateIdComparer != null)
+					{
+						if (stateIdComparer.Equals(transition.to, activeState.name))
+							continue;
+					}
+					else
+					{
+						if (transition.to.Equals(activeState.name))
+							continue;	
+					}
 
 					if (TryTransition(transition))
 						return true;
@@ -593,7 +641,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			AddTransition(CreateOptimizedTransition(default, to, condition, forceInstantly));
+			AddTransitionFromAny(CreateOptimizedTransition(default, to, condition, forceInstantly));
 		}
 
 		/// <summary>
@@ -630,14 +678,15 @@ namespace FSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true, IEqualityComparer<TStateId> stateIdComparer = null, IEqualityComparer<TEvent> eventComparer = null) 
+			: base(needsExitTime, stateIdComparer, eventComparer)
 		{
 		}
 	}
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true, IEqualityComparer<TStateId> stateIdComparer = null) : base(needsExitTime, stateIdComparer)
 		{
 		}
 	}

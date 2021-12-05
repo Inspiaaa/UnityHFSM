@@ -28,19 +28,34 @@ namespace FSM
 		/// <param name="needsExitTime">Determins if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// 	state change (true)</param>
+		/// <param name="commands">Commands which will be registered for OnCommand calls</param>
 		public State(
 				Action<State<TStateId>> onEnter = null,
 				Action<State<TStateId>> onLogic = null,
 				Action<State<TStateId>> onExit = null,
 				Func<State<TStateId>, bool> canExit = null,
-				bool needsExitTime = false) : base(needsExitTime)
+				bool needsExitTime = false,
+				params CommandBase<TStateId>[] commands) : base(needsExitTime)
 		{
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
 			this.onExit = onExit;
 			this.canExit = canExit;
 
+			if (commands != null)
+			{
+				foreach (var command in commands)
+				{
+					command?.Register(this);
+				}
+			}
+
 			this.timer = new Timer();
+		}
+
+		internal void SetCommandHandlerInternal<TCommand>(Action<TCommand> handler)
+		{
+			SetCommandHandler(handler);
 		}
 
 		public override void OnEnter()
@@ -76,7 +91,8 @@ namespace FSM
 			Action<State<string>> onLogic = null,
 			Action<State<string>> onExit = null,
 			Func<State<string>, bool> canExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+			bool needsExitTime = false,
+			params CommandBase<string>[] commands) : base(onEnter, onLogic, onExit, canExit, needsExitTime, commands)
 		{
 		}
 	}

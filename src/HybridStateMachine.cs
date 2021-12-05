@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 namespace FSM
 {
@@ -33,11 +34,17 @@ namespace FSM
 		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true).</param>
+		/// <param name="stateIdComparer">Comparer which will be used for lookup by state id.
+		///		Recommended for struct typed TStateId or custom lookup logic.</param>
+		/// <param name="eventComparer">Comparer which will be used for lookup by event.
+		///		Recommended for struct typed TEvent or custom lookup logic.</param>
 		public HybridStateMachine(
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onEnter = null,
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onLogic = null,
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onExit = null,
-				bool needsExitTime = false) : base(needsExitTime)
+				bool needsExitTime = false,
+				IEqualityComparer<TStateId> stateIdComparer = null, 
+				IEqualityComparer<TEvent> eventComparer = null) : base(needsExitTime, stateIdComparer, eventComparer)
 		{
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
@@ -76,7 +83,9 @@ namespace FSM
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onLogic = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
+			bool needsExitTime = false,
+			IEqualityComparer<TStateId> stateIdComparer = null, 
+			IEqualityComparer<TEvent> eventComparer = null) : base(onEnter, onLogic, onExit, needsExitTime, stateIdComparer, eventComparer)
 		{
 		}
 	}
@@ -87,7 +96,8 @@ namespace FSM
 			Action<HybridStateMachine<TStateId, TStateId, string>> onEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, string>> onLogic = null,
 			Action<HybridStateMachine<TStateId, TStateId, string>> onExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
+			bool needsExitTime = false,
+			IEqualityComparer<TStateId> stateIdComparer = null) : base(onEnter, onLogic, onExit, needsExitTime, stateIdComparer)
 		{
 		}
 	}
