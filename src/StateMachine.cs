@@ -233,6 +233,18 @@ namespace FSM
 		/// </summary>
 		public override void OnEnter()
 		{
+			if (!startState.hasState)
+			{
+				throw new System.InvalidOperationException(
+					FSM.Exceptions.ExceptionFormatter.Format(
+						context: "Running OnEnter of the state machine.",
+						problem: "No start state is selected. "
+							+ "The state machine needs at least one state to function properly.",
+						solution: "Make sure that there is at least one state in the state machine "
+							+ "before running Init() or OnEnter() by calling fsm.AddState(...)."
+					)
+				);
+			}
 			ChangeState(startState.state);
 
 			for (int i = 0; i < transitionsFromAny.Count; i ++)

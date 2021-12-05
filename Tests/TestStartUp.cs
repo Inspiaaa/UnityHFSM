@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
 using FSM;
+using System;
 
 namespace FSM.Tests
 {
@@ -75,11 +76,17 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestNotInitializedException()
+		public void TestAccessingActiveStateBeforeInitialization()
 		{
 			fsm.AddState("A");
 			StateBase<string> activeState;
 			Assert.Throws<FSM.Exceptions.StateMachineNotInitializedException>(() => activeState = fsm.ActiveState);
+		}
+
+		[Test]
+		public void TestInitBeforeAddingAState()
+		{
+			Assert.Throws<InvalidOperationException>(() => fsm.Init());
 		}
 	}
 }
