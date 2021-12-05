@@ -129,6 +129,13 @@ namespace FSM.Tests
 		}
 
 		[Test]
+		public void TestNonExistentTrigger() {
+			fsm.AddState("A");
+			fsm.Init();
+			fsm.Trigger("Trigger");
+		}
+
+		[Test]
 		public void TestTriggerInNestedFsm()
 		{
 			var nested = new StateMachine();
