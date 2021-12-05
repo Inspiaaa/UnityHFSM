@@ -548,4 +548,14 @@ Simply inherit from the base class `StateBase` and override the methods you need
     }
 ```
 
+# Development
+
+### Running the tests
+
+UnityHFSM has a test suite that can be run from Unity's Test Runner window.
+
+1. Open <kbd>Window</kbd> > <kbd>General</kbd> > <kbd>Test Runner</kbd>
+
+2. To run the tests, click the <kbd>Run All</kbd> button
+
 More documentation coming soon...
