@@ -132,7 +132,7 @@ namespace FSM.Tests
 		public void TestNonExistentTrigger() {
 			fsm.AddState("A");
 			fsm.Init();
-			fsm.Trigger("Trigger");
+			Assert.DoesNotThrow(() => fsm.Trigger("Trigger"));
 		}
 
 		[Test]
