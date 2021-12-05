@@ -87,8 +87,6 @@ namespace FSM
 			}
 		}
 
-		private StateBase<TStateId> state;
-
 		private Action<StateBase<TStateId>>
 			beforeOnEnter,
 			afterOnEnter,
