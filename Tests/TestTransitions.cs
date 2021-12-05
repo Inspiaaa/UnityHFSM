@@ -20,19 +20,24 @@ namespace FSM.Tests
 
 		/*
 		# Terminology:
-		- Direct transition: fsm.AddTransition(...)
-		- Global transition: fsm.AddTransitionFromAny(...)
-		- Trigger transition: fsm.AddTriggerTransition(...)
-		- Request transition: fsm.RequestStateChange(...)
-		- Force transition: forceInstantly: true
+		- Direct: fsm.AddTransition(...)
+		- Global: fsm.AddTransitionFromAny(...)
+		- Trigger: fsm.AddTriggerTransition(...)
+		- Request: fsm.RequestStateChange(...)
+		- Force: forceInstantly: true
+		- Combination of the above, e.g. ForceGlobalTrigger
 
 		With exit time:
 		- Unwilling: State won't let the fsm exit (yet)
 		- Willing: State will instantly let the fsm exit when a transition occurs
+
+		Nested State machine:
+		- WithNestedFsm: The transition applies to a state machine that contains another state machine
+		- InNestedFsm: The transition is in the nested state of the parent state machine
 		*/
 
 		[Test]
-		public void TestDirectTransition()
+		public void TestDirect()
 		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
@@ -49,7 +54,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestDirectTransitionWithCondition()
+		public void TestDirectWithCondition()
 		{
 			bool condition = false;
 
@@ -71,7 +76,37 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestTriggerTransition()
+		public void TestDirectWithNestedFsm()
+		{
+			var nested = new StateMachine();
+			fsm.AddState("A", recorder.Track(nested));
+			fsm.AddState("B", recorder.TrackedState);
+			nested.AddState("A.X", recorder.TrackedState);
+
+			fsm.Init();
+			fsm.OnLogic();
+			recorder.Check
+				.Enter("A")
+				.Enter("A.X")
+				.Logic("A")
+				.Logic("A.X")
+				.All();
+
+			fsm.RequestStateChange("B");
+			recorder.Check
+				.Exit("A")
+				.Exit("A.X")
+				.Enter("B")
+				.All();
+
+			fsm.OnLogic();
+			recorder.Check
+				.Logic("B")
+				.All();
+		}
+
+		[Test]
+		public void TestTrigger()
 		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
@@ -94,7 +129,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestTriggerTransitionInNestedState()
+		public void TestTriggerInNestedFsm()
 		{
 			var nested = new StateMachine();
 			fsm.AddState("Nested", nested);
@@ -110,7 +145,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestRequestTransition()
+		public void TestRequest()
 		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
@@ -128,7 +163,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestTransitionUnwillingWithExitTime()
+		public void TestDirectUnwillingWithExitTime()
 		{
 			// State A needs exit time and will not let the fsm transition until a condition is met.
 			bool condition = false;
@@ -164,7 +199,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestTransitionWillingWithExitTime()
+		public void TestDirectWillingWithExitTime()
 		{
 			// State A needs exit time but will instantly let the fsm transition.
 			fsm.AddState("A", recorder.Track(new State(needsExitTime: true, canExit: state => true)));
@@ -183,7 +218,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestForceTransitionUnwillingWithExitTime()
+		public void TestForceDirectUnwillingWithExitTime()
 		{
 			fsm.AddState("A", new State(needsExitTime: true));
 			fsm.AddState("B");
