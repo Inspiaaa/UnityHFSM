@@ -16,7 +16,7 @@ namespace FSM
 		private Action<CoState<TStateId>> onExit;
 		private Func<CoState<TStateId>, bool> canExit;
 
-		public Timer timer;
+		public ITimer timer;
 		private Coroutine coroutine;
 
 		/// <summary>

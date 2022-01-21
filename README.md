@@ -309,7 +309,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
             {
                 // When the state has been active for more than 5 seconds,
                 // notify the fsm that the state can cleanly exit
-                if (state.timer > 5)
+                if (state.timer.Elapsed > 5)
                     state.fsm.StateCanExit();
 
                 // Make the enemy turn at 100 degrees per second
@@ -321,7 +321,7 @@ So that you can see a visual difference, the enemy should be spinning when it en
         ));
 
         extractIntel.AddState("CollectData", new State(
-            onLogic: (state) => {if (state.timer > 5) state.fsm.StateCanExit();},
+            onLogic: (state) => {if (state.timer.Elapsed > 5) state.fsm.StateCanExit();},
             needsExitTime: true
         ));
 

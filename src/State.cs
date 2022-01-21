@@ -13,7 +13,7 @@ namespace FSM
 		private Action<State<TStateId>> onExit;
 		private Func<State<TStateId>, bool> canExit;
 
-		public Timer timer;
+		public ITimer timer;
 
 		/// <summary>
 		/// Initialises a new instance of the State class

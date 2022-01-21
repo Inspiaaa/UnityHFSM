@@ -11,7 +11,7 @@ namespace FSM
 
 		public float delay;
 		public Func<TransitionAfter<TStateId>, bool> condition;
-		public Timer timer;
+		public ITimer timer;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfter class
@@ -43,7 +43,7 @@ namespace FSM
 
 		public override bool ShouldTransition()
 		{
-			if (timer < delay)
+			if (timer.Elapsed < delay)
 				return false;
 
 			if (condition == null)
