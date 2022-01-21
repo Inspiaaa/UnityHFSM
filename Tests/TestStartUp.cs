@@ -34,7 +34,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestImplicitStartState()
+		public void Test_fsm_starts_in_implicit_start_state()
 		{
 			fsm.AddState("A");
 			fsm.AddState("B");
@@ -43,7 +43,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestExplicitStartState()
+		public void Test_fsm_starts_in_explicit_start_state()
 		{
 			fsm.AddState("A");
 			fsm.AddState("B");
@@ -53,7 +53,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestExplicitStartStateBeforeAdding()
+		public void Test_setting_start_state_before_adding_the_state_works()
 		{
 			fsm.SetStartState("B");
 			fsm.AddState("A");
@@ -63,7 +63,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestSetStartStateWhileRunning()
+		public void Test_setting_start_state_while_running_does_nothing()
 		{
 			fsm.AddState("A");
 			fsm.AddState("B");
@@ -76,7 +76,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestAccessingActiveStateBeforeInitialization()
+		public void Test_accessing_active_state_before_init_fails()
 		{
 			fsm.AddState("A");
 			StateBase<string> activeState;
@@ -84,7 +84,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestInitBeforeAddingAState()
+		public void Test_calling_init_before_adding_a_state_fails()
 		{
 			Assert.Throws<InvalidOperationException>(() => fsm.Init());
 		}

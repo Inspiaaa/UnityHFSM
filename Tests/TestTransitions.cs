@@ -37,7 +37,7 @@ namespace FSM.Tests
 		*/
 
 		[Test]
-		public void TestDirect()
+		public void Test_direct_transition()
 		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
@@ -54,7 +54,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestDirectWithCondition()
+		public void Test_direct_transition_with_condition()
 		{
 			bool condition = false;
 
@@ -76,7 +76,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestDirectWithNestedFsm()
+		public void Test_request_transition_with_a_nested_fsm()
 		{
 			var nested = new StateMachine();
 			fsm.AddState("A", recorder.Track(nested));
@@ -106,7 +106,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestTrigger()
+		public void Test_trigger_transition()
 		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
@@ -129,14 +129,14 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestNonExistentTrigger() {
+		public void Test_activating_non_existent_trigger_does_not_fail() {
 			fsm.AddState("A");
 			fsm.Init();
 			Assert.DoesNotThrow(() => fsm.Trigger("Trigger"));
 		}
 
 		[Test]
-		public void TestTriggerInNestedFsm()
+		public void Test_activating_trigger_of_root_fsm_leads_to_transition_in_nested_fsm()
 		{
 			var nested = new StateMachine();
 			fsm.AddState("Nested", nested);
@@ -152,7 +152,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestRequest()
+		public void Test_request_transition()
 		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
@@ -170,9 +170,9 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestDirectUnwillingWithExitTime()
+		public void Test_fsm_only_transitions_when_the_active_state_can_exit()
 		{
-			// State A needs exit time and will not let the fsm transition until a condition is met.
+			// State "A" needs exit time and will not let the fsm transition until a condition is met.
 			bool condition = false;
 			fsm.AddState("A", recorder.Track(new State(
 				needsExitTime: true,
@@ -206,7 +206,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestDirectWillingWithExitTime()
+		public void Test_fsm_transitions_instantly_because_the_active_state_with_exit_time_can_exit()
 		{
 			// State A needs exit time but will instantly let the fsm transition.
 			fsm.AddState("A", recorder.Track(new State(needsExitTime: true, canExit: state => true)));
@@ -225,7 +225,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestForceDirectUnwillingWithExitTime()
+		public void Test_forced_direct_transition_overrides_exit_time()
 		{
 			fsm.AddState("A", new State(needsExitTime: true));
 			fsm.AddState("B");
@@ -236,7 +236,7 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void TestUnwillingPendingState()
+		public void Test_fsm_transitions_to_correct_pending_state_once_the_active_state_can_exit()
 		{
 			bool condition = false;
 			fsm.AddState("A", new State(
