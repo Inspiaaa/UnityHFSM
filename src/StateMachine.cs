@@ -350,7 +350,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Initialises a transition, i.e. sets its fields, like mono and fsm, and then calls its Init method.
+		/// Initialises a transition, i.e. sets its fsm attribute, and then calls its Init method.
 		/// </summary>
 		/// <param name="transition"></param>
 		private void InitTransition(TransitionBase<TStateId> transition)
