@@ -6,9 +6,12 @@
 
 ### Changed
 
+- The `RequestExit()` method of the StateBase class has been renamed to `OnExitRequest()` for more clarity.
+
 - The "shortcut methods" of the state machine have been moved to a dedicated class as extension methods. This does not change the API or usage in any way, but makes the internal code cleaner. -> This change reduces the coupling between the base StateMachine class and the State / Transition classes. Instead, the StateMachine only depends on the StateBase and TransitionBase classes. This especially shows that the extension methods are optional and not necessary in a fundamental way.
 
 - To allow for better testing and more customisation, references to the Timer class have been replaced with the ITimer interface. This allows you to write a custom timer for your use case and allows for time-based transitions to be tested more easily.
+
   ```csharp
   // Previously
   if (timer > 2) { }

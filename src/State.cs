@@ -60,7 +60,7 @@ namespace FSM
 			onExit?.Invoke(this);
 		}
 
-		public override void RequestExit()
+		public override void OnExitRequest()
 		{
 			if (!needsExitTime || canExit != null && canExit(this))
 			{

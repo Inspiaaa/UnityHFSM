@@ -60,7 +60,7 @@ namespace FSM
 		/// 	If it can exit, it should call fsm.StateCanExit()
 		/// 	and if it can not exit right now, it should call fsm.StateCanExit() later in OnLogic().
 		/// </summary>
-		public virtual void RequestExit()
+		public virtual void OnExitRequest()
 		{
 
 		}

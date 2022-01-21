@@ -122,11 +122,11 @@ namespace FSM
 			fsm?.StateCanExit();
 		}
 
-		public override void RequestExit()
+		public override void OnExitRequest()
 		{
 			if (activeState.needsExitTime)
 			{
-				activeState.RequestExit();
+				activeState.OnExitRequest();
 				return;
 			}
 
@@ -183,7 +183,7 @@ namespace FSM
 			else
 			{
 				pendingState = (name, true);
-				activeState.RequestExit();
+				activeState.OnExitRequest();
 				/**
 				 * If it can exit, the activeState would call
 				 * -> state.fsm.StateCanExit() which in turn would call

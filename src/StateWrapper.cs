@@ -76,9 +76,9 @@ namespace FSM
 				afterOnExit?.Invoke(this);
 			}
 
-			public override void RequestExit()
+			public override void OnExitRequest()
 			{
-				state.RequestExit();
+				state.OnExitRequest();
 			}
 
 			public void Trigger(TEvent trigger)
