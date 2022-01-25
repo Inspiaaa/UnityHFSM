@@ -139,7 +139,7 @@ As you can see the enemy will try to stay outside of the player's scanning range
 - Run the state machine
 
   ```csharp
-  void Update {
+  void Update() {
       fsm.OnLogic()
   }
   ```
