@@ -3,7 +3,7 @@ using UnityEngine;
 namespace FSM
 {
 	/// <summary>
-	/// Default timer that calculates the elapsed time based on Time.time
+	/// Default timer that calculates the elapsed time based on Time.time.
 	/// </summary>
 	public class Timer : ITimer
 	{
