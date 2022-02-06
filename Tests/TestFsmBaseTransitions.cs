@@ -45,7 +45,7 @@ namespace FSM.Tests
 
 			fsm.Init();
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Enter("A")
 				.Exit("A")
 				.Enter("B")
@@ -68,7 +68,7 @@ namespace FSM.Tests
 
 			condition = true;
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Exit("A")
 				.Enter("B")
 				.Logic("B")
@@ -85,7 +85,7 @@ namespace FSM.Tests
 
 			fsm.Init();
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Enter("A")
 				.Enter("A.X")
 				.Logic("A")
@@ -93,14 +93,14 @@ namespace FSM.Tests
 				.All();
 
 			fsm.RequestStateChange("B");
-			recorder.Check
+			recorder.Expect
 				.Exit("A")
 				.Exit("A.X")
 				.Enter("B")
 				.All();
 
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Logic("B")
 				.All();
 		}
@@ -116,16 +116,16 @@ namespace FSM.Tests
 			recorder.DiscardAll();
 
 			fsm.OnLogic();
-			recorder.Check.Logic("A").All();
+			recorder.Expect.Logic("A").All();
 
 			fsm.Trigger("Trigger");
-			recorder.Check
+			recorder.Expect
 				.Exit("A")
 				.Enter("B")
 				.All();
 
 			fsm.OnLogic();
-			recorder.Check.Logic("B").All();
+			recorder.Expect.Logic("B").All();
 		}
 
 		[Test]
@@ -160,13 +160,13 @@ namespace FSM.Tests
 			recorder.DiscardAll();
 
 			fsm.RequestStateChange("B");
-			recorder.Check
+			recorder.Expect
 				.Exit("A")
 				.Enter("B")
 				.All();
 
 			fsm.OnLogic();
-			recorder.Check.Logic("B").All();
+			recorder.Expect.Logic("B").All();
 		}
 
 		[Test]
@@ -192,13 +192,13 @@ namespace FSM.Tests
 			recorder.DiscardAll();
 
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Logic("A")
 				.All();
 
 			condition = true;
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Logic("A")
 				.Exit("A")
 				.Enter("B")
@@ -217,7 +217,7 @@ namespace FSM.Tests
 			recorder.DiscardAll();
 
 			fsm.OnLogic();
-			recorder.Check
+			recorder.Expect
 				.Exit("A")
 				.Enter("B")
 				.Logic("B")

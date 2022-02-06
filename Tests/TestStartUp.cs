@@ -23,14 +23,14 @@ namespace FSM.Tests
 		public void TestStartupEvents()
 		{
 			fsm.AddState("A", recorder.Track(new State()));
-			recorder.Check.Empty();
+			recorder.Expect.Empty();
 
 			fsm.Init();
-			recorder.Check.Enter("A").All();
+			recorder.Expect.Enter("A").All();
 			Assert.AreEqual("A", fsm.ActiveStateName);
 
 			fsm.OnLogic();
-			recorder.Check.Logic("A").All();
+			recorder.Expect.Logic("A").All();
 		}
 
 		[Test]
