@@ -7,8 +7,59 @@ using FSM;
 namespace FSM.Tests
 {
     public class Recorder<TStateId> {
-        private enum RecordedAction {
+        private enum StateAction {
             ENTER, LOGIC, EXIT
+        }
+
+        private enum TransitionAction {
+            ENTER, SHOULD_TRANSITION
+        }
+
+        private abstract class Event {
+            public abstract bool Equals(Event other);
+        }
+
+        private class StateEvent : Event {
+            public TStateId state;
+            public StateAction action;
+
+            public StateEvent(TStateId state, StateAction action) {
+                this.state = state;
+                this.action = action;
+            }
+
+            public override bool Equals(Event other) {
+                if (! (other is StateEvent)) {
+                    return false;
+                }
+                StateEvent otherStateEvent = (StateEvent) other;
+                return state.Equals(otherStateEvent.state) && action == otherStateEvent.action;
+            }
+
+            public override string ToString() => $"({state}, {action})";
+        }
+
+        private class TransitionEvent : Event {
+            public TStateId from, to;
+            public TransitionAction action;
+
+            public TransitionEvent(TStateId from, TStateId to, TransitionAction action) {
+                this.from = from;
+                this.to = to;
+                this.action = action;
+            }
+
+            public override bool Equals(Event other) {
+                if (! (other is TransitionEvent)) {
+                    return false;
+                }
+                TransitionEvent otherTransitionEvent = (TransitionEvent) other;
+                return from.Equals(otherTransitionEvent.from)
+                    && to.Equals(otherTransitionEvent.to)
+                    && action == otherTransitionEvent.action;
+            }
+
+            public override string ToString() => $"({from}->{to}, {action})";
         }
 
         public class RecorderQuery {
@@ -18,51 +69,69 @@ namespace FSM.Tests
                 this.recorder = recorder;
             }
 
-            private void CheckNext((TStateId state, RecordedAction action) step) {
-                if (recorder.recordedSteps.Count == 0) {
-                    Assert.Fail($"No recorded steps left. {step} has not happened yet.");
+            private void CheckNext(Event expectedEvent) {
+                if (recorder.recordedEvents.Count == 0) {
+                    Assert.Fail($"No recorded steps left. {expectedEvent} has not happened yet.");
                 }
-                Assert.AreEqual(step, recorder.recordedSteps.Dequeue());
+
+                Event nextEvent = recorder.recordedEvents.Dequeue();
+                bool doesNextEventMatch = expectedEvent.Equals(nextEvent);
+                if (! doesNextEventMatch) {
+                    Assert.Fail(
+                        $"Next event {nextEvent} does not match the expected event {expectedEvent}.\n"
+                        + "Remaining steps: " + recorder.CreateTraceback());
+                }
             }
 
             public RecorderQuery Enter(TStateId stateName) {
-                CheckNext((stateName, RecordedAction.ENTER));
+                CheckNext(new StateEvent(stateName, StateAction.ENTER));
                 return this;
             }
 
             public RecorderQuery Logic(TStateId stateName) {
-                CheckNext((stateName, RecordedAction.LOGIC));
+                CheckNext(new StateEvent(stateName, StateAction.LOGIC));
                 return this;
             }
 
             public RecorderQuery Exit(TStateId stateName) {
-                CheckNext((stateName, RecordedAction.EXIT));
+                CheckNext(new StateEvent(stateName, StateAction.EXIT));
+                return this;
+            }
+
+            public RecorderQuery TransitionEnter(TStateId from, TStateId to) {
+                CheckNext(new TransitionEvent(from, to, TransitionAction.ENTER));
+                return this;
+            }
+
+            public RecorderQuery ShouldTransition(TStateId from, TStateId to) {
+                CheckNext(new TransitionEvent(from, to, TransitionAction.SHOULD_TRANSITION));
                 return this;
             }
 
             public void All() {
-                if (recorder.recordedSteps.Count != 0) {
+                if (recorder.recordedEvents.Count != 0) {
                     Assert.Fail($"Too many events happened. Remaining steps: " + recorder.CreateTraceback());
                 }
             }
 
             public void Empty() {
-                if (recorder.recordedSteps.Count != 0) {
+                if (recorder.recordedEvents.Count != 0) {
                     Assert.Fail("Expected nothing to happen. Recorded steps: " + recorder.CreateTraceback());
                 }
             }
         }
 
-        private Queue<(TStateId state, RecordedAction action)> recordedSteps;
+        private Queue<Event> recordedEvents;
         private StateWrapper<TStateId, string> tracker;
 
-        // Fluent interface for checking the validity of the steps
-        public RecorderQuery Check => new RecorderQuery(this);
+        // Fluent interface for checking the validity of the recorded events.
+        public RecorderQuery Expect => new RecorderQuery(this);
 
+        // Creates a new StateBase whose OnEnter / OnLogic / OnExit events are tracked.
         public StateBase<TStateId> TrackedState => Track(new StateBase<TStateId>(false));
 
         public Recorder() {
-            recordedSteps = new Queue<(TStateId state, RecordedAction action)>();
+            recordedEvents = new Queue<Event>();
             tracker = new StateWrapper<TStateId, string>(
                 beforeOnEnter: s => RecordEnter(s.name),
                 beforeOnLogic: s => RecordLogic(s.name),
@@ -70,9 +139,17 @@ namespace FSM.Tests
             );
         }
 
-        public void RecordEnter(TStateId state) => recordedSteps.Enqueue((state, RecordedAction.ENTER));
-        public void RecordLogic(TStateId state) => recordedSteps.Enqueue((state, RecordedAction.LOGIC));
-        public void RecordExit(TStateId state) => recordedSteps.Enqueue((state, RecordedAction.EXIT));
+        public void RecordEnter(TStateId state)
+            => recordedEvents.Enqueue(new StateEvent(state, StateAction.ENTER));
+        public void RecordLogic(TStateId state)
+            => recordedEvents.Enqueue(new StateEvent(state, StateAction.LOGIC));
+        public void RecordExit(TStateId state)
+            => recordedEvents.Enqueue(new StateEvent(state, StateAction.EXIT));
+
+        public void RecordTransitionEnter(TStateId from, TStateId to)
+            => recordedEvents.Enqueue(new TransitionEvent(from, to, TransitionAction.ENTER));
+        public void RecordTransitionShouldTransition(TStateId from, TStateId to)
+            => recordedEvents.Enqueue(new TransitionEvent(from, to, TransitionAction.SHOULD_TRANSITION));
 
         public StateBase<TStateId> Track(StateBase<TStateId> state) {
             return tracker.Wrap(state);
@@ -82,19 +159,18 @@ namespace FSM.Tests
             StringBuilder builder = new StringBuilder();
 
             builder.AppendLine();
-            foreach (var step in recordedSteps) {
-                builder.AppendLine(step.ToString());
+            foreach (var ev in recordedEvents) {
+                builder.AppendLine(ev.ToString());
             }
 
             return builder.ToString();
         }
 
         public void DiscardAll() {
-            recordedSteps.Clear();
+            recordedEvents.Clear();
         }
     }
 
     public class Recorder : Recorder<string> {
-
     }
 }
