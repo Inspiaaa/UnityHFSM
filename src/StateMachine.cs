@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 
 /**
  * Hierarchichal finite state machine for Unity

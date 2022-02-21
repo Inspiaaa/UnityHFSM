@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 
 namespace FSM
 {
@@ -22,7 +21,6 @@ namespace FSM
 		/// <summary>
 		/// Initialises a new instance of the HybridStateMachine class
 		/// </summary>
-		/// <param name="mono">The MonoBehaviour of the script that created the state machine</param>
 		/// <param name="onEnter">A function that is called after running the sub-state's OnEnter method
 		/// when this state machine is entered</param>
 		/// <param name="onLogic">A function that is called after running the sub-state's OnLogic method
@@ -72,7 +70,6 @@ namespace FSM
 	public class HybridStateMachine<TStateId, TEvent> : HybridStateMachine<TStateId, TStateId, TEvent>
 	{
 		public HybridStateMachine(
-			MonoBehaviour mono,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onLogic = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onExit = null,
