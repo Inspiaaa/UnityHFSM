@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace FSM
 {
-	public class ActionableState<TStateId, TEvent> : StateBase<TStateId>, IActionable<TEvent>
+	public class ActionState<TStateId, TEvent> : StateBase<TStateId>, IActionable<TEvent>
 	{
 		// Lazy initialized
 		private Dictionary<TEvent, Delegate> actionsByEvent;
 
-		public ActionableState(bool needsExitTime) : base(needsExitTime: needsExitTime)
+		public ActionState(bool needsExitTime) : base(needsExitTime: needsExitTime)
 		{
 		}
 
@@ -18,13 +18,14 @@ namespace FSM
 			actionsByEvent[trigger] = action;
 		}
 
-		public ActionableState<TStateId, TEvent> AddAction(TEvent trigger, Action action)
+		// Fluent interface
+		public ActionState<TStateId, TEvent> AddAction(TEvent trigger, Action action)
 		{
 			AddGenericAction(trigger, action);
 			return this;
 		}
 
-		public ActionableState<TStateId, TEvent> AddAction<TData>(TEvent trigger, Action<TData> action)
+		public ActionState<TStateId, TEvent> AddAction<TData>(TEvent trigger, Action<TData> action)
 		{
 			AddGenericAction(trigger, action);
 			return this;
@@ -45,9 +46,9 @@ namespace FSM
 		}
 	}
 
-	public class ActionableState : ActionableState<string, string>
+	public class ActionState : ActionState<string, string>
 	{
-		public ActionableState(bool needsExitTime) : base(needsExitTime: needsExitTime)
+		public ActionState(bool needsExitTime) : base(needsExitTime: needsExitTime)
 		{
 		}
 	}
