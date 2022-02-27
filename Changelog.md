@@ -4,6 +4,22 @@
 
 ## In progress
 
+### Added
+- Action system to allow for adding and calling custom functions apart from `OnLogic`.
+
+  E.g.
+  ```csharp
+  var state = new State()
+    .AddAction("OnGameOver", () => print("Good game"))
+    .AddAction<Collision2D>("OnCollision", collision => print(collision));
+
+  fsm.AddState("State", state);
+  fsm.Init();
+
+  fsm.OnAction("OnGameOver");  // prints "Good game"
+  fsm.OnAction<Collision2D>("OnCollision", new Collision2D());
+  ```
+
 ### Changed
 
 - The `RequestExit()` method of the StateBase class has been renamed to `OnExitRequest()` for more clarity.
@@ -18,6 +34,28 @@
 
   // Now
   if (timer.Elapsed > 2) { }
+  ```
+
+- As a consequence of the way the action system was implemented, generic datatype of the input parameter of `onEnter` / `onLogic` / `onExit` for `State` and `CoState` has changed. The class `State` now requires two generic type parameters: One for the type of its ID and one for the type of the IDs of the actions.
+
+  Previously:
+  ```csharp
+  void FollowPlayer(State<string> state)
+  {
+      // ...
+  }
+
+  fsm.AddState("FollowPlayer", onLogic: FollowPlayer);
+  ```
+
+  Now:
+  ```csharp
+  void FollowPlayer(State<string, string> state)
+  {
+      // ...
+  }
+
+  fsm.AddState("FollowPlayer", onLogic: FollowPlayer);
   ```
 
 ---
