@@ -16,7 +16,8 @@ namespace FSM
 	public class StateMachine<TOwnId, TStateId, TEvent> :
 		StateBase<TOwnId>,
 		ITriggerable<TEvent>,
-		IStateMachine<TStateId>
+		IStateMachine<TStateId>,
+		IActionable<TEvent>
 	{
 		/// <summary>
 		/// A bundle of a state together with the outgoing transitions and trigger transitions.
@@ -79,13 +80,7 @@ namespace FSM
 		{
 			get
 			{
-				if (activeState == null)
-				{
-					throw new FSM.Exceptions.StateMachineNotInitializedException(
-						"Trying to get the active state"
-					);
-				}
-
+				EnsureIsInitializedFor("Trying to get the active state");
 				return activeState;
 			}
 		}
@@ -103,6 +98,12 @@ namespace FSM
 		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
 		{
 
+		}
+
+		private void EnsureIsInitializedFor(string context)
+		{
+			if (activeState == null)
+				throw new FSM.Exceptions.StateMachineNotInitializedException(context);
 		}
 
 		/// <summary>
@@ -266,12 +267,7 @@ namespace FSM
 		/// </summary>
 		public override void OnLogic()
 		{
-			if (activeState == null)
-			{
-				throw new FSM.Exceptions.StateMachineNotInitializedException(
-					"Running OnLogic"
-				);
-			}
+			EnsureIsInitializedFor("Running OnLogic");
 
 			// Try the "global" transitions that can transition from any state
 			for (int i = 0; i < transitionsFromAny.Count; i++)
@@ -424,12 +420,7 @@ namespace FSM
 		/// <returns>True when a transition occurred, otherwise false</returns>
 		private bool TryTrigger(TEvent trigger)
 		{
-			if (activeState == null)
-			{
-				throw new FSM.Exceptions.StateMachineNotInitializedException(
-					"Checking all trigger transitions of the active state"
-				);
-			}
+			EnsureIsInitializedFor("Checking all trigger transitions of the active state");
 
 			List<TransitionBase<TStateId>> triggerTransitions;
 
@@ -494,6 +485,18 @@ namespace FSM
 			}
 
 			return bundle.state;
+		}
+
+		public void OnAction(TEvent trigger)
+		{
+			EnsureIsInitializedFor("Running OnAction of the active state");
+			(activeState as IActionable<TEvent>)?.OnAction(trigger);
+		}
+
+		public void OnAction<TData>(TEvent trigger, TData data)
+		{
+			EnsureIsInitializedFor("Running OnAction of the active state");
+			(activeState as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
 		}
 
 		public StateMachine<string, string, string> this[TStateId name]
