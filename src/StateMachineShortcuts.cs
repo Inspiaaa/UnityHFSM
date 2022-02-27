@@ -22,10 +22,10 @@ namespace FSM
 		public static void AddState<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId name,
-			Action<State<TStateId>> onEnter = null,
-			Action<State<TStateId>> onLogic = null,
-			Action<State<TStateId>> onExit = null,
-			Func<State<TStateId>, bool> canExit = null,
+			Action<State<TStateId, TEvent>> onEnter = null,
+			Action<State<TStateId, TEvent>> onLogic = null,
+			Action<State<TStateId, TEvent>> onExit = null,
+			Func<State<TStateId, TEvent>, bool> canExit = null,
 			bool needsExitTime = false)
 		{
 			// Optimise for empty states
@@ -35,7 +35,7 @@ namespace FSM
 				return;
 			}
 
-			fsm.AddState(name, new State<TStateId>(onEnter, onLogic, onExit, canExit, needsExitTime));
+			fsm.AddState(name, new State<TStateId, TEvent>(onEnter, onLogic, onExit, canExit, needsExitTime));
 		}
 
 		/// <summary>
