@@ -7,14 +7,14 @@ namespace FSM
 	/// <summary>
 	/// A state that can run a Unity coroutine as its OnLogic method
 	/// </summary>
-	public class CoState<TStateId> : StateBase<TStateId>
+	public class CoState<TStateId, TEvent> : ActionState<TStateId, TEvent>
 	{
 		private MonoBehaviour mono;
 
-		private Action<CoState<TStateId>> onEnter;
-		private Func<CoState<TStateId>, IEnumerator> onLogic;
-		private Action<CoState<TStateId>> onExit;
-		private Func<CoState<TStateId>, bool> canExit;
+		private Action<CoState<TStateId, TEvent>> onEnter;
+		private Func<CoState<TStateId, TEvent>, IEnumerator> onLogic;
+		private Action<CoState<TStateId, TEvent>> onExit;
+		private Func<CoState<TStateId, TEvent>, bool> canExit;
 
 		public ITimer timer;
 		private Coroutine coroutine;
@@ -38,10 +38,10 @@ namespace FSM
 		/// state change (true)</param>
 		public CoState(
 				MonoBehaviour mono,
-				Action<CoState<TStateId>> onEnter = null,
-				Func<CoState<TStateId>, IEnumerator> onLogic = null,
-				Action<CoState<TStateId>> onExit = null,
-				Func<CoState<TStateId>, bool> canExit = null,
+				Action<CoState<TStateId, TEvent>> onEnter = null,
+				Func<CoState<TStateId, TEvent>, IEnumerator> onLogic = null,
+				Action<CoState<TStateId, TEvent>> onExit = null,
+				Func<CoState<TStateId, TEvent>, bool> canExit = null,
 				bool needsExitTime = false) : base(needsExitTime)
 		{
 			this.mono = mono;
@@ -113,14 +113,27 @@ namespace FSM
 		}
 	}
 
-	public class CoState : CoState<string>
+	public class CoState<TStateId> : CoState<TStateId, string>
 	{
 		public CoState(
 			MonoBehaviour mono,
-			Action<CoState<string>> onEnter = null,
-			Func<CoState<string>, IEnumerator> onLogic = null,
-			Action<CoState<string>> onExit = null,
-			Func<CoState<string>, bool> canExit = null,
+			Action<CoState<TStateId, string>> onEnter = null,
+			Func<CoState<TStateId, string>, IEnumerator> onLogic = null,
+			Action<CoState<TStateId, string>> onExit = null,
+			Func<CoState<TStateId, string>, bool> canExit = null,
+			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, canExit, needsExitTime)
+		{
+		}
+	}
+
+	public class CoState : CoState<string, string>
+	{
+		public CoState(
+			MonoBehaviour mono,
+			Action<CoState<string, string>> onEnter = null,
+			Func<CoState<string, string>, IEnumerator> onLogic = null,
+			Action<CoState<string, string>> onExit = null,
+			Func<CoState<string, string>, bool> canExit = null,
 			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, canExit, needsExitTime)
 		{
 		}

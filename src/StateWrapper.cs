@@ -9,7 +9,7 @@ namespace FSM
 	/// </summary>
 	public class StateWrapper<TStateId, TEvent>
 	{
-		public class WrappedState : StateBase<TStateId>, ITriggerable<TEvent>
+		public class WrappedState : StateBase<TStateId>, ITriggerable<TEvent>, IActionable<TEvent>
 		{
 			private Action<StateBase<TStateId>>
 				beforeOnEnter,
@@ -84,6 +84,14 @@ namespace FSM
 			public void Trigger(TEvent trigger)
 			{
 				(state as ITriggerable<TEvent>)?.Trigger(trigger);
+			}
+
+			public void OnAction(TEvent trigger) {
+				(state as IActionable<TEvent>)?.OnAction(trigger);
+			}
+
+			public void OnAction<TData>(TEvent trigger, TData data) {
+				(state as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
 			}
 		}
 
