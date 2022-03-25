@@ -275,7 +275,7 @@ namespace FSM
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
 
 				// Don't transition to the "to" state, if that state is already the active state
-				if (transition.to.Equals(activeState.name))
+				if (EqualityComparer<TStateId>.Default.Equals(transition.to, activeState.name))
 					continue;
 
 				if (TryTransition(transition))
@@ -430,7 +430,7 @@ namespace FSM
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
-					if (transition.to.Equals(activeState.name))
+					if (EqualityComparer<TStateId>.Default.Equals(transition.to, activeState.name))
 						continue;
 
 					if (TryTransition(transition))
