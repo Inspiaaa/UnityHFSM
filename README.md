@@ -108,7 +108,7 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
 
 Here's a simple state machine for an enemy spy in your game.
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5f7b75c48c74b72bb43ee63af20741192f89a679/diagrams/EnemySpyExample.png)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5e1beed4003e3350c9e9a58af0a07f2fac779a7b/docs/StateDiagrams/EnemySpyExample/Simple.png)
 
 As you can see the enemy will try to stay outside of the player's scanning range while extracting intel. When the player goes too far away, it will follow the player again.
 
@@ -261,7 +261,7 @@ Because StateMachine inherits from StateBase, it can be treated as a normal stat
 
 ### Expanding on the previous example
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5f7b75c48c74b72bb43ee63af20741192f89a679/diagrams/EnemySpyHierarchicalExample.png)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5e1beed4003e3350c9e9a58af0a07f2fac779a7b/docs/StateDiagrams/EnemySpyExample/Hierarchical.png)
 
 So that you can see a visual difference, the enemy should be spinning when it enters the "SendData" state.
 
@@ -346,7 +346,7 @@ But when is the right time for the state machine to finally change states? This 
 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5f7b75c48c74b72bb43ee63af20741192f89a679/diagrams/StateChangeFlowchart.jpg)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/f5af253a954ea35cc2745eb383fc5371f404fc5a/docs/Flowcharts/StateChange.svg?sanitize=true)
 
 ## State Change Patterns
 
@@ -455,7 +455,7 @@ Because global transitions are checked first, they have the highest priority. Th
 
 As you can see on the steps mentioned above, only one transition can occur per `OnLogic` call. This has many reasons, one of which being that the state machine does not get stuck in an infinite loop.
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5f7b75c48c74b72bb43ee63af20741192f89a679/diagrams/OnLogicFlowchart.jpg)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/f5af253a954ea35cc2745eb383fc5371f404fc5a/docs/Flowcharts/OnLogic.svg?sanitize=true)
 
 ## Unity Coroutines
 
