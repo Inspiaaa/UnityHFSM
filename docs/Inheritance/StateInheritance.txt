@@ -1,11 +1,13 @@
 classDiagram
-    class StateBase
     StateBase <|-- StringStateBase
 
-    StateBase <|-- State
+    StateBase <|-- ActionState
+    ActionState <|-- StringActionState
+
+    ActionState <|-- State
     State <|-- StringState
 
-    StateBase <|-- CoState
+    ActionState <|-- CoState
     CoState <|-- StringCoState
 
     StateBase <|-- StateMachine
