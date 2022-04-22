@@ -472,7 +472,7 @@ As a result of a [limitation of the C# language](https://stackoverflow.com/quest
 In this example, we can replace the `SendData` state with a more advanced one, which makes the spy turn in one direction for two seconds, and the in the other direction for the same duration.
 
 ```csharp
-    IEnumerator SendData(CoState<string> state)
+    IEnumerator SendData(CoState<string, string> state)
     {
         while (state.timer.Elapsed < 2)
         {
