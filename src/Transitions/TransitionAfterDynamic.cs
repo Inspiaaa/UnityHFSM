@@ -8,7 +8,6 @@ namespace FSM
 	/// </summary>
 	public class TransitionAfterDynamic<TStateId> : TransitionBase<TStateId>
 	{
-
 		public Func<TransitionAfterDynamic<TStateId>, float> delayCalculator;
 		public Func<TransitionAfterDynamic<TStateId>, bool> condition;
 		public ITimer timer;

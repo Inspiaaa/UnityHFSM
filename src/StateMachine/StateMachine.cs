@@ -100,6 +100,11 @@ namespace FSM
 
 		}
 
+		/// <summary>
+		/// Throws an exception if the state machine is not initialised yet.
+		/// </summary>
+		/// <param name="context">String message for which action the fsm should
+		/// 	be initialised for.</param>
 		private void EnsureIsInitializedFor(string context)
 		{
 			if (activeState == null)
@@ -487,12 +492,23 @@ namespace FSM
 			return bundle.state;
 		}
 
+		/// <summary>
+		/// Runs an action on the currently active state.
+		/// </summary>
+		/// <param name="trigger">Name of the action</param>
 		public void OnAction(TEvent trigger)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
 			(activeState as IActionable<TEvent>)?.OnAction(trigger);
 		}
 
+		/// <summary>
+		/// Runs an action on the currently active state and lets you pass one data parameter.
+		/// </summary>
+		/// <param name="trigger">Name of the action</param>
+		/// <param name="data">Any custom data for the parameter</param>
+		/// <typeparam name="TData">Type of the data parameter.
+		/// 	Should match the data type of the action that was added via AddAction<T>(...).</typeparam>
 		public void OnAction<TData>(TEvent trigger, TData data)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
