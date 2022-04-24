@@ -58,6 +58,8 @@
   fsm.AddState("FollowPlayer", onLogic: FollowPlayer);
   ```
 
+- (Internal change) Restructured the `src` folder to make it cleaner
+
 ---
 
 ## 1.8 - Generics
