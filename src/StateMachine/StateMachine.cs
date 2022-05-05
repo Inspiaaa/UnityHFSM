@@ -417,6 +417,28 @@ namespace FSM
 			transitionsOfTrigger.Add(transition);
 		}
 
+		public void AddTwoWayTransition(TransitionBase<TStateId> transition)
+		{
+			InitTransition(transition);
+			AddTransition(transition);
+
+			// TODO: Maybe make this a one liner: Make InitTransition return the transition.
+			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition);
+			InitTransition(reverse);
+			AddTransition(reverse);
+		}
+
+		public void AddTwoWayTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
+		{
+			InitTransition(transition);
+			AddTriggerTransition(trigger, transition);
+
+			// TODO: Maybe make this a one liner: Make InitTransition return the transition.
+			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition);
+			InitTransition(reverse);
+			AddTriggerTransition(trigger, reverse);
+		}
+
 		/// <summary>
 		/// Activates the specified trigger, checking all targeted trigger transitions to see whether
 		/// a transition should occur.
