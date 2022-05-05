@@ -422,8 +422,7 @@ namespace FSM
 			InitTransition(transition);
 			AddTransition(transition);
 
-			// TODO: Maybe make this a one liner: Make InitTransition return the transition.
-			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition);
+			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition, false);
 			InitTransition(reverse);
 			AddTransition(reverse);
 		}
@@ -433,8 +432,7 @@ namespace FSM
 			InitTransition(transition);
 			AddTriggerTransition(trigger, transition);
 
-			// TODO: Maybe make this a one liner: Make InitTransition return the transition.
-			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition);
+			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition, false);
 			InitTransition(reverse);
 			AddTriggerTransition(trigger, reverse);
 		}
