@@ -5,9 +5,11 @@
 ## In progress
 
 ### Added
+
 - Action system to allow for adding and calling custom functions apart from `OnLogic`.
 
   E.g.
+
   ```csharp
   var state = new State()
     .AddAction("OnGameOver", () => print("Good game"))
@@ -18,6 +20,21 @@
 
   fsm.OnAction("OnGameOver");  // prints "Good game"
   fsm.OnAction<Collision2D>("OnCollision", new Collision2D());
+  ```
+
+- Two way transitions: New feature that lets the state machine transition from a source to a target state when a condition is true, and from the target to the source state when the condition is false:
+
+  ```csharp
+  fsm.AddTwoWayTransition("Idle", "Shoot", t => isInRange);
+
+  // Same as
+  fsm.AddTransition("Idle", "Shoot", t => isInRange);
+  fsm.AddTransition("Shoot", "Idle", t => ! isInRange);
+  ```
+
+  ```csharp
+  fsm.AddTwoWayTransition(transition);
+  fsm.AddTwoWayTriggerTransition(transition);
   ```
 
 ### Changed
@@ -39,6 +56,7 @@
 - As a consequence of the way the action system was implemented, generic datatype of the input parameter of `onEnter` / `onLogic` / `onExit` for `State` and `CoState` has changed. The class `State` now requires two generic type parameters: One for the type of its ID and one for the type of the IDs of the actions.
 
   Previously:
+
   ```csharp
   void FollowPlayer(State<string> state)
   {
@@ -49,6 +67,7 @@
   ```
 
   Now:
+
   ```csharp
   void FollowPlayer(State<string, string> state)
   {
