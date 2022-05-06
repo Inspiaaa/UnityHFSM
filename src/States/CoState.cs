@@ -53,7 +53,7 @@ namespace FSM
 			this.timer = new Timer();
 		}
 
-		override public void OnEnter()
+		public override void OnEnter()
 		{
 			timer.Reset();
 
