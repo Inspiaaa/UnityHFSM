@@ -116,5 +116,38 @@ namespace FSM
 		{
 			fsm.AddTriggerTransitionFromAny(trigger, CreateOptimizedTransition(default, to, condition, forceInstantly));
 		}
+
+		/// <summary>
+		/// Shortcut method for adding two transitions:
+		/// If the condition function is true, the fsm transitions from the "from"
+		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// i.e. from "to" to "from".
+		/// </summary>
+		public static void AddTwoWayTransition<TOwnId, TStateId, TEvent>(
+			this StateMachine<TOwnId, TStateId, TEvent> fsm,
+			TStateId from,
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition,
+			bool forceInstantly = false)
+		{
+			fsm.AddTwoWayTransition(new Transition<TStateId>(from, to, condition, forceInstantly));
+		}
+
+		/// <summary>
+		/// Shortcut method for adding two transitions that are only checked when the specified trigger is activated:
+		/// If the condition function is true, the fsm transitions from the "from"
+		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// i.e. from "to" to "from".
+		/// </summary>
+		public static void AddTwoWayTriggerTransition<TOwnId, TStateId, TEvent>(
+			this StateMachine<TOwnId, TStateId, TEvent> fsm,
+			TEvent trigger,
+			TStateId from,
+			TStateId to,
+			Func<Transition<TStateId>, bool> condition,
+			bool forceInstantly = false)
+		{
+			fsm.AddTwoWayTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
+		}
 	}
 }

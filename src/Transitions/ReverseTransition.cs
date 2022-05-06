@@ -1,5 +1,10 @@
 namespace FSM
 {
+	/// <summary>
+	/// A ReverseTransition wraps another transition, but reverses it. The "from"
+	/// and "to" states are swapped. Only when the condition of the wrapped transition
+	/// is false does it transition.
+	/// </summary>
 	public class ReverseTransition<TStateId> : TransitionBase<TStateId>
 	{
 		public TransitionBase<TStateId> wrappedTransition;
@@ -19,7 +24,8 @@ namespace FSM
 
 		public override void Init()
 		{
-			if (shouldInitWrappedTransition) {
+			if (shouldInitWrappedTransition)
+			{
 				wrappedTransition.fsm = this.fsm;
 				wrappedTransition.Init();
 			}

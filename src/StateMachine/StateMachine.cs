@@ -417,6 +417,16 @@ namespace FSM
 			transitionsOfTrigger.Add(transition);
 		}
 
+		/// <summary>
+		/// Adds two transitions:
+		/// If the condition of the transition instance is true, it transitions from the "from"
+		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// i.e. from "to" to "from".
+		/// </summary>
+		/// <remarks>
+		/// Internally the same transition instance will be used for both transitions
+		/// by wrapping it in a ReverseTransition.
+		/// </remarks>
 		public void AddTwoWayTransition(TransitionBase<TStateId> transition)
 		{
 			InitTransition(transition);
@@ -427,6 +437,16 @@ namespace FSM
 			AddTransition(reverse);
 		}
 
+		/// <summary>
+		/// Adds two transitions that are only checked when the specified trigger is activated:
+		/// If the condition of the transition instance is true, it transitions from the "from"
+		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// i.e. from "to" to "from".
+		/// </summary>
+		/// <remarks>
+		/// Internally the same transition instance will be used for both transitions
+		/// by wrapping it in a ReverseTransition.
+		/// </remarks>
 		public void AddTwoWayTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{
 			InitTransition(transition);
