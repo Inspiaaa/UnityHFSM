@@ -40,6 +40,15 @@ namespace FSM
 		{
 			return ! wrappedTransition.ShouldTransition();
 		}
+	}
 
+	public class ReverseTransition : ReverseTransition<string>
+	{
+		public ReverseTransition(
+			TransitionBase<string> wrappedTransition,
+			bool shouldInitWrappedTransition = true)
+			: base(wrappedTransition, shouldInitWrappedTransition)
+		{
+		}
 	}
 }
