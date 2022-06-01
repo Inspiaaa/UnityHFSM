@@ -1,6 +1,13 @@
 
+using System.Collections.Generic;
+
 namespace FSM
 {
+	public interface IStateMachine : IState
+	{
+		IReadOnlyList<IState> States { get; }
+	}
+	
 	/// <summary>
 	/// A subset of features that every parent state machine has to provide.
 	/// It is useful, as it allows the parent state machine to be independent from the
@@ -9,7 +16,7 @@ namespace FSM
 	/// => An abstraction layer
 	/// </summary>
 	/// <typeparam name="TStateId">They type of the names / ids of the sub states</typeparam>
-	public interface IStateMachine<TStateId>
+	public interface IStateMachine<TStateId> : IStateMachine
 	{
 		/// <summary>
 		/// Tells the state machine that, if there is a state transition pending,

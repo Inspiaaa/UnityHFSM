@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace FSM
 {
+	public interface IState
+	{
+		
+	}
+	
 	/// <summary>
 	/// The base class of all states
 	/// </summary>
-	public class StateBase<TStateId>
+	public class StateBase<TStateId> : IState
 	{
 		public bool needsExitTime;
 		public TStateId name;

@@ -89,6 +89,10 @@ namespace FSM
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
+		private readonly List<IState> states;
+
+		public IReadOnlyList<IState> States { get; }
+
 		public StateBase<TStateId> ActiveState
 		{
 			get
@@ -125,6 +129,8 @@ namespace FSM
 			nameToStateBundle = stateIdComparer == null
 				? new Dictionary<TStateId, StateBundle>()
 				: new Dictionary<TStateId, StateBundle>(stateIdComparer);
+			states = new List<IState>();
+			States = states.AsReadOnly();
 		}
 
 		/// <summary>
@@ -369,7 +375,12 @@ namespace FSM
 			state.Init();
 
 			StateBundle bundle = GetOrCreateStateBundle(name);
+			if (bundle.state != null)
+			{
+				states.Remove(bundle.state);
+			}
 			bundle.state = state;
+			states.Add(state);
 
 			if (nameToStateBundle.Count == 1 && !startState.hasState)
 			{
