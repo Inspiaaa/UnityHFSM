@@ -12,7 +12,7 @@ namespace FSM
 
 		public Timer()
 		{
-			startTime = Time.time;
+			if(Application.isPlaying) { startTime = Time.time; }
 		}
 
 		public void Reset()
