@@ -20,7 +20,6 @@ namespace FSM
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
-
 				keyCode = key;
 			}
 
@@ -45,7 +44,6 @@ namespace FSM
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
-
 				keyCode = key;
 			}
 
@@ -70,7 +68,6 @@ namespace FSM
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
-
 				keyCode = key;
 			}
 
@@ -95,7 +92,6 @@ namespace FSM
 					KeyCode key,
 					bool forceInstantly = false) : base(from, to, forceInstantly)
 			{
-
 				keyCode = key;
 			}
 
