@@ -37,6 +37,10 @@
   fsm.AddTwoWayTriggerTransition(transition);
   ```
 
+### Improved
+
+- Improved performance in many cases for value types as the state names (e.g. `State<int>`) by preventing boxing and minimising GC allocations
+
 ### Changed
 
 - The `RequestExit()` method of the StateBase class has been renamed to `OnExitRequest()` for more clarity.
