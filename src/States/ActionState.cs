@@ -96,6 +96,13 @@ namespace FSM
 			=> TryGetAndCastAction<Action<TData>>(trigger)?.Invoke(data);
 	}
 
+	public class ActionState<TStateId> : ActionState<TStateId, string>
+	{
+		public ActionState(bool needsExitTime) : base(needsExitTime: needsExitTime)
+		{
+		}
+	}
+
 	public class ActionState : ActionState<string, string>
 	{
 		public ActionState(bool needsExitTime) : base(needsExitTime: needsExitTime)
