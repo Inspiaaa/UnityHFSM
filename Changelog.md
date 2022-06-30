@@ -37,6 +37,14 @@
   fsm.AddTwoWayTriggerTransition(transition);
   ```
 
+- `TransitionOnMouse` classes for readable transitions that should occur when a certain mouse button has been pressed / released / ... It is analogous to `TransitionOnKey`.
+
+  E.g.:
+
+  ```csharp
+  fsm.AddTransition(new TransitionOnMouse.Down("Idle", "Shoot", 0));
+  ```
+
 ### Improved
 
 - Improved performance in many cases for value types as the state names (e.g. `State<int>`) by preventing boxing and minimising GC allocations
