@@ -3,9 +3,9 @@ graph TD
 
   NeedsExitTime -->|No| End([Change State])
 
-  NeedsExitTime -->|Yes| RequestExit["FSM calls<br> activeState.RequestExit()"]
+  NeedsExitTime -->|Yes| RequestExit["FSM calls<br> activeState.OnExitRequest()"]
   RequestExit --> IsCanExitDefinined{"Is<br>activeState.canExit<br>defined"}
-  IsCanExitDefinined -->|Yes| CanExitCallsStateCanExit{"Does<br>canExit call<br>fsm.StateCanExit()"}
+  IsCanExitDefinined -->|Yes| CanExitCallsStateCanExit{"Does<br>canExit() return<br>true"}
   IsCanExitDefinined -->|No| Later
 
   CanExitCallsStateCanExit -->|Yes| End
