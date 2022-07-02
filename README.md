@@ -346,7 +346,7 @@ But when is the right time for the state machine to finally change states? This 
 
 2. If the state couldn't exit when `canExit` was called, the active state has to notify the state machine at a later point in time, that it can exit, by calling the `fsm.StateCanExit()` method.
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/f5af253a954ea35cc2745eb383fc5371f404fc5a/docs/Flowcharts/StateChange.svg?sanitize=true)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/dd220a596a19918932abeace71df0a195b32edba/docs/Flowcharts/StateChange.svg?sanitize=true)
 
 ## State Change Patterns
 
