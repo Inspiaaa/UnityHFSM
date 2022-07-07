@@ -70,6 +70,16 @@ namespace FSM
 			commandHandlers[typeof(TCommand)] = handler;
 		}
 
+		protected bool CanProcessCommand<TCommand>()
+		{
+			if (commandHandlers != null)
+			{
+				commandHandlers.TryGetValue(typeof(TCommand), out var commandHandler);
+				return commandHandler is Action<TCommand>;
+			}
+			return false;
+		}
+
 		/// <summary>
 		/// Called when state is active and fsm was call OnCommand
 		/// </summary>

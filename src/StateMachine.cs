@@ -108,6 +108,7 @@ namespace FSM
 			}
 		}
 		public TStateId ActiveStateName => ActiveState.name;
+		public TStateId PrevStateName { get; private set; }
 
 		private bool IsRootFsm => fsm == null;
 
@@ -177,6 +178,7 @@ namespace FSM
 			activeTransitions = bundle.transitions ?? noTransitions;
 			activeTriggerTransitions = bundle.triggerToTransitions ?? noTriggerTransitions;
 
+			PrevStateName = activeState != null ? activeState.name : default;
 			activeState = bundle.state;
 			activeState.OnEnter();
 
@@ -324,6 +326,17 @@ namespace FSM
 		}
 
 		public override void OnCommand<TCommand>(TCommand command = default)
+		{
+			if (CanProcessCommand<TCommand>())
+			{
+				base.OnCommand(command);
+				return;
+			}
+			
+			SendCommandToStates(command);
+		}
+
+		protected void SendCommandToStates<TCommand>(TCommand command = default)
 		{
 			if (activeState == null)
 			{

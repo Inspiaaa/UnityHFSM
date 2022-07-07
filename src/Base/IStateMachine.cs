@@ -28,5 +28,6 @@ namespace FSM
 
 		StateBase<TStateId> ActiveState { get; }
 		TStateId ActiveStateName { get; }
+		TStateId PrevStateName { get; }
 	}
 }
