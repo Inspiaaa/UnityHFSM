@@ -91,6 +91,10 @@
 
 - (Internal change) Restructured the `src` folder to make it cleaner
 
+### Fixed
+
+- Fix ArgumentNullException when using the `AddTransitionFromAny` shortcut method
+
 ---
 
 ## 1.8 - Generics
