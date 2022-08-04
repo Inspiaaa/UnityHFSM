@@ -4,7 +4,7 @@ using System.Collections.Generic;
  * Hierarchichal finite state machine for Unity
  * by Inspiaaa
  *
- * Version: 1.8.0
+ * Version: 1.9.0
  */
 
 namespace FSM
