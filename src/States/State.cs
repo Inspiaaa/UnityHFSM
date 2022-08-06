@@ -77,7 +77,15 @@ namespace FSM
 			Action<State<TStateId, string>> onLogic = null,
 			Action<State<TStateId, string>> onExit = null,
 			Func<State<TStateId, string>, bool> canExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+			bool needsExitTime = false,
+			bool isGhostState = false)
+			: base(
+				onEnter,
+				onLogic,
+				onExit,
+				canExit,
+				needsExitTime: needsExitTime,
+				isGhostState: isGhostState)
 		{
 		}
 	}
@@ -89,7 +97,15 @@ namespace FSM
 			Action<State<string, string>> onLogic = null,
 			Action<State<string, string>> onExit = null,
 			Func<State<string, string>, bool> canExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, canExit, needsExitTime)
+			bool needsExitTime = false,
+			bool isGhostState = false)
+			: base(
+				onEnter,
+				onLogic,
+				onExit,
+				canExit,
+				needsExitTime: needsExitTime,
+				isGhostState: isGhostState)
 		{
 		}
 	}

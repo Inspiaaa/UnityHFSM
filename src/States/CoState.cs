@@ -122,7 +122,16 @@ namespace FSM
 			Func<CoState<TStateId, string>, IEnumerator> onLogic = null,
 			Action<CoState<TStateId, string>> onExit = null,
 			Func<CoState<TStateId, string>, bool> canExit = null,
-			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, canExit, needsExitTime)
+			bool needsExitTime = false,
+			bool isGhostState = false)
+			: base(
+				mono,
+				onEnter,
+				onLogic,
+				onExit,
+				canExit,
+				needsExitTime: needsExitTime,
+				isGhostState: isGhostState)
 		{
 		}
 	}
@@ -135,7 +144,16 @@ namespace FSM
 			Func<CoState<string, string>, IEnumerator> onLogic = null,
 			Action<CoState<string, string>> onExit = null,
 			Func<CoState<string, string>, bool> canExit = null,
-			bool needsExitTime = false) : base(mono, onEnter, onLogic, onExit, canExit, needsExitTime)
+			bool needsExitTime = false,
+			bool isGhostState = false)
+			: base(
+				mono,
+				onEnter,
+				onLogic,
+				onExit,
+				canExit,
+				needsExitTime: needsExitTime,
+				isGhostState: isGhostState)
 		{
 		}
 	}

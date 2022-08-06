@@ -73,7 +73,8 @@ namespace FSM
 
 	public class StateBase : StateBase<string>
 	{
-		public StateBase(bool needsExitTime) : base(needsExitTime)
+		public StateBase(bool needsExitTime, bool isGhostState = false)
+			: base(needsExitTime, isGhostState)
 		{
 		}
 	}

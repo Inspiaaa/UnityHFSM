@@ -95,7 +95,8 @@ namespace FSM
 		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true).</param>
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 
 		}
@@ -616,21 +617,24 @@ namespace FSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 		}
 	}
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 		}
 	}
 
 	public class StateMachine : StateMachine<string, string, string>
 	{
-		public StateMachine(bool needsExitTime = true) : base(needsExitTime)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 		}
 	}
