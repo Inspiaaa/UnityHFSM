@@ -42,7 +42,8 @@ namespace FSM
 				Func<CoState<TStateId, TEvent>, IEnumerator> onLogic = null,
 				Action<CoState<TStateId, TEvent>> onExit = null,
 				Func<CoState<TStateId, TEvent>, bool> canExit = null,
-				bool needsExitTime = false) : base(needsExitTime)
+				bool needsExitTime = false,
+				bool isGhostState = false) : base(needsExitTime, isGhostState)
 		{
 			this.mono = mono;
 			this.onEnter = onEnter;

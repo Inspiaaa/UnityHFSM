@@ -15,12 +15,17 @@ namespace FSM
 		/// <summary>
 		/// Initialises a new instance of the BaseState class
 		/// </summary>
-		/// <param name="needsExitTime">Determins if the state is allowed to instantly
+		/// <param name="needsExitTime">Determines if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until
 		/// 	the state is ready for a state change (true)</param>
-		public StateBase(bool needsExitTime)
+		/// <param name="isGhostState">If true, this state becomes a ghost state, a
+		/// 	state the state machine does not want to stay in. That means that if the
+		/// 	fsm transitions to this state, it will test all outgoing transitions instantly
+		/// 	and not wait until the next OnLogic call.</param>
+		public StateBase(bool needsExitTime, bool isGhostState = false)
 		{
 			this.needsExitTime = needsExitTime;
+			this.isGhostState = isGhostState;
 		}
 
 		/// <summary>

@@ -26,16 +26,27 @@ namespace FSM
 			Action<State<TStateId, TEvent>> onLogic = null,
 			Action<State<TStateId, TEvent>> onExit = null,
 			Func<State<TStateId, TEvent>, bool> canExit = null,
-			bool needsExitTime = false)
+			bool needsExitTime = false,
+			bool isGhostState = false)
 		{
 			// Optimise for empty states
 			if (onEnter == null && onLogic == null && onExit == null && canExit == null)
 			{
-				fsm.AddState(name, new StateBase<TStateId>(needsExitTime));
+				fsm.AddState(name, new StateBase<TStateId>(needsExitTime, isGhostState));
 				return;
 			}
 
-			fsm.AddState(name, new State<TStateId, TEvent>(onEnter, onLogic, onExit, canExit, needsExitTime));
+			fsm.AddState(
+				name,
+				new State<TStateId, TEvent>(
+					onEnter,
+					onLogic,
+					onExit,
+					canExit,
+					needsExitTime: needsExitTime,
+					isGhostState: isGhostState
+				)
+			);
 		}
 
 		/// <summary>

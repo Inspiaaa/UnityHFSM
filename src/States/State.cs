@@ -33,7 +33,8 @@ namespace FSM
 				Action<State<TStateId, TEvent>> onLogic = null,
 				Action<State<TStateId, TEvent>> onExit = null,
 				Func<State<TStateId, TEvent>, bool> canExit = null,
-				bool needsExitTime = false) : base(needsExitTime)
+				bool needsExitTime = false,
+				bool isGhostState = false) : base(needsExitTime, isGhostState)
 		{
 			this.onEnter = onEnter;
 			this.onLogic = onLogic;
