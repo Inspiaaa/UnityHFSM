@@ -119,8 +119,13 @@ namespace FSM
 		{
 			if (pendingState.isPending)
 			{
-				ChangeState(pendingState.state);
+				TStateId state = pendingState.state;
+				// When the pending state is a ghost state, ChangeState() will have
+				// to try all outgoing transitions, which may overwrite the pendingState.
+				// That's why it is first cleared, and not afterwards, as that would overwrite
+				// a new, valid pending state.
 				pendingState = (default, false);
+				ChangeState(state);
 			}
 
 			fsm?.StateCanExit();
@@ -169,6 +174,10 @@ namespace FSM
 				{
 					transitions[i].OnEnter();
 				}
+			}
+
+			if (activeState.isGhostState) {
+				TryAllDirectTransitions();
 			}
 		}
 
@@ -249,6 +258,7 @@ namespace FSM
 					)
 				);
 			}
+
 			ChangeState(startState.state);
 
 			for (int i = 0; i < transitionsFromAny.Count; i ++)
@@ -266,15 +276,11 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Runs one logic step. It does at most one transition itself and
-		/// calls the active state's logic function (after the state transition, if
-		/// one occurred).
+		/// Tries the "global" transitions that can transition from any state
 		/// </summary>
-		public override void OnLogic()
+		/// <returns>Returns true if a transition occurred.</returns>
+		private bool TryAllGlobalTransitions()
 		{
-			EnsureIsInitializedFor("Running OnLogic");
-
-			// Try the "global" transitions that can transition from any state
 			for (int i = 0; i < transitionsFromAny.Count; i++)
 			{
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
@@ -284,16 +290,42 @@ namespace FSM
 					continue;
 
 				if (TryTransition(transition))
-					break;
+					return true;
 			}
 
-			// Try the "normal" transitions that transition from one specific state to another
+			return false;
+		}
+
+		/// <summary>
+		/// Tries the "normal" transitions that transition from one specific state to another.
+		/// </summary>
+		/// <returns>Returns true if a transition occurred.</returns>
+		private bool TryAllDirectTransitions()
+		{
 			for (int i = 0; i < activeTransitions.Count; i++)
 			{
 				TransitionBase<TStateId> transition = activeTransitions[i];
 
 				if (TryTransition(transition))
-					break;
+					return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Runs one logic step. It does at most one transition itself and
+		/// calls the active state's logic function (after the state transition, if
+		/// one occurred).
+		/// </summary>
+		public override void OnLogic()
+		{
+			EnsureIsInitializedFor("Running OnLogic");
+
+			bool hasChangedState = TryAllGlobalTransitions();
+
+			if (!hasChangedState) {
+				TryAllDirectTransitions();
 			}
 
 			activeState.OnLogic();

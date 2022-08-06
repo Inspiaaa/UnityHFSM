@@ -7,6 +7,7 @@ namespace FSM
 	public class StateBase<TStateId>
 	{
 		public bool needsExitTime;
+		public bool isGhostState;
 		public TStateId name;
 
 		public IStateMachine<TStateId> fsm;
