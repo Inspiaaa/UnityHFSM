@@ -43,7 +43,12 @@ namespace FSM
 				Action<CoState<TStateId, TEvent>> onExit = null,
 				Func<CoState<TStateId, TEvent>, bool> canExit = null,
 				bool needsExitTime = false,
-				bool isGhostState = false) : base(needsExitTime, isGhostState)
+				bool isGhostState = false,
+				bool isExitState = false)
+			: base(
+				needsExitTime,
+				isGhostState: isGhostState,
+				isExitState: isExitState)
 		{
 			this.mono = mono;
 			this.onEnter = onEnter;
@@ -123,15 +128,17 @@ namespace FSM
 			Action<CoState<TStateId, string>> onExit = null,
 			Func<CoState<TStateId, string>, bool> canExit = null,
 			bool needsExitTime = false,
-			bool isGhostState = false)
-			: base(
-				mono,
-				onEnter,
-				onLogic,
-				onExit,
-				canExit,
-				needsExitTime: needsExitTime,
-				isGhostState: isGhostState)
+			bool isGhostState = false,
+			bool isExitState = false)
+		: base(
+			mono,
+			onEnter,
+			onLogic,
+			onExit,
+			canExit,
+			needsExitTime: needsExitTime,
+			isGhostState: isGhostState,
+			isExitState: isExitState)
 		{
 		}
 	}
@@ -145,15 +152,17 @@ namespace FSM
 			Action<CoState<string, string>> onExit = null,
 			Func<CoState<string, string>, bool> canExit = null,
 			bool needsExitTime = false,
-			bool isGhostState = false)
-			: base(
-				mono,
-				onEnter,
-				onLogic,
-				onExit,
-				canExit,
-				needsExitTime: needsExitTime,
-				isGhostState: isGhostState)
+			bool isGhostState = false,
+			bool isExitState = false)
+		: base(
+			mono,
+			onEnter,
+			onLogic,
+			onExit,
+			canExit,
+			needsExitTime: needsExitTime,
+			isGhostState: isGhostState,
+			isExitState: isExitState)
 		{
 		}
 	}

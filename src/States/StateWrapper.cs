@@ -33,7 +33,11 @@ namespace FSM
 					Action<StateBase<TStateId>> afterOnLogic = null,
 
 					Action<StateBase<TStateId>> beforeOnExit = null,
-					Action<StateBase<TStateId>> afterOnExit = null) : base(state.needsExitTime, state.isGhostState)
+					Action<StateBase<TStateId>> afterOnExit = null)
+				: base(
+					state.needsExitTime,
+					isGhostState: state.isGhostState,
+					isExitState: state.isExitState)
 			{
 				this.state = state;
 

@@ -12,8 +12,8 @@ namespace FSM
 		// Lazy initialized
 		private Dictionary<TEvent, Delegate> actionsByEvent;
 
-		public ActionState(bool needsExitTime, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public ActionState(bool needsExitTime, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 
@@ -99,16 +99,16 @@ namespace FSM
 
 	public class ActionState<TStateId> : ActionState<TStateId, string>
 	{
-		public ActionState(bool needsExitTime, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public ActionState(bool needsExitTime, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 	}
 
 	public class ActionState : ActionState<string, string>
 	{
-		public ActionState(bool needsExitTime, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public ActionState(bool needsExitTime, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 	}
