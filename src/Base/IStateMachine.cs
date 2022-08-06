@@ -15,7 +15,9 @@ namespace FSM
 		/// Tells the state machine that, if there is a state transition pending,
 		/// now is the time to perform it.
 		/// </summary>
-		void StateCanExit();
+		/// <returns>Returns true if the state machine could execute a pending state change
+		/// 	and false if it remained in its current state</returns>
+		bool StateCanExit();
 
 		void RequestStateChange(TStateId name, bool forceInstantly = false);
 

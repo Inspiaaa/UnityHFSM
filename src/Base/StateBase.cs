@@ -8,6 +8,8 @@ namespace FSM
 	{
 		public bool needsExitTime;
 		public bool isGhostState;
+		public bool isExitState;
+
 		public TStateId name;
 
 		public IStateMachine<TStateId> fsm;
@@ -22,10 +24,11 @@ namespace FSM
 		/// 	state the state machine does not want to stay in. That means that if the
 		/// 	fsm transitions to this state, it will test all outgoing transitions instantly
 		/// 	and not wait until the next OnLogic call.</param>
-		public StateBase(bool needsExitTime, bool isGhostState = false)
+		public StateBase(bool needsExitTime, bool isGhostState = false, bool isExitState = false)
 		{
 			this.needsExitTime = needsExitTime;
 			this.isGhostState = isGhostState;
+			this.isExitState = isExitState;
 		}
 
 		/// <summary>
@@ -73,8 +76,8 @@ namespace FSM
 
 	public class StateBase : StateBase<string>
 	{
-		public StateBase(bool needsExitTime, bool isGhostState = false)
-			: base(needsExitTime, isGhostState)
+		public StateBase(bool needsExitTime, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 	}

@@ -95,8 +95,8 @@ namespace FSM
 		/// 	Determins whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
 		/// 	state change (true).</param>
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 
 		}
@@ -116,31 +116,47 @@ namespace FSM
 		/// Notifies the state machine that the state can cleanly exit,
 		/// and if a state change is pending, it will execute it.
 		/// </summary>
-		public void StateCanExit()
+		/// <returns>Returns true if the state machine could execute a pending state change
+		/// 	and false if it remained in its current state</returns>
+		public bool StateCanExit()
 		{
-			if (pendingState.isPending)
+			if (activeState.isExitState && fsm != null && fsm.StateCanExit())
 			{
-				TStateId state = pendingState.state;
-				// When the pending state is a ghost state, ChangeState() will have
-				// to try all outgoing transitions, which may overwrite the pendingState.
-				// That's why it is first cleared, and not afterwards, as that would overwrite
-				// a new, valid pending state.
-				pendingState = (default, false);
-				ChangeState(state);
+				return true;
 			}
 
-			fsm?.StateCanExit();
+			if (!pendingState.isPending)
+			{
+				return false;
+			}
+
+			TStateId state = pendingState.state;
+			// When the pending state is a ghost state, ChangeState() will have
+			// to try all outgoing transitions, which may overwrite the pendingState.
+			// That's why it is first cleared, and not afterwards, as that would overwrite
+			// a new, valid pending state.
+			pendingState = (default, false);
+			ChangeState(state);
+
+			if (activeState.isExitState && !activeState.needsExitTime) {
+				fsm?.StateCanExit();
+				// TODO: If the active state needsExitTime, and the parent fsm has a pending
+				// state change, then call OnExitRequest() on the new active state.
+			}
+
+			return true;
 		}
 
 		public override void OnExitRequest()
 		{
-			if (activeState.needsExitTime)
+			if (activeState.isExitState && ! activeState.needsExitTime)
+			{
+				fsm?.StateCanExit();
+			}
+			else if (activeState.isExitState && activeState.needsExitTime)
 			{
 				activeState.OnExitRequest();
-				return;
 			}
-
-			fsm?.StateCanExit();
 		}
 
 		/// <summary>
@@ -177,7 +193,8 @@ namespace FSM
 				}
 			}
 
-			if (activeState.isGhostState) {
+			if (activeState.isGhostState)
+			{
 				TryAllDirectTransitions();
 			}
 		}
@@ -193,6 +210,12 @@ namespace FSM
 			if (!activeState.needsExitTime || forceInstantly)
 			{
 				ChangeState(name);
+
+				if (activeState.isExitState && !activeState.needsExitTime) {
+					fsm?.StateCanExit();
+					// TODO: If the active state needsExitTime, and the parent fsm has a pending
+					// state change, then call OnExitRequest() on the new active state.
+				}
 			}
 			else
 			{
@@ -617,24 +640,24 @@ namespace FSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 	}
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 	}
 
 	public class StateMachine : StateMachine<string, string, string>
 	{
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = true, bool isGhostState = false, bool isExitState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, isExitState: isExitState)
 		{
 		}
 	}
