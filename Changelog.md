@@ -2,7 +2,29 @@
 
 ---
 
-## In progress
+## In progress (1.10)
+
+### Added
+
+- Ghost states: Ghost states are states that the state machine does not want to remain in and will try to exit as soon as possible. This means that the fsm can do multiple transitions in one `OnLogic` call. The "ghost state behaviour" is supported by all state types by setting the `isGhostState` field.
+
+  E.g.
+
+  ```csharp
+  fsm.AddState("A", onEnter: s => print("A"));
+  fsm.AddState("B", new State(onEnter: s => print("B"), isGhostState: true));
+  fsm.AddState("C", onEnter: s => print("C");
+
+  fsm.AddTransition("A", "B");
+  fsm.AddTransition("B", "C");
+
+  fsm.Init(); // Prints "A"
+  fsm.OnLogic(); // Prints "B" and then "C"
+  ```
+
+---
+
+## 1.9
 
 ### Added
 
