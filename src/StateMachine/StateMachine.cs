@@ -138,8 +138,6 @@ namespace FSM
 			// a new, valid pending state.
 			pendingState = (default, false);
 			ChangeState(state);
-
-			TryToExitStateMachine();
 			return true;
 		}
 
@@ -256,7 +254,6 @@ namespace FSM
 			if (!activeState.needsExitTime || forceInstantly)
 			{
 				ChangeState(name);
-				TryToExitStateMachine();
 			}
 			else
 			{
@@ -386,6 +383,10 @@ namespace FSM
 		public override void OnLogic()
 		{
 			EnsureIsInitializedFor("Running OnLogic");
+
+			if (TryToExitStateMachine()) {
+				return;
+			}
 
 			bool hasChangedState = TryAllGlobalTransitions();
 
