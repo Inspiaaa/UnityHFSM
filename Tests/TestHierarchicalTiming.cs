@@ -43,7 +43,7 @@ namespace FSM.Tests
         }
 
         [Test]
-        public void Test_parent_fsm_stays_in_nested_fsm_until_exit_state_is_entered() {
+        public void Test_nested_fsm_exits_on_OnLogic_when_in_an_exit_state() {
             StateMachine nested = new StateMachine(needsExitTime: true);
             nested.AddState("A.X", recorder.TrackedState);
             nested.AddState("A.Y", recorder.Track(new State(isExitState: true)));
@@ -71,15 +71,42 @@ namespace FSM.Tests
             recorder.Expect
                 .Exit("A.X")
                 .Enter("A.Y")
-                .Exit("A")
-                .Exit("A.Y")
-                .Enter("B")
                 .All();
 
             fsm.OnLogic();
 
             recorder.Expect
+                .Exit("A")
+                .Exit("A.Y")
+                .Enter("B")
                 .Logic("B")
+                .All();
+        }
+
+        [Test]
+        public void Test_nested_fsm_instantly_exits_when_entering_exit_ghost_state() {
+             StateMachine nested = new StateMachine(needsExitTime: true);
+            nested.AddState("A.X", recorder.TrackedState);
+            nested.AddState("A.Y", recorder.Track(new State(isExitState: true, isGhostState: true)));
+
+            fsm.AddState("A", recorder.Track(nested));
+            fsm.AddState("B", recorder.TrackedState);
+
+            fsm.SetStartState("A");
+            fsm.AddTransition("A", "B");
+            fsm.Init();
+            fsm.OnLogic();
+
+            recorder.DiscardAll();
+
+            nested.RequestStateChange("A.Y");
+
+            recorder.Expect
+                .Exit("A.X")
+                .Enter("A.Y")
+                .Exit("A")
+                .Exit("A.Y")
+                .Enter("B")
                 .All();
         }
 
