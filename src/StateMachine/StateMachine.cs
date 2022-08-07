@@ -86,6 +86,7 @@ namespace FSM
 		}
 		public TStateId ActiveStateName => ActiveState.name;
 
+		private bool IsActive => activeState != null;
 		private bool IsRootFsm => fsm == null;
 
 		/// <summary>
@@ -120,7 +121,7 @@ namespace FSM
 		/// 	and false if it remained in its current state</returns>
 		public bool StateCanExit()
 		{
-			if (activeState.isExitState && fsm != null && fsm.StateCanExit())
+			if (TryToExitStateMachine())
 			{
 				return true;
 			}
@@ -138,24 +139,39 @@ namespace FSM
 			pendingState = (default, false);
 			ChangeState(state);
 
-			if (activeState.isExitState && !activeState.needsExitTime) {
-				fsm?.StateCanExit();
-				// TODO: If the active state needsExitTime, and the parent fsm has a pending
-				// state change, then call OnExitRequest() on the new active state.
-			}
-
+			TryToExitStateMachine();
 			return true;
+		}
+
+		/// <summary>
+		/// Notifies the state machine that it can cleanly exit so that the parent state machine
+		/// can move on to another state.
+		/// </summary>
+		/// <returns>Returns true if this state machine has exited, i.e. the parent state machine
+		/// 	has moved on to another state. Returns false if this state machine
+		/// 	remains active.</returns>
+		public bool StateMachineCanExit()
+		{
+			if (fsm == null) {
+				return false;
+			}
+			return fsm.StateCanExit();
 		}
 
 		public override void OnExitRequest()
 		{
-			if (activeState.isExitState && ! activeState.needsExitTime)
+			if (! activeState.isExitState)
 			{
-				fsm?.StateCanExit();
+				return;
 			}
-			else if (activeState.isExitState && activeState.needsExitTime)
+
+			if (activeState.needsExitTime)
 			{
 				activeState.OnExitRequest();
+			}
+			else
+			{
+				StateMachineCanExit();
 			}
 		}
 
@@ -195,8 +211,38 @@ namespace FSM
 
 			if (activeState.isGhostState)
 			{
-				TryAllDirectTransitions();
+				TryToExitGhostState();
 			}
+		}
+
+		/// <summary>
+		/// Tries to instantly exit the active ghost state, by attempting to make the
+		/// state machine exit (and give control to a parent state machine) and by
+		/// checking all direct outgoing transitions.
+		/// </summary>
+		private void TryToExitGhostState()
+		{
+			if (TryToExitStateMachine()) return;
+			TryAllDirectTransitions();
+		}
+
+		/// <summary>
+		/// If the active state is an exit state, it tries to exit the current state
+		/// machine so that a parent state machine can move on to another state.
+		/// </summary>
+		private bool TryToExitStateMachine()
+		{
+			if (fsm == null || !activeState.isExitState)
+			{
+				return false;
+			}
+
+			if (activeState.needsExitTime) {
+				activeState.OnExitRequest();
+				return !IsActive;
+			}
+
+			return fsm.StateCanExit();
 		}
 
 		/// <summary>
@@ -210,12 +256,7 @@ namespace FSM
 			if (!activeState.needsExitTime || forceInstantly)
 			{
 				ChangeState(name);
-
-				if (activeState.isExitState && !activeState.needsExitTime) {
-					fsm?.StateCanExit();
-					// TODO: If the active state needsExitTime, and the parent fsm has a pending
-					// state change, then call OnExitRequest() on the new active state.
-				}
+				TryToExitStateMachine();
 			}
 			else
 			{
@@ -352,7 +393,9 @@ namespace FSM
 				TryAllDirectTransitions();
 			}
 
-			activeState.OnLogic();
+			// When a direct transitions leads to an exit state and the state machine exits,
+			// it exits before OnLogic() has finished calling and therefore activeState will be null.
+			activeState?.OnLogic();
 		}
 
 		public override void OnExit()
