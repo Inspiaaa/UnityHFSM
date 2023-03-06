@@ -8,12 +8,12 @@ namespace FSM
     /// use coroutine-like method to determin whether the state machine should transition to another state
     /// </summary>
     /// <typeparam name="TStateId"></typeparam>
-    public class TransitionAwait < TStateId > : TransitionBase < TStateId >
+    public class TransitionAwait<TStateId> : TransitionBase<TStateId>
     {
-        private Stack < IEnumerator > stack;
+        private Stack<IEnumerator> stack;
         private IEnumerator routine;
-        private Func < TransitionAwait < TStateId > , IEnumerator > condition;
-        public TransitionAwait(TStateId from, TStateId to, Func < TransitionAwait < TStateId > , IEnumerator > condition, bool forceInstantly = false): base(from, to, forceInstantly)
+        private Func<TransitionAwait<TStateId> , IEnumerator> condition;
+        public TransitionAwait(TStateId from, TStateId to, Func<TransitionAwait<TStateId> , IEnumerator> condition, bool forceInstantly = false): base(from, to, forceInstantly)
         {
             this.condition = condition;
         }
@@ -40,7 +40,7 @@ namespace FSM
         }
         public override void Init()
         {
-            stack = new Stack < IEnumerator > ();
+            stack = new Stack<IEnumerator>();
         }
         public override void OnEnter()
         {
@@ -54,13 +54,12 @@ namespace FSM
         public IEnumerator WaitForSeconds(float seconds)
         {
             float enterTime = Time.timeSinceLevelLoad;
-            while(Time.timeSinceLevelLoad - enterTime < seconds) yield
-            return null;
+            while(Time.timeSinceLevelLoad - enterTime < seconds) yield return null;
         }
     }
-    public class TransitionAwait: TransitionAwait < string >
+    public class TransitionAwait: TransitionAwait<string>
     {
-        public TransitionAwait(string@ from, string to, Func < TransitionAwait < string > , IEnumerator > condition = null, bool forceInstantly = false): base(@from, to, condition, forceInstantly)
+        public TransitionAwait(string@ from, string to, Func<TransitionAwait<string> , IEnumerator> condition = null, bool forceInstantly = false): base(@from, to, condition, forceInstantly)
         {}
     }
 }
