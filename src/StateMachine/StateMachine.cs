@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /**
@@ -76,6 +77,8 @@ namespace FSM
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
+		public event Action<StateBase<TStateId>> OnActiveStateChanged;
+		
 		public StateBase<TStateId> ActiveState
 		{
 			get
@@ -162,6 +165,7 @@ namespace FSM
 			activeTriggerTransitions = bundle.triggerToTransitions ?? noTriggerTransitions;
 
 			activeState = bundle.state;
+			OnActiveStateChanged?.Invoke(activeState);
 			activeState.OnEnter();
 
 			for (int i = 0; i < activeTransitions.Count; i++)
@@ -340,6 +344,7 @@ namespace FSM
 				// By setting the activeState to null, the state's onExit method won't be called
 				// a second time when the state machine enters again (and changes to the start state)
 				activeState = null;
+				OnActiveStateChanged?.Invoke(activeState);
 			}
 		}
 
