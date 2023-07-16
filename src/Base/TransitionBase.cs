@@ -10,8 +10,9 @@ namespace FSM
 		public TStateId to;
 
 		public bool forceInstantly;
+		public bool isExitTransition;
 
-		public IStateMachine<TStateId> fsm;
+		public IStateMachine fsm;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionBase class
@@ -25,6 +26,7 @@ namespace FSM
 			this.from = from;
 			this.to = to;
 			this.forceInstantly = forceInstantly;
+			this.isExitTransition = false;
 		}
 
 		/// <summary>

@@ -10,7 +10,7 @@ namespace FSM
 		public bool isGhostState;
 		public TStateId name;
 
-		public IStateMachine<TStateId> fsm;
+		public IStateMachine fsm;
 
 		/// <summary>
 		/// Initialises a new instance of the BaseState class

@@ -8,8 +8,7 @@ namespace FSM
 	/// every sub state would have to provide all generic type parameters of the fsm.
 	/// => An abstraction layer
 	/// </summary>
-	/// <typeparam name="TStateId">They type of the names / ids of the sub states</typeparam>
-	public interface IStateMachine<TStateId>
+	public interface IStateMachine
 	{
 		/// <summary>
 		/// Tells the state machine that, if there is a state transition pending,
@@ -17,9 +16,8 @@ namespace FSM
 		/// </summary>
 		void StateCanExit();
 
-		void RequestStateChange(TStateId name, bool forceInstantly = false);
+		bool HasPendingTransition { get; }
 
-		StateBase<TStateId> ActiveState { get; }
-		TStateId ActiveStateName { get; }
+		IStateMachine ParentFsm { get; }
 	}
 }

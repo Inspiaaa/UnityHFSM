@@ -16,7 +16,7 @@ namespace FSM
 	public class StateMachine<TOwnId, TStateId, TEvent> :
 		StateBase<TOwnId>,
 		ITriggerable<TEvent>,
-		IStateMachine<TStateId>,
+		IStateMachine,
 		IActionable<TEvent>
 	{
 		/// <summary>
@@ -38,7 +38,8 @@ namespace FSM
 				transitions.Add(t);
 			}
 
-			public void AddTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition) {
+			public void AddTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
+			{
 				triggerToTransitions = triggerToTransitions
 					?? new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
@@ -61,7 +62,8 @@ namespace FSM
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
 		private (TStateId state, bool hasState) startState = (default, false);
-		private (TStateId state, bool isPending) pendingState = (default, false);
+		// TODO: Maybe: Rename to pendingTransition + introduce struct to store data.
+		private (TStateId state, bool isExit, bool isPending) pendingState = (default, false, false);
 
 		// Central storage of states
 		private Dictionary<TStateId, StateBundle> nameToStateBundle
@@ -86,15 +88,18 @@ namespace FSM
 		}
 		public TStateId ActiveStateName => ActiveState.name;
 
+		public IStateMachine ParentFsm => fsm;
+
 		private bool IsRootFsm => fsm == null;
+
+		public bool HasPendingTransition => pendingState.isPending;
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
 		/// </summary>
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
-		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
-		/// 	state change (true).</param>
+		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs. </param>
 		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
@@ -118,29 +123,29 @@ namespace FSM
 		/// </summary>
 		public void StateCanExit()
 		{
-			if (pendingState.isPending)
+			if (! pendingState.isPending)
+				return;
+
+			if (pendingState.isExit)
 			{
+				TryVerticalTransition();
+			}
+			else {
 				TStateId state = pendingState.state;
+
 				// When the pending state is a ghost state, ChangeState() will have
 				// to try all outgoing transitions, which may overwrite the pendingState.
 				// That's why it is first cleared, and not afterwards, as that would overwrite
 				// a new, valid pending state.
-				pendingState = (default, false);
+				pendingState = (default, false, false);
 				ChangeState(state);
 			}
-
-			fsm?.StateCanExit();
 		}
 
 		public override void OnExitRequest()
 		{
-			if (activeState.needsExitTime)
-			{
-				activeState.OnExitRequest();
-				return;
-			}
-
-			fsm?.StateCanExit();
+			// TODO: Only if activeState needsExitTime? or not at all?
+			activeState.OnExitRequest();
 		}
 
 		/// <summary>
@@ -177,7 +182,9 @@ namespace FSM
 				}
 			}
 
-			if (activeState.isGhostState) {
+			// TODO: Move this to a wrapper function?
+			if (activeState.isGhostState)
+			{
 				TryAllDirectTransitions();
 			}
 		}
@@ -196,13 +203,25 @@ namespace FSM
 			}
 			else
 			{
-				pendingState = (name, true);
+				pendingState = (name, isExit: false, isPending: true);
 				activeState.OnExitRequest();
 				/**
 				 * If it can exit, the activeState would call
 				 * -> state.fsm.StateCanExit() which in turn would call
 				 * -> fsm.ChangeState(...)
 				 */
+			}
+		}
+
+		public void RequestExit(bool forceInstantly = false)
+		{
+			if (!activeState.needsExitTime || forceInstantly)
+			{
+				TryVerticalTransition();
+			}
+			else {
+				pendingState = (default, isExit: true, isPending: true);
+				activeState.OnExitRequest();
 			}
 		}
 
@@ -217,9 +236,22 @@ namespace FSM
 			if (!transition.ShouldTransition())
 				return false;
 
-			RequestStateChange(transition.to, transition.forceInstantly);
+			if (transition.isExitTransition)
+			{
+				RequestExit(transition.forceInstantly);
+			}
+			else
+			{
+				RequestStateChange(transition.to, transition.forceInstantly);
+			}
 
 			return true;
+		}
+
+		// TODO: Maybe rename to PerformVerticalTransition
+		private void TryVerticalTransition()
+		{
+			fsm?.StateCanExit();
 		}
 
 		/// <summary>
@@ -232,7 +264,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Calls OnEnter if it is the root machine, therefore initialising the state machine
+		/// Calls OnEnter if it is the root state machine, therefore initialising the state machine
 		/// </summary>
 		public override void Init()
 		{
@@ -323,13 +355,14 @@ namespace FSM
 		{
 			EnsureIsInitializedFor("Running OnLogic");
 
-			bool hasChangedState = TryAllGlobalTransitions();
+			if (TryAllGlobalTransitions())
+				goto runOnLogic;
 
-			if (!hasChangedState) {
-				TryAllDirectTransitions();
-			}
+			if (TryAllDirectTransitions())
+				goto runOnLogic;
 
-			activeState.OnLogic();
+			runOnLogic:
+			activeState?.OnLogic();
 		}
 
 		public override void OnExit()
@@ -350,10 +383,12 @@ namespace FSM
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		private StateBundle GetOrCreateStateBundle(TStateId name) {
+		private StateBundle GetOrCreateStateBundle(TStateId name)
+		{
 			StateBundle bundle;
 
-			if (! nameToStateBundle.TryGetValue(name, out bundle)) {
+			if (! nameToStateBundle.TryGetValue(name, out bundle))
+			{
 				bundle = new StateBundle();
 				nameToStateBundle.Add(name, bundle);
 			}
@@ -442,7 +477,8 @@ namespace FSM
 
 			List<TransitionBase<TStateId>> transitionsOfTrigger;
 
-			if (!triggerTransitionsFromAny.TryGetValue(trigger, out transitionsOfTrigger)) {
+			if (!triggerTransitionsFromAny.TryGetValue(trigger, out transitionsOfTrigger))
+			{
 				transitionsOfTrigger = new List<TransitionBase<TStateId>>();
 				triggerTransitionsFromAny.Add(trigger, transitionsOfTrigger);
 			}
@@ -488,6 +524,16 @@ namespace FSM
 			ReverseTransition<TStateId> reverse = new ReverseTransition<TStateId>(transition, false);
 			InitTransition(reverse);
 			AddTriggerTransition(trigger, reverse);
+		}
+
+		// TODO: AddTriggerExitTransition
+		// TODO: AddExitTransitionFromAny
+		// TODO: AddTriggerExitTransitionFromAny
+		public void AddExitTransition(TransitionBase<TStateId> transition)
+		{
+			ExitTransition<TStateId> exitTransition = new ExitTransition<TStateId>(transition);
+			// TODO: Insert at front for higher priority???
+			AddTransition(exitTransition);
 		}
 
 		/// <summary>
