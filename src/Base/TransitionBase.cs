@@ -44,7 +44,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to determin whether the state machine should transition to the <c>to</c> state
+		/// Called to determine whether the state machine should transition to the <c>to</c> state
 		/// </summary>
 		/// <returns>True if the state machine should change states / transition</returns>
 		public virtual bool ShouldTransition()

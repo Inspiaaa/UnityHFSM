@@ -3,7 +3,7 @@ using System;
 namespace FSM
 {
 	/// <summary>
-	/// A class used to determin whether the state machine should transition to another state
+	/// A class used to determine whether the state machine should transition to another state
 	/// </summary>
 	public class Transition<TStateId> : TransitionBase<TStateId>
 	{

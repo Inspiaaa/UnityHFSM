@@ -3,7 +3,7 @@ using System;
 namespace FSM
 {
 	/// <summary>
-	/// A class used to determin whether the state machine should transition to another state
+	/// A class used to determine whether the state machine should transition to another state
 	/// depending on a dynamically computed delay and an optional condition
 	/// </summary>
 	public class TransitionAfterDynamic<TStateId> : TransitionBase<TStateId>
