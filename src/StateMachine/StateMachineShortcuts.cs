@@ -160,5 +160,16 @@ namespace FSM
 		{
 			fsm.AddTwoWayTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
 		}
+
+		public static void AddExitTransition<TOwnId, TStateId, TEvent>(
+			this StateMachine<TOwnId, TStateId, TEvent> fsm,
+			TStateId from,
+			Func<Transition<TStateId>, bool> condition = null,
+			bool forceInstantly = false)
+		{
+			fsm.AddExitTransition(new ExitTransition<TStateId>(
+				CreateOptimizedTransition(from, default, condition, forceInstantly)
+			));
+		}
 	}
 }
