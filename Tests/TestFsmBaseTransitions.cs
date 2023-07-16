@@ -78,7 +78,7 @@ namespace FSM.Tests
 		[Test]
 		public void Test_request_transition_with_a_nested_fsm()
 		{
-			var nested = new StateMachine();
+			var nested = new StateMachine(needsExitTime: false);
 			fsm.AddState("A", recorder.Track(nested));
 			fsm.AddState("B", recorder.TrackedState);
 			nested.AddState("A.X", recorder.TrackedState);
