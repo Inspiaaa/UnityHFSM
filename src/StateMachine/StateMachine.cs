@@ -530,14 +530,28 @@ namespace FSM
 			AddTriggerTransition(trigger, reverse);
 		}
 
-		// TODO: AddTriggerExitTransition
-		// TODO: AddExitTransitionFromAny
-		// TODO: AddTriggerExitTransitionFromAny
 		public void AddExitTransition(TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
 			// TODO: Insert at front for higher priority???
 			AddTransition(transition);
+		}
+
+		public void AddExitTransitionFromAny(TransitionBase<TStateId> transition)
+		{
+			transition.isExitTransition = true;
+			AddTransitionFromAny(transition);
+		}
+
+		public void AddExitTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
+		{
+			transition.isExitTransition = true;
+			AddTriggerTransition(trigger, transition);
+		}
+
+		public void AddExitTriggerTransitionFromAny(TEvent trigger, TransitionBase<TStateId> transition) {
+			transition.isExitTransition = true;
+			AddTriggerTransitionFromAny(trigger, transition);
 		}
 
 		/// <summary>

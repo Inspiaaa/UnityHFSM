@@ -169,5 +169,38 @@ namespace FSM
 		{
 			fsm.AddExitTransition(CreateOptimizedTransition(from, default, condition, forceInstantly));
 		}
+
+		public static void AddExitTransitionFromAny<TOwnId, TStateId, TEvent>(
+			this StateMachine<TOwnId, TStateId, TEvent> fsm,
+			Func<Transition<TStateId>, bool> condition = null,
+			bool forceInstantly = false)
+		{
+			fsm.AddExitTransitionFromAny(CreateOptimizedTransition(default, default, condition, forceInstantly));
+		}
+
+		public static void AddExitTriggerTransition<TOwnId, TStateId, TEvent>(
+			this StateMachine<TOwnId, TStateId, TEvent> fsm,
+			TEvent trigger,
+			TStateId from,
+			Func<Transition<TStateId>, bool> condition = null,
+			bool forceInstantly = false)
+		{
+			fsm.AddExitTriggerTransition(
+				trigger,
+				CreateOptimizedTransition(from, default, condition, forceInstantly)
+			);
+		}
+
+		public static void AddExitTriggerTransitionFromAny<TOwnId, TStateId, TEvent>(
+			this StateMachine<TOwnId, TStateId, TEvent> fsm,
+			TEvent trigger,
+			Func<Transition<TStateId>, bool> condition = null,
+			bool forceInstantly = false)
+		{
+			fsm.AddExitTriggerTransitionFromAny(
+				trigger,
+				CreateOptimizedTransition(default, default, condition, forceInstantly)
+			);
+		}
 	}
 }
