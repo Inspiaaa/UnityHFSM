@@ -16,6 +16,8 @@ namespace FSM.Tests
 			fsm = new StateMachine();
 		}
 
+		// TODO: Test exit transitions coexisting beside normal transitions (priorities)
+
 		[Test]
 		public void Test_nested_fsm_with_needsExitTime_does_not_exit_on_parent_transition()
 		{
@@ -152,6 +154,112 @@ namespace FSM.Tests
 				.Exit("A.B")
 				.Exit("A.B.C")
 				.Exit("A.B.C.D")
+				.All();
+		}
+
+		[Test]
+		public void Test_exit_transition_succeeds_when_state_with_needsExitTime_can_exit()
+		{
+			var nested = new StateMachine(needsExitTime: true);
+			nested.AddState("A.X", recorder.Track(new State(needsExitTime: true)));
+			nested.AddExitTransition("A.X");
+
+			fsm.AddState("A", recorder.Track(nested));
+			fsm.AddState("B", recorder.TrackedState);
+			fsm.AddTransition("A", "B");
+
+			fsm.Init();
+			recorder.DiscardAll();
+
+			fsm.OnLogic();
+			recorder.Expect
+				.Logic("A")
+				.Logic("A.X")
+				.All();
+
+			nested.StateCanExit();
+
+			recorder.Expect
+				.Exit("A")
+				.Exit("A.X")
+				.Enter("B")
+				.All();
+		}
+
+		[Test]
+		public void Test_exit_trigger_transition()
+		{
+			var nested = new StateMachine(needsExitTime: true);
+			nested.AddState("A.X", recorder.TrackedState);
+			nested.AddExitTriggerTransition("Event", "A.X");
+
+			fsm.AddState("A", recorder.Track(nested));
+			fsm.AddState("B", recorder.TrackedState);
+			fsm.AddTransition("A", "B");
+
+			fsm.Init();
+			recorder.DiscardAll();
+
+			fsm.OnLogic();
+			recorder.Expect
+				.Logic("A")
+				.Logic("A.X")
+				.All();
+
+			fsm.Trigger("Event");
+			recorder.Expect
+				.Exit("A")
+				.Exit("A.X")
+				.Enter("B")
+				.All();
+
+			fsm.OnLogic();
+			recorder.Expect.Logic("B").All();
+		}
+
+		[Test]
+		public void Test_exit_transition_from_any()
+		{
+			var nested = new StateMachine(needsExitTime: true);
+			nested.AddState("A.X", recorder.TrackedState);
+			nested.AddExitTransitionFromAny();
+
+			fsm.AddState("A", recorder.Track(nested));
+			fsm.AddState("B", recorder.TrackedState);
+			fsm.AddTransition("A", "B");
+
+			fsm.Init();
+			recorder.DiscardAll();
+
+			fsm.OnLogic();
+			recorder.Expect
+				.Logic("A")
+				.Exit("A")
+				.Exit("A.X")
+				.Enter("B")
+				.All();
+		}
+
+		[Test]
+		public void Test_exit_trigger_transition_from_any()
+		{
+			var nested = new StateMachine(needsExitTime: true);
+			nested.AddState("A.X", recorder.TrackedState);
+			nested.AddExitTriggerTransitionFromAny("Event");
+
+			fsm.AddState("A", recorder.Track(nested));
+			fsm.AddState("B", recorder.TrackedState);
+			fsm.AddTransition("A", "B");
+
+			fsm.Init();
+			fsm.OnLogic();
+			recorder.DiscardAll();
+
+			fsm.Trigger("Event");
+			recorder.Expect
+				.Exit("A")
+				.Exit("A.X")
+				.Enter("B")
 				.All();
 		}
 	}
