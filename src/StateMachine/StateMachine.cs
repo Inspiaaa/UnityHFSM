@@ -100,7 +100,7 @@ namespace FSM
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs. </param>
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 
@@ -681,7 +681,7 @@ namespace FSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 		}
@@ -689,7 +689,7 @@ namespace FSM
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 		}
@@ -697,7 +697,7 @@ namespace FSM
 
 	public class StateMachine : StateMachine<string, string, string>
 	{
-		public StateMachine(bool needsExitTime = true, bool isGhostState = false)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
 		}
