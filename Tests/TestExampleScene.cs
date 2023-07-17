@@ -7,6 +7,34 @@ using System;
 
 namespace FSM.Tests
 {
+	/*
+	Mermaid state diagram for reference:
+
+	```
+	stateDiagram-v2
+		[*] --> Follow
+		Extract: Extract Intel
+		Flee: Flee From Player
+		Follow: Follow Player
+
+		Flee --> Extract
+		Extract --> Flee
+
+		Follow --> Extract
+		Extract --> Follow
+
+		state Extract {
+			Send: Send Data
+			Collect: Collect Data
+
+			[*] --> Collect
+			Collect --> Send
+			Send --> Collect
+
+			Collect --> [*]
+		}
+	```
+	*/
 	public class TestExampleScene
 	{
 		private Recorder recorder;
@@ -27,12 +55,13 @@ namespace FSM.Tests
 			// that controls the beheviour of an Enemy Spy unit in a space game.
 
 			// ExtractIntel state
-			StateMachine extractIntel = new StateMachine();
+			StateMachine extractIntel = new StateMachine(needsExitTime: true);
 			extractIntel.AddState("CollectData", recorder.TrackedState);
 			extractIntel.AddState("SendData", recorder.TrackedState);
 
 			bool shouldCollectData = true;
 			extractIntel.SetStartState("CollectData");
+			extractIntel.AddExitTransition("CollectData");
 			extractIntel.AddTransition("CollectData", "SendData", t => !shouldCollectData);
 			extractIntel.AddTransition("SendData", "CollectData", t => shouldCollectData);
 
@@ -126,10 +155,10 @@ namespace FSM.Tests
 			isInPlayerScanningRange = true;
 			fsm.OnLogic();
 			recorder.Expect
+				.Logic("ExtractIntel")
 				.Exit("ExtractIntel")
 				.Exit("CollectData")
 				.Enter("FleeFromPlayer")
-				.Logic("FleeFromPlayer")
 				.All();
 
 			fsm.OnLogic();
