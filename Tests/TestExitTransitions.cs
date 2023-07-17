@@ -112,5 +112,43 @@ namespace FSM.Tests
                 .All();
         }
 
+        [Test]
+        public void Test_deeply_nested_exit_transitions_can_lead_to_transition_in_root() {
+            var nestedA = new StateMachine(needsExitTime: true);
+            var nestedB = new StateMachine(needsExitTime: true);
+            var nestedC = new StateMachine(needsExitTime: true);
+
+            fsm.AddState("A", recorder.Track(nestedA));
+            nestedA.AddState("A.B", recorder.Track(nestedB));
+            nestedB.AddState("A.B.C", recorder.Track(nestedC));
+            nestedC.AddState("A.B.C.D", recorder.TrackedState);
+
+            fsm.AddState("Z");
+            fsm.AddTransition("A", "Z");
+
+            nestedA.AddExitTransition("A.B");
+            nestedB.AddExitTransition("A.B.C");
+            nestedC.AddExitTransition("A.B.C.D");
+
+            fsm.Init();
+            recorder.Expect
+                .Enter("A")
+                .Enter("A.B")
+                .Enter("A.B.C")
+                .Enter("A.B.C.D")
+                .All();
+
+            fsm.OnLogic();
+            recorder.Expect
+                .Logic("A")
+                .Logic("A.B")
+                .Logic("A.B.C")
+                .Exit("A")
+                .Exit("A.B")
+                .Exit("A.B.C")
+                .Exit("A.B.C.D")
+                .All();
+        }
+
     }
 }
