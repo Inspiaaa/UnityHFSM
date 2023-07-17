@@ -35,6 +35,7 @@ namespace FSM.Tests
 		}
 	```
 	*/
+
 	public class TestExampleScene
 	{
 		private Recorder recorder;
