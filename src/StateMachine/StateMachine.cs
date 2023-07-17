@@ -128,7 +128,8 @@ namespace FSM
 
 			if (pendingState.isExit)
 			{
-				TryVerticalTransition();
+				pendingState = default;
+				PerformVerticalTransition();
 			}
 			else {
 				TStateId state = pendingState.state;
@@ -137,7 +138,7 @@ namespace FSM
 				// to try all outgoing transitions, which may overwrite the pendingState.
 				// That's why it is first cleared, and not afterwards, as that would overwrite
 				// a new, valid pending state.
-				pendingState = (default, false, false);
+				pendingState = default;
 				ChangeState(state);
 			}
 		}
@@ -217,7 +218,7 @@ namespace FSM
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
-				TryVerticalTransition();
+				PerformVerticalTransition();
 			}
 			else {
 				pendingState = (default, isExit: true, isPending: true);
@@ -233,23 +234,23 @@ namespace FSM
 		/// <returns></returns>
 		private bool TryTransition(TransitionBase<TStateId> transition)
 		{
-			if (!transition.ShouldTransition())
-				return false;
+			if (transition.isExitTransition) {
+				if (fsm == null || !fsm.HasPendingTransition || !transition.ShouldTransition())
+					return false;
 
-			if (transition.isExitTransition)
-			{
 				RequestExit(transition.forceInstantly);
+				return true;
 			}
-			else
-			{
-				RequestStateChange(transition.to, transition.forceInstantly);
-			}
+			else {
+				if (!transition.ShouldTransition())
+					return false;
 
-			return true;
+				RequestStateChange(transition.to, transition.forceInstantly);
+				return true;
+			}
 		}
 
-		// TODO: Maybe rename to PerformVerticalTransition
-		private void TryVerticalTransition()
+		private void PerformVerticalTransition()
 		{
 			fsm?.StateCanExit();
 		}
@@ -291,6 +292,9 @@ namespace FSM
 					)
 				);
 			}
+
+			// Clear any previous pending transition from the last run
+			pendingState = default;
 
 			ChangeState(startState.state);
 
@@ -531,9 +535,9 @@ namespace FSM
 		// TODO: AddTriggerExitTransitionFromAny
 		public void AddExitTransition(TransitionBase<TStateId> transition)
 		{
-			ExitTransition<TStateId> exitTransition = new ExitTransition<TStateId>(transition);
+			transition.isExitTransition = true;
 			// TODO: Insert at front for higher priority???
-			AddTransition(exitTransition);
+			AddTransition(transition);
 		}
 
 		/// <summary>

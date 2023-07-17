@@ -167,9 +167,7 @@ namespace FSM
 			Func<Transition<TStateId>, bool> condition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddExitTransition(new ExitTransition<TStateId>(
-				CreateOptimizedTransition(from, default, condition, forceInstantly)
-			));
+			fsm.AddExitTransition(CreateOptimizedTransition(from, default, condition, forceInstantly));
 		}
 	}
 }
