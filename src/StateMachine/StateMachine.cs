@@ -142,12 +142,6 @@ namespace FSM
 			}
 		}
 
-		public override void OnExitRequest()
-		{
-			if (activeState.needsExitTime)
-				activeState.OnExitRequest();
-		}
-
 		/// <summary>
 		/// Instantly changes to the target state
 		/// </summary>
@@ -186,6 +180,15 @@ namespace FSM
 			{
 				TryAllDirectTransitions();
 			}
+		}
+
+		/// <summary>
+		/// Signals to the parent fsm that this fsm can exit which allows the parent
+		/// fsm to transition to the next state.
+		/// </summary>
+		private void PerformVerticalTransition()
+		{
+			fsm?.StateCanExit();
 		}
 
 		/// <summary>
@@ -254,21 +257,41 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Signals to the parent fsm that this fsm can exit which allows the parent
-		/// fsm to transition to the next state.
+		/// Tries the "global" transitions that can transition from any state
 		/// </summary>
-		private void PerformVerticalTransition()
+		/// <returns>Returns true if a transition occurred.</returns>
+		private bool TryAllGlobalTransitions()
 		{
-			fsm?.StateCanExit();
+			for (int i = 0; i < transitionsFromAny.Count; i++)
+			{
+				TransitionBase<TStateId> transition = transitionsFromAny[i];
+
+				// Don't transition to the "to" state, if that state is already the active state
+				if (EqualityComparer<TStateId>.Default.Equals(transition.to, activeState.name))
+					continue;
+
+				if (TryTransition(transition))
+					return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
-		/// Defines the entry point of the state machine
+		/// Tries the "normal" transitions that transition from one specific state to another.
 		/// </summary>
-		/// <param name="name">The name / identifier of the start state</param>
-		public void SetStartState(TStateId name)
+		/// <returns>Returns true if a transition occurred.</returns>
+		private bool TryAllDirectTransitions()
 		{
-			startState = (name, true);
+			for (int i = 0; i < activeTransitions.Count; i++)
+			{
+				TransitionBase<TStateId> transition = activeTransitions[i];
+
+				if (TryTransition(transition))
+					return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -320,44 +343,6 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Tries the "global" transitions that can transition from any state
-		/// </summary>
-		/// <returns>Returns true if a transition occurred.</returns>
-		private bool TryAllGlobalTransitions()
-		{
-			for (int i = 0; i < transitionsFromAny.Count; i++)
-			{
-				TransitionBase<TStateId> transition = transitionsFromAny[i];
-
-				// Don't transition to the "to" state, if that state is already the active state
-				if (EqualityComparer<TStateId>.Default.Equals(transition.to, activeState.name))
-					continue;
-
-				if (TryTransition(transition))
-					return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Tries the "normal" transitions that transition from one specific state to another.
-		/// </summary>
-		/// <returns>Returns true if a transition occurred.</returns>
-		private bool TryAllDirectTransitions()
-		{
-			for (int i = 0; i < activeTransitions.Count; i++)
-			{
-				TransitionBase<TStateId> transition = activeTransitions[i];
-
-				if (TryTransition(transition))
-					return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
 		/// Runs one logic step. It does at most one transition itself and
 		/// calls the active state's logic function (after the state transition, if
 		/// one occurred).
@@ -385,6 +370,21 @@ namespace FSM
 				// a second time when the state machine enters again (and changes to the start state)
 				activeState = null;
 			}
+		}
+
+		public override void OnExitRequest()
+		{
+			if (activeState.needsExitTime)
+				activeState.OnExitRequest();
+		}
+
+		/// <summary>
+		/// Defines the entry point of the state machine
+		/// </summary>
+		/// <param name="name">The name / identifier of the start state</param>
+		public void SetStartState(TStateId name)
+		{
+			startState = (name, true);
 		}
 
 		/// <summary>
@@ -545,7 +545,6 @@ namespace FSM
 		public void AddExitTransition(TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
-			// TODO: Insert at front for higher priority???
 			AddTransition(transition);
 		}
 
@@ -652,18 +651,6 @@ namespace FSM
 			TryTrigger(trigger);
 		}
 
-		public StateBase<TStateId> GetState(TStateId name)
-		{
-			StateBundle bundle;
-
-			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
-			{
-				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Getting a state");
-			}
-
-			return bundle.state;
-		}
-
 		/// <summary>
 		/// Runs an action on the currently active state.
 		/// </summary>
@@ -685,6 +672,18 @@ namespace FSM
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
 			(activeState as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
+		}
+
+		public StateBase<TStateId> GetState(TStateId name)
+		{
+			StateBundle bundle;
+
+			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
+			{
+				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Getting a state");
+			}
+
+			return bundle.state;
 		}
 
 		public StateMachine<string, string, string> this[TStateId name]
