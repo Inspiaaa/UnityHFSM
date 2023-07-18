@@ -113,7 +113,7 @@ namespace FSM
 		private void EnsureIsInitializedFor(string context)
 		{
 			if (activeState == null)
-				throw new FSM.Exceptions.StateMachineNotInitializedException(context);
+				throw FSM.Exceptions.Common.NotInitialized(context);
 		}
 
 		/// <summary>
@@ -154,7 +154,7 @@ namespace FSM
 
 			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Switching states");
+				throw FSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Switching states");
 			}
 
 			activeTransitions = bundle.transitions ?? noTransitions;
@@ -312,15 +312,7 @@ namespace FSM
 		{
 			if (!startState.hasState)
 			{
-				throw new System.InvalidOperationException(
-					FSM.Exceptions.ExceptionFormatter.Format(
-						context: "Running OnEnter of the state machine.",
-						problem: "No start state is selected. "
-							+ "The state machine needs at least one state to function properly.",
-						solution: "Make sure that there is at least one state in the state machine "
-							+ "before running Init() or OnEnter() by calling fsm.AddState(...)."
-					)
-				);
+				throw FSM.Exceptions.Common.MissingStartState(context: "Running OnEnter of the state machine.");
 			}
 
 			// Clear any previous pending transition from the last run
@@ -680,7 +672,7 @@ namespace FSM
 
 			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Getting a state");
+				throw FSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Getting a state");
 			}
 
 			return bundle.state;
@@ -695,14 +687,7 @@ namespace FSM
 
 				if (subFsm == null)
 				{
-					throw new System.InvalidOperationException(
-						FSM.Exceptions.ExceptionFormatter.Format(
-							context: "Getting a nested state machine with the indexer",
-							problem: "The selected state is not a state machine.",
-							solution: "This method is only there for quickly accessing a nested state machine. "
-								+ $"To get the selected state, use GetState(\"{name}\")."
-						)
-					);
+					throw FSM.Exceptions.Common.QuickIndexerMisusedForGettingState(name.ToString());
 				}
 
 				return subFsm;
