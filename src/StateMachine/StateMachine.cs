@@ -62,7 +62,6 @@ namespace FSM
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
 		private (TStateId state, bool hasState) startState = (default, false);
-		// TODO: Maybe: Rename to pendingTransition + introduce struct to store data.
 		private (TStateId state, bool isExit, bool isPending) pendingState = (default, false, false);
 
 		// Central storage of states
@@ -145,8 +144,8 @@ namespace FSM
 
 		public override void OnExitRequest()
 		{
-			// TODO: Only if activeState needsExitTime? or not at all?
-			activeState.OnExitRequest();
+			if (activeState.needsExitTime)
+				activeState.OnExitRequest();
 		}
 
 		/// <summary>
@@ -183,7 +182,6 @@ namespace FSM
 				}
 			}
 
-			// TODO: Move this to a wrapper function?
 			if (activeState.isGhostState)
 			{
 				TryAllDirectTransitions();
@@ -214,6 +212,13 @@ namespace FSM
 			}
 		}
 
+		/// <summary>
+		/// Requests a "vertical transition", allowing the state machine to exit
+		/// to allow the parent fsm to transition to the next state. It respects the
+		/// needsExitTime property of the active state.
+		/// </summary>
+		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
+		/// therefore forcing an immediate state change</param>
 		public void RequestExit(bool forceInstantly = false)
 		{
 			if (!activeState.needsExitTime || forceInstantly)
@@ -230,8 +235,6 @@ namespace FSM
 		/// Checks if a transition can take place, and if this is the case, transition to the
 		/// "to" state and return true. Otherwise it returns false.
 		/// </summary>
-		/// <param name="transition"></param>
-		/// <returns></returns>
 		private bool TryTransition(TransitionBase<TStateId> transition)
 		{
 			if (transition.isExitTransition) {
@@ -250,6 +253,10 @@ namespace FSM
 			}
 		}
 
+		/// <summary>
+		/// Signals to the parent fsm that this fsm can exit which allows the parent
+		/// fsm to transition to the next state.
+		/// </summary>
 		private void PerformVerticalTransition()
 		{
 			fsm?.StateCanExit();
@@ -385,8 +392,6 @@ namespace FSM
 		/// Otherwise it will create a new StateBundle, that will be added to the Dictionary,
 		/// and return the newly created instance.
 		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
 		private StateBundle GetOrCreateStateBundle(TStateId name)
 		{
 			StateBundle bundle;
@@ -530,6 +535,13 @@ namespace FSM
 			AddTriggerTransition(trigger, reverse);
 		}
 
+		/// <summary>
+		/// Adds a new exit transition from a state. It represents an exit point that
+		/// allows the fsm to exit and the parent fsm to continue to the next state.
+		/// It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <param name="transition">The transition instance. The "to" field can be
+		/// left empty, as it has no meaning in this context.</param>
 		public void AddExitTransition(TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
@@ -537,18 +549,41 @@ namespace FSM
 			AddTransition(transition);
 		}
 
+		/// <summary>
+		/// Adds a new exit transition that can happen from any possible state.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue
+		/// to the next state. It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <param name="transition">The transition instance. The "from" and "to" fields can be
+		/// left empty, as they have no meaning in this context.</param>
 		public void AddExitTransitionFromAny(TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
 			AddTransitionFromAny(transition);
 		}
 
+		/// <summary>
+		/// Adds a new exit transition from a state that is only checked when the specified trigger
+		/// is activated.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue
+		/// to the next state. It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <param name="transition">The transition instance. The "to" field can be
+		/// left empty, as it has no meaning in this context.</param>
 		public void AddExitTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
 			AddTriggerTransition(trigger, transition);
 		}
 
+		/// <summary>
+		/// Adds a new exit transition that can happen from any possible state and is only checked
+		/// when the specified trigger is activated.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue
+		/// to the next state. It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <param name="transition">The transition instance. The "from" and "to" fields can be
+		/// left empty, as they have no meaning in this context.</param>
 		public void AddExitTriggerTransitionFromAny(TEvent trigger, TransitionBase<TStateId> transition) {
 			transition.isExitTransition = true;
 			AddTriggerTransitionFromAny(trigger, transition);

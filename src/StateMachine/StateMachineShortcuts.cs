@@ -161,6 +161,15 @@ namespace FSM
 			fsm.AddTwoWayTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
 		}
 
+		/// <summary>
+		/// Shortcut method for adding a new exit transition from a state.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue to the next state.
+		/// It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <remarks>
+		/// When no condition is required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddExitTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
@@ -170,6 +179,15 @@ namespace FSM
 			fsm.AddExitTransition(CreateOptimizedTransition(from, default, condition, forceInstantly));
 		}
 
+		/// <summary>
+		/// Shortcut method for adding a new exit transition that can happen from any state.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue to the next state.
+		/// It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <remarks>
+		/// When no condition is required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddExitTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			Func<Transition<TStateId>, bool> condition = null,
@@ -178,6 +196,16 @@ namespace FSM
 			fsm.AddExitTransitionFromAny(CreateOptimizedTransition(default, default, condition, forceInstantly));
 		}
 
+		/// <summary>
+		/// Shortcut method for adding a new exit transition from a state that is only checked when the
+		/// specified trigger is activated.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue to the next state.
+		/// It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <remarks>
+		/// When no condition is required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddExitTriggerTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
@@ -191,6 +219,16 @@ namespace FSM
 			);
 		}
 
+		/// <summary>
+		/// Shortcut method for adding a new exit transition from a state that can happen from any possible state
+		/// and is only checked when the specified trigger is activated.
+		/// It represents an exit point that allows the fsm to exit and the parent fsm to continue to the next state.
+		/// It is only checked if the parent fsm has a pending transition.
+		/// </summary>
+		/// <remarks>
+		/// When no condition is required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddExitTriggerTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,

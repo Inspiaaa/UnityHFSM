@@ -1,6 +1,10 @@
 
 namespace FSM
 {
+	/// <summary>
+	/// Interface for states that can receive events (triggers), such as StateMachines.
+	/// </summary>
+	/// <typeparam name="TEvent"></typeparam>
 	public interface ITriggerable<TEvent>
 	{
 		/// <summary>
