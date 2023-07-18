@@ -65,7 +65,7 @@ namespace FSM
 		private (TStateId state, bool isExit, bool isPending) pendingState = (default, false, false);
 
 		// Central storage of states
-		private Dictionary<TStateId, StateBundle> nameToStateBundle
+		private Dictionary<TStateId, StateBundle> stateBundlesByName
 			= new Dictionary<TStateId, StateBundle>();
 
 		private StateBase<TStateId> activeState = null;
@@ -152,7 +152,7 @@ namespace FSM
 
 			StateBundle bundle;
 
-			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
+			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
 				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Switching states");
 			}
@@ -396,10 +396,10 @@ namespace FSM
 		{
 			StateBundle bundle;
 
-			if (! nameToStateBundle.TryGetValue(name, out bundle))
+			if (! stateBundlesByName.TryGetValue(name, out bundle))
 			{
 				bundle = new StateBundle();
-				nameToStateBundle.Add(name, bundle);
+				stateBundlesByName.Add(name, bundle);
 			}
 
 			return bundle;
@@ -419,7 +419,7 @@ namespace FSM
 			StateBundle bundle = GetOrCreateStateBundle(name);
 			bundle.state = state;
 
-			if (nameToStateBundle.Count == 1 && !startState.hasState)
+			if (stateBundlesByName.Count == 1 && !startState.hasState)
 			{
 				SetStartState(name);
 			}
@@ -678,7 +678,7 @@ namespace FSM
 		{
 			StateBundle bundle;
 
-			if (!nameToStateBundle.TryGetValue(name, out bundle) || bundle.state == null)
+			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
 				throw new FSM.Exceptions.StateNotFoundException<TStateId>(name, "Getting a state");
 			}
