@@ -3,8 +3,8 @@
 namespace FSM
 {
 	/// <summary>
-	/// A State-like StateMachine that allows you to run additional functions (companion code)
-	/// with the sub-states.
+	/// A StateMachine that is also like a normal State in the sense that it allows you to run
+	/// custom code on enter, on logic, ... besides its active state's code.
 	/// It is especially handy for hierarchical state machines, as it allows you to factor out
 	/// common code from the sub states into the HybridStateMachines, essentially removing
 	/// duplicate code.
@@ -12,68 +12,99 @@ namespace FSM
 	/// </summary>
 	public class HybridStateMachine<TOwnId, TStateId, TEvent> : StateMachine<TOwnId, TStateId, TEvent>
 	{
-		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onEnter;
-		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onLogic;
-		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onExit;
+		private Action<HybridStateMachine<TOwnId, TStateId, TEvent>>
+			beforeOnEnter, afterOnEnter,
+			beforeOnLogic, afterOnLogic,
+			beforeOnExit, afterOnExit;
 
 		public Timer timer;
 
-		/// <summary>
-		/// Initialises a new instance of the HybridStateMachine class
-		/// </summary>
-		/// <param name="onEnter">A function that is called after running the sub-state's OnEnter method
-		/// when this state machine is entered</param>
-		/// <param name="onLogic">A function that is called after running the sub-state's OnLogic method
-		/// if this state machine is the active state</param>
-		/// <param name="onExit">A function that is called after running the sub-state's OnExit method
-		/// when this state machine is left</param>
-		/// <param name="needsExitTime">(Only for hierarchical states):
+		/// <summary>Initialises a new instance of the HybridStateMachine class</summary>
+		/// <param name="beforeOnEnter">A function that is called before running the sub-state's OnEnter</param>
+		/// <param name="afterOnEnter">A function that is called after running the sub-state's OnEnter</param>
+		/// <param name="beforeOnLogic">A function that is called before running the sub-state's OnLogic</param>
+		/// <param name="afterOnLogic">A function that is called after running the sub-state's OnLogic</param>
+		/// <param name="beforeOnExit">A function that is called before running the sub-state's OnExit</param>
+		/// <param name="afterOnExit">A function that is called after running the sub-state's OnExit</param>
+		/// <param name="needsExitTime">
+		/// 	(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
-		/// 	exit on a transition (false), or if it should wait until the active state is ready for a
-		/// 	state change (true).</param>
+		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs.
+		/// </param>
+		/// <param name="isGhostState">
+		/// 	If true, this state becomes a ghost state, a state the state machine does not want to stay in.
+		/// 	That means that if the fsm transitions to this state, it will test all outgoing transitions instantly
+		/// 	and not wait until the next OnLogic call.
+		/// </param>
 		public HybridStateMachine(
-				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onEnter = null,
-				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onLogic = null,
-				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> onExit = null,
-				bool needsExitTime = false) : base(needsExitTime)
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> beforeOnEnter = null,
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> afterOnEnter = null,
+
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> beforeOnLogic = null,
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> afterOnLogic = null,
+
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> beforeOnExit= null,
+				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> afterOnExit = null,
+
+				bool needsExitTime = false,
+				bool isGhostState = false) : base(needsExitTime, isGhostState)
 		{
-			this.onEnter = onEnter;
-			this.onLogic = onLogic;
-			this.onExit = onExit;
+			this.beforeOnEnter = beforeOnEnter;
+			this.afterOnEnter = afterOnEnter;
+
+			this.beforeOnLogic = beforeOnLogic;
+			this.afterOnLogic = afterOnLogic;
+
+			this.beforeOnExit = beforeOnExit;
+			this.afterOnExit = afterOnExit;
 
 			this.timer = new Timer();
 		}
 
 		public override void OnEnter()
 		{
+			beforeOnEnter?.Invoke(this);
 			base.OnEnter();
 
 			timer.Reset();
-			onEnter?.Invoke(this);
+			afterOnEnter?.Invoke(this);
 		}
 
 		public override void OnLogic()
 		{
+			beforeOnLogic?.Invoke(this);
 			base.OnLogic();
-
-			onLogic?.Invoke(this);
+			afterOnLogic?.Invoke(this);
 		}
 
 		public override void OnExit()
 		{
+			beforeOnExit?.Invoke(this);
 			base.OnExit();
-
-			onExit?.Invoke(this);
+			afterOnExit?.Invoke(this);
 		}
 	}
 
 	public class HybridStateMachine<TStateId, TEvent> : HybridStateMachine<TStateId, TStateId, TEvent>
 	{
 		public HybridStateMachine(
-			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onEnter = null,
-			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onLogic = null,
-			Action<HybridStateMachine<TStateId, TStateId, TEvent>> onExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnEnter = null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnEnter = null,
+
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnLogic = null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnLogic = null,
+
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnExit= null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnExit = null,
+
+			bool needsExitTime = false,
+			bool isGhostState = false) : base(
+				beforeOnEnter, afterOnEnter,
+				beforeOnLogic, afterOnLogic,
+				beforeOnExit, afterOnExit,
+				needsExitTime,
+				isGhostState
+			)
 		{
 		}
 	}
@@ -81,10 +112,23 @@ namespace FSM
 	public class HybridStateMachine<TStateId> : HybridStateMachine<TStateId, TStateId, string>
 	{
 		public HybridStateMachine(
-			Action<HybridStateMachine<TStateId, TStateId, string>> onEnter = null,
-			Action<HybridStateMachine<TStateId, TStateId, string>> onLogic = null,
-			Action<HybridStateMachine<TStateId, TStateId, string>> onExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
+			Action<HybridStateMachine<TStateId, TStateId, string>> beforeOnEnter = null,
+			Action<HybridStateMachine<TStateId, TStateId, string>> afterOnEnter = null,
+
+			Action<HybridStateMachine<TStateId, TStateId, string>> beforeOnLogic = null,
+			Action<HybridStateMachine<TStateId, TStateId, string>> afterOnLogic = null,
+
+			Action<HybridStateMachine<TStateId, TStateId, string>> beforeOnExit= null,
+			Action<HybridStateMachine<TStateId, TStateId, string>> afterOnExit = null,
+
+			bool needsExitTime = false,
+			bool isGhostState = false) : base(
+				beforeOnEnter, afterOnEnter,
+				beforeOnLogic, afterOnLogic,
+				beforeOnExit, afterOnExit,
+				needsExitTime,
+				isGhostState
+			)
 		{
 		}
 	}
@@ -92,10 +136,23 @@ namespace FSM
 	public class HybridStateMachine : HybridStateMachine<string, string, string>
 	{
 		public HybridStateMachine(
-			Action<HybridStateMachine<string, string, string>> onEnter = null,
-			Action<HybridStateMachine<string, string, string>> onLogic = null,
-			Action<HybridStateMachine<string, string, string>> onExit = null,
-			bool needsExitTime = false) : base(onEnter, onLogic, onExit, needsExitTime)
+			Action<HybridStateMachine<string, string, string>> beforeOnEnter = null,
+			Action<HybridStateMachine<string, string, string>> afterOnEnter = null,
+
+			Action<HybridStateMachine<string, string, string>> beforeOnLogic = null,
+			Action<HybridStateMachine<string, string, string>> afterOnLogic = null,
+
+			Action<HybridStateMachine<string, string, string>> beforeOnExit= null,
+			Action<HybridStateMachine<string, string, string>> afterOnExit = null,
+
+			bool needsExitTime = false,
+			bool isGhostState = false) : base(
+				beforeOnEnter, afterOnEnter,
+				beforeOnLogic, afterOnLogic,
+				beforeOnExit, afterOnExit,
+				needsExitTime,
+				isGhostState
+			)
 		{
 		}
 	}
