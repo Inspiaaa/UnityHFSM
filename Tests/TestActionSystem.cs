@@ -28,6 +28,15 @@ namespace FSM.Tests
 		}
 
 		[Test]
+		public void Test_calling_non_existant_action_does_not_throw_exception_when_no_actions_added()
+		{
+			var state = new ActionState(false);
+
+			Assert.DoesNotThrow(() => state.OnAction("NonExistantAction"));
+			Assert.DoesNotThrow(() => state.OnAction<string>("NonExistantAction", ""));
+		}
+
+		[Test]
 		public void Test_calling_non_existant_action_does_nothing()
 		{
 			bool called = false;
