@@ -29,11 +29,10 @@ namespace FSM.Tests
             }
 
             public override bool Equals(Event other) {
-                if (! (other is StateEvent)) {
+                if (! (other is StateEvent e)) {
                     return false;
                 }
-                StateEvent otherStateEvent = (StateEvent) other;
-                return state.Equals(otherStateEvent.state) && action == otherStateEvent.action;
+                return state.Equals(e.state) && action == e.action;
             }
 
             public override string ToString() => $"({state}, {action})";
@@ -50,16 +49,32 @@ namespace FSM.Tests
             }
 
             public override bool Equals(Event other) {
-                if (! (other is TransitionEvent)) {
+                if (! (other is TransitionEvent e)) {
                     return false;
                 }
-                TransitionEvent otherTransitionEvent = (TransitionEvent) other;
-                return from.Equals(otherTransitionEvent.from)
-                    && to.Equals(otherTransitionEvent.to)
-                    && action == otherTransitionEvent.action;
+                return from.Equals(e.from)
+                    && to.Equals(e.to)
+                    && action == e.action;
             }
 
             public override string ToString() => $"({from}->{to}, {action})";
+        }
+
+        private class CustomEvent : Event {
+            public string message;
+
+            public CustomEvent(string message) {
+                this.message = message;
+            }
+
+            public override bool Equals(Event other) {
+                if (! (other is CustomEvent e)) {
+                    return false;
+                }
+                return this.message == e.message;
+            }
+
+            public override string ToString() => $"({message})";
         }
 
         public class RecorderQuery {
@@ -108,6 +123,11 @@ namespace FSM.Tests
                 return this;
             }
 
+            public RecorderQuery Custom(string message) {
+                CheckNext(new CustomEvent(message));
+                return this;
+            }
+
             public void All() {
                 if (recorder.recordedEvents.Count != 0) {
                     Assert.Fail($"Too many events happened. Remaining steps: " + recorder.CreateTraceback());
@@ -150,6 +170,9 @@ namespace FSM.Tests
             => recordedEvents.Enqueue(new TransitionEvent(from, to, TransitionAction.ENTER));
         public void RecordTransitionShouldTransition(TStateId from, TStateId to)
             => recordedEvents.Enqueue(new TransitionEvent(from, to, TransitionAction.SHOULD_TRANSITION));
+
+        public void RecordCustom(string message)
+            => recordedEvents.Enqueue(new CustomEvent(message));
 
         public StateBase<TStateId> Track(StateBase<TStateId> state) {
             return tracker.Wrap(state);
