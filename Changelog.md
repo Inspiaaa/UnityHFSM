@@ -37,6 +37,31 @@
   
   Exit transitions can also be defined for all states (`AddExitTransitionFromAny`), as trigger transitions (`AddExitTriggerTransition`), or as both (`AddExitTriggerTransitionFromAny`).
 
+- Added support for **custom actions** in `HybridStateMachine`, just like in the normal `State` class:
+  
+  ```csharp
+  var hybrid = new HybridStateMachine();
+  hybrid.AddState("A", new State().AddAction("Action", () => print("A")));
+  hybrid.AddAction("Action", () => print("Hybrid"));
+  
+  hybrid.Init();
+  hybrid.OnAction("Action");  // Prints "A" and then "Hybrid"
+  ```
+
+- Added option in `HybridStateMachine` to **run custom code before and after** the `OnEnter` / `OnLogic` / ... of its active sub state. Previously, you could only add a custom callback that was run *after* the respective methods of the sub state. When migrating to this version simply replace the `onEnter` parameter with `afterOnEnter` in the constructor. For example
+  
+  ```csharp
+  var hybrid = new HybridStateMachine(
+  	beforeOnEnter: fsm => print("Before OnEnter"),
+  	afterOnLogic: fsm => print("After OnLogic")
+  	// ...
+  )
+  ```
+
+### Changed
+
+- The parameters `onEnter`, `onLogic`, ... in the constructor of the `HybridStateMachine` class are now equivalent to the new parameters `afterOnEnter`, `afterOnLogic`, ...
+
 ---
 
 ## 1.9
