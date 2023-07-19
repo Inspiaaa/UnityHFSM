@@ -647,7 +647,7 @@ namespace FSM
 		/// Runs an action on the currently active state.
 		/// </summary>
 		/// <param name="trigger">Name of the action</param>
-		public void OnAction(TEvent trigger)
+		public virtual void OnAction(TEvent trigger)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
 			(activeState as IActionable<TEvent>)?.OnAction(trigger);
@@ -660,7 +660,7 @@ namespace FSM
 		/// <param name="data">Any custom data for the parameter</param>
 		/// <typeparam name="TData">Type of the data parameter.
 		/// 	Should match the data type of the action that was added via AddAction<T>(...).</typeparam>
-		public void OnAction<TData>(TEvent trigger, TData data)
+		public virtual void OnAction<TData>(TEvent trigger, TData data)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
 			(activeState as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
