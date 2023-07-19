@@ -80,13 +80,13 @@ namespace FSM.Tests
 		{
 			fsm.AddState("A");
 			StateBase<string> activeState;
-			Assert.Throws<FSM.Exceptions.StateMachineNotInitializedException>(() => activeState = fsm.ActiveState);
+			Assert.Throws<FSM.Exceptions.StateMachineException>(() => activeState = fsm.ActiveState);
 		}
 
 		[Test]
 		public void Test_calling_init_before_adding_a_state_fails()
 		{
-			Assert.Throws<InvalidOperationException>(() => fsm.Init());
+			Assert.Throws<FSM.Exceptions.StateMachineException>(() => fsm.Init());
 		}
 	}
 }
