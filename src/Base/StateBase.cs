@@ -69,6 +69,17 @@ namespace FSM
 		{
 
 		}
+
+		/// <summary>
+		/// Returns a string representation of all active states in the hierarchy,
+		/// e.g. "/Move/Jump/Falling".
+		/// In contrast, the state machine's ActiveStateName property only returns the name
+		/// of its active state, not of any nested states.
+		/// </summary>
+		public virtual string GetActiveHierarchyPath()
+		{
+			return name.ToString();
+		}
 	}
 
 	public class StateBase : StateBase<string>

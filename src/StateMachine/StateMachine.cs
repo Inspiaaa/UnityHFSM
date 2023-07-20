@@ -693,6 +693,16 @@ namespace FSM
 				return subFsm;
 			}
 		}
+
+		public override string GetActiveHierarchyPath() {
+			if (activeState == null) {
+				// When the state machine is not active, then the active hierarchy path
+				// is empty.
+				return "";
+			}
+
+			return $"{name}/{activeState.GetActiveHierarchyPath()}";
+		}
 	}
 
 	// Overloaded classes to allow for an easier usage of the StateMachine for common cases.
