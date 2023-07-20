@@ -30,7 +30,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to initialise the transition, after values like mono and fsm have been set
+		/// Called to initialise the transition, after values like fsm have been set
 		/// </summary>
 		public virtual void Init()
 		{

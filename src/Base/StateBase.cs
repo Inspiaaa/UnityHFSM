@@ -29,7 +29,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to initialise the state, after values like name, mono and fsm have been set
+		/// Called to initialise the state, after values like name and fsm have been set
 		/// </summary>
 		public virtual void Init()
 		{
