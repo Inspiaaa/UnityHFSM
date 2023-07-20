@@ -30,14 +30,14 @@
   nested.AddState("B");
   // ...
   
-  // The nested fsm can only exit when it is in the "B"" state and
+  // The nested fsm can only exit when it is in the "B" state and
   // the variable x equals 0.
   move.AddExitTransition("B", t => x == 0);
   ```
   
   Exit transitions can also be defined for all states (`AddExitTransitionFromAny`), as trigger transitions (`AddExitTriggerTransition`), or as both (`AddExitTriggerTransitionFromAny`).
 
-- Added support for **custom actions** in `HybridStateMachine`, just like in the normal `State` class:
+- Support for **custom actions** in `HybridStateMachine`, just like in the normal `State` class:
   
   ```csharp
   var hybrid = new HybridStateMachine();
@@ -48,7 +48,7 @@
   hybrid.OnAction("Action");  // Prints "A" and then "Hybrid"
   ```
 
-- Added option in `HybridStateMachine` to **run custom code before and after** the `OnEnter` / `OnLogic` / ... of its active sub state. Previously, you could only add a custom callback that was run *after* the respective methods of the sub state. When migrating to this version simply replace the `onEnter` parameter with `afterOnEnter` in the constructor. For example
+- Option in `HybridStateMachine` to **run custom code before and after** the `OnEnter` / `OnLogic` / ... of its active sub state. Previously, you could only add a custom callback that was run *after* the respective methods of the sub state. When migrating to this version simply replace the `onEnter` parameter with `afterOnEnter` in the constructor. For example
   
   ```csharp
   var hybrid = new HybridStateMachine(
@@ -56,6 +56,21 @@
   	afterOnLogic: fsm => print("After OnLogic")
   	// ...
   )
+  ```
+
+- Feature for getting the **active path in the state hierarchy**: When debugging it is often useful to not only see what the active state of the root state machine is (using `ActiveStateName`) but also which state is active in any nested state machine. This path of states can now be retrieved using the new `GetActiveHierarchyPath()` method:
+  
+  ```csharp
+  var fsm = new StateMachine();
+  var move = new StateMachine();
+  var jump = new StateMachine();
+  
+  fsm.AddState("Move", move);
+  move.AddState("Jump", jump);
+  jump.AddState("Falling");
+  
+  fsm.Init();
+  print(fsm.GetActiveHierarchyPath());  // Prints "/Move/Jump/Falling"
   ```
 
 ### Changed
