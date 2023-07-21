@@ -154,9 +154,9 @@ namespace FSM
 			if (! pendingTransition.isPending)
 				return;
 
+			ITransitionListener listener = pendingTransition.listener;
 			if (pendingTransition.isExitTransition)
 			{
-				ITransitionListener listener = pendingTransition.listener;
 				pendingTransition = default;
 
 				listener?.BeforeTransition();
@@ -171,7 +171,7 @@ namespace FSM
 				// That's why it is first cleared, and not afterwards, as that would overwrite
 				// a new, valid pending state.
 				pendingTransition = default;
-				ChangeState(state, pendingTransition.listener);
+				ChangeState(state, listener);
 			}
 		}
 
