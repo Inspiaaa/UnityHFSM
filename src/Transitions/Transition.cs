@@ -44,15 +44,8 @@ namespace FSM
 			return condition(this);
 		}
 
-		public override void BeforeTransition()
-		{
-			beforeTransition?.Invoke(this);
-		}
-
-		public override void AfterTransition()
-		{
-			afterTransition?.Invoke(this);
-		}
+		public override void BeforeTransition() => beforeTransition?.Invoke(this);
+		public override void AfterTransition() => afterTransition?.Invoke(this);
 	}
 
 	public class Transition : Transition<string>

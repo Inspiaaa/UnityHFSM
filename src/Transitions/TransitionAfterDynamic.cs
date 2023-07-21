@@ -8,9 +8,13 @@ namespace FSM
 	/// </summary>
 	public class TransitionAfterDynamic<TStateId> : TransitionBase<TStateId>
 	{
-		public Func<TransitionAfterDynamic<TStateId>, float> delayCalculator;
-		public Func<TransitionAfterDynamic<TStateId>, bool> condition;
 		public ITimer timer;
+		public Func<TransitionAfterDynamic<TStateId>, float> delayCalculator;
+
+		public Func<TransitionAfterDynamic<TStateId>, bool> condition;
+
+		public Action<TransitionAfterDynamic<TStateId>> beforeTransition;
+		public Action<TransitionAfterDynamic<TStateId>> afterTransition;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfterDynamic class
@@ -21,6 +25,8 @@ namespace FSM
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
+		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
+		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
 		/// 	=> Forces an instant transition</param>
 		public TransitionAfterDynamic(
@@ -28,10 +34,14 @@ namespace FSM
 				TStateId to,
 				Func<TransitionAfterDynamic<TStateId>, float> delay,
 				Func<TransitionAfterDynamic<TStateId>, bool> condition = null,
+				Action<TransitionAfterDynamic<TStateId>> onTransition = null,
+				Action<TransitionAfterDynamic<TStateId>> afterTransition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
 			this.delayCalculator = delay;
 			this.condition = condition;
+			this.beforeTransition = onTransition;
+			this.afterTransition = afterTransition;
 			this.timer = new Timer();
 		}
 
@@ -50,6 +60,9 @@ namespace FSM
 
 			return condition(this);
 		}
+
+		public override void BeforeTransition() => beforeTransition?.Invoke(this);
+		public override void AfterTransition() => afterTransition?.Invoke(this);
 	}
 
 	public class TransitionAfterDynamic : TransitionAfterDynamic<string>
@@ -59,7 +72,16 @@ namespace FSM
 			string to,
 			Func<TransitionAfterDynamic<string>, float> delay,
 			Func<TransitionAfterDynamic<string>, bool> condition = null,
-			bool forceInstantly = false) : base(@from, to, delay, condition, forceInstantly)
+			Action<TransitionAfterDynamic<string>> onTransition = null,
+			Action<TransitionAfterDynamic<string>> afterTransition = null,
+			bool forceInstantly = false) : base(
+				@from,
+				to,
+				delay,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly)
 		{
 		}
 	}

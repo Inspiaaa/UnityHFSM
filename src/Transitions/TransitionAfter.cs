@@ -10,8 +10,13 @@ namespace FSM
 	{
 
 		public float delay;
-		public Func<TransitionAfter<TStateId>, bool> condition;
 		public ITimer timer;
+
+		public Func<TransitionAfter<TStateId>, bool> condition;
+
+		public Action<TransitionAfter<TStateId>> beforeTransition;
+		public Action<TransitionAfter<TStateId>> afterTransition;
+
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfter class
@@ -22,6 +27,8 @@ namespace FSM
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
+		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
+		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
 		/// 	=> Forces an instant transition</param>
 		public TransitionAfter(
@@ -29,10 +36,14 @@ namespace FSM
 				TStateId to,
 				float delay,
 				Func<TransitionAfter<TStateId>, bool> condition = null,
+				Action<TransitionAfter<TStateId>> onTransition = null,
+				Action<TransitionAfter<TStateId>> afterTransition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
 			this.delay = delay;
 			this.condition = condition;
+			this.beforeTransition = onTransition;
+			this.afterTransition = afterTransition;
 			this.timer = new Timer();
 		}
 
@@ -51,6 +62,9 @@ namespace FSM
 
 			return condition(this);
 		}
+
+		public override void BeforeTransition() => beforeTransition?.Invoke(this);
+		public override void AfterTransition() => afterTransition?.Invoke(this);
 	}
 
 	public class TransitionAfter : TransitionAfter<string>
@@ -60,7 +74,16 @@ namespace FSM
 			string to,
 			float delay,
 			Func<TransitionAfter<string>, bool> condition = null,
-			bool forceInstantly = false) : base(@from, to, delay, condition, forceInstantly)
+			Action<TransitionAfter<string>> onTransition = null,
+			Action<TransitionAfter<string>> afterTransition = null,
+			bool forceInstantly = false) : base(
+				@from,
+				to,
+				delay,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly)
 		{
 		}
 	}
