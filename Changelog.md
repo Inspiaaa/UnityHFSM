@@ -37,6 +37,30 @@
   
   Exit transitions can also be defined for all states (`AddExitTransitionFromAny`), as trigger transitions (`AddExitTriggerTransition`), or as both (`AddExitTriggerTransitionFromAny`).
 
+- **Transition callbacks**: New feature that lets you define a function that is called when a transition succeeds. It is supported by all transition types (e.g. trigger transitions, transitions from any, exit transitions, ...).
+  
+  ```csharp
+  fsm.AddTransition(
+      new Transition("A", "B", onTransition: t => print("Transition"))
+  );
+  ```
+  
+  This feature is also supported when using the shortcut methods:
+  
+  ```csharp
+  // Can be shortened using shortcut methods:
+  fsm.AddTransition("A", "B", onTransition: t => print("Transition"));
+  ```
+  
+  The print function will be called just before the transition. You can also define a callback that is called just after the transition:
+  
+  ```csharp
+    fsm.AddTransition("A", "B",
+      onTransition: t => print("Before"),
+      afterTransition: t => print("After")
+  );
+  ```
+
 - Support for **custom actions** in `HybridStateMachine`, just like in the normal `State` class:
   
   ```csharp
@@ -52,9 +76,9 @@
   
   ```csharp
   var hybrid = new HybridStateMachine(
-  	beforeOnEnter: fsm => print("Before OnEnter"),
-  	afterOnLogic: fsm => print("After OnLogic")
-  	// ...
+      beforeOnEnter: fsm => print("Before OnEnter"),
+      afterOnLogic: fsm => print("After OnLogic")
+      // ...
   )
   ```
 
