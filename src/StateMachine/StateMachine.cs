@@ -242,6 +242,7 @@ namespace FSM
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
+				pendingTransition = default;
 				ChangeState(name, listener);
 			}
 			else
@@ -268,6 +269,7 @@ namespace FSM
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
+				pendingTransition = default;
 				listener?.BeforeTransition();
 				PerformVerticalTransition();
 				listener?.AfterTransition();
