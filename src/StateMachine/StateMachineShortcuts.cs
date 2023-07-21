@@ -51,81 +51,138 @@ namespace FSM
 
 		/// <summary>
 		/// Creates the most efficient transition type possible for the given parameters.
-		/// It creates a Transition instance when a condition is specified and otherwise
-		/// it returns a TransitionBase.
+		/// It creates a Transition instance when a condition or transition callbacks are specified,
+		/// otherwise it returns a TransitionBase.
 		/// </summary>
 		private static TransitionBase<TStateId> CreateOptimizedTransition<TStateId>(
 			TStateId from,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			if (condition == null)
+			if (condition == null && onTransition == null && afterTransition == null)
 				return new TransitionBase<TStateId>(from, to, forceInstantly);
 
-			return new Transition<TStateId>(from, to, condition, forceInstantly);
+			return new Transition<TStateId>(
+				from,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			);
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a regular transition.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
-		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
+		/// <remarks>
+		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddTransition(CreateOptimizedTransition(from, to, condition, forceInstantly));
+			fsm.AddTransition(CreateOptimizedTransition(
+				from,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a regular transition that can happen from any state.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
-		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
+		/// <remarks>
+		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddTransitionFromAny(CreateOptimizedTransition(default, to, condition, forceInstantly));
+			fsm.AddTransitionFromAny(CreateOptimizedTransition(
+				default,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a new trigger transition between two states that is only checked
 		/// when the specified trigger is activated.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
-		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
+		/// <remarks>
+		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddTriggerTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
 			TStateId from,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddTriggerTransition(trigger, CreateOptimizedTransition(from, to, condition, forceInstantly));
+			fsm.AddTriggerTransition(trigger, CreateOptimizedTransition(
+				from,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
 		/// Shortcut method for adding a new trigger transition that can happen from any possible state, but is only
 		/// checked when the specified trigger is activated.
 		/// It creates a new Transition() instance under the hood. => See Transition for more information.
-		/// When no condition is required, it creates a TransitionBase for optimal performance.
 		/// </summary>
+		/// <remarks>
+		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
+		/// otherwise a Transition object.
+		/// </remarks>
 		public static void AddTriggerTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddTriggerTransitionFromAny(trigger, CreateOptimizedTransition(default, to, condition, forceInstantly));
+			fsm.AddTriggerTransitionFromAny(trigger, CreateOptimizedTransition(
+				default,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
@@ -134,14 +191,28 @@ namespace FSM
 		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
 		/// i.e. from "to" to "from".
 		/// </summary>
+		/// <remarks>
+		/// For the reverse transition the afterTransition callback is called before the transition
+		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// of the two way transitions by creating two separate transitions.
+		/// </remarks>
 		public static void AddTwoWayTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddTwoWayTransition(new Transition<TStateId>(from, to, condition, forceInstantly));
+			fsm.AddTwoWayTransition(new Transition<TStateId>(
+				from,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
@@ -150,15 +221,29 @@ namespace FSM
 		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
 		/// i.e. from "to" to "from".
 		/// </summary>
+		/// <remarks>
+		/// For the reverse transition the afterTransition callback is called before the transition
+		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// of the two way transitions by creating two separate transitions.
+		/// </remarks>
 		public static void AddTwoWayTriggerTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
 			TStateId from,
 			TStateId to,
 			Func<Transition<TStateId>, bool> condition,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddTwoWayTriggerTransition(trigger, new Transition<TStateId>(from, to, condition, forceInstantly));
+			fsm.AddTwoWayTriggerTransition(trigger, new Transition<TStateId>(
+				from,
+				to,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
@@ -167,16 +252,25 @@ namespace FSM
 		/// It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <remarks>
-		/// When no condition is required, it creates a TransitionBase for optimal performance,
+		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
 		public static void AddExitTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddExitTransition(CreateOptimizedTransition(from, default, condition, forceInstantly));
+			fsm.AddExitTransition(CreateOptimizedTransition(
+				from,
+				default,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
@@ -191,9 +285,18 @@ namespace FSM
 		public static void AddExitTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
-			fsm.AddExitTransitionFromAny(CreateOptimizedTransition(default, default, condition, forceInstantly));
+			fsm.AddExitTransitionFromAny(CreateOptimizedTransition(
+				default,
+				default,
+				condition,
+				onTransition: onTransition,
+				afterTransition: afterTransition,
+				forceInstantly: forceInstantly
+			));
 		}
 
 		/// <summary>
@@ -211,11 +314,20 @@ namespace FSM
 			TEvent trigger,
 			TStateId from,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
 			fsm.AddExitTriggerTransition(
 				trigger,
-				CreateOptimizedTransition(from, default, condition, forceInstantly)
+				CreateOptimizedTransition(
+					from,
+					default,
+					condition,
+					onTransition: onTransition,
+					afterTransition: afterTransition,
+					forceInstantly: forceInstantly
+				)
 			);
 		}
 
@@ -233,11 +345,20 @@ namespace FSM
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
 			Func<Transition<TStateId>, bool> condition = null,
+			Action<Transition<TStateId>> onTransition = null,
+			Action<Transition<TStateId>> afterTransition = null,
 			bool forceInstantly = false)
 		{
 			fsm.AddExitTriggerTransitionFromAny(
 				trigger,
-				CreateOptimizedTransition(default, default, condition, forceInstantly)
+				CreateOptimizedTransition(
+					default,
+					default,
+					condition,
+					onTransition: onTransition,
+					afterTransition: afterTransition,
+					forceInstantly: forceInstantly
+				)
 			);
 		}
 	}

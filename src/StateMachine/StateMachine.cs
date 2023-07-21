@@ -540,6 +540,9 @@ namespace FSM
 		/// <remarks>
 		/// Internally the same transition instance will be used for both transitions
 		/// by wrapping it in a ReverseTransition.
+		/// For the reverse transition the afterTransition callback is called before the transition
+		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// of the two way transitions by creating two separate transitions.
 		/// </remarks>
 		public void AddTwoWayTransition(TransitionBase<TStateId> transition)
 		{
@@ -560,6 +563,9 @@ namespace FSM
 		/// <remarks>
 		/// Internally the same transition instance will be used for both transitions
 		/// by wrapping it in a ReverseTransition.
+		/// For the reverse transition the afterTransition callback is called before the transition
+		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// of the two way transitions by creating two separate transitions.
 		/// </remarks>
 		public void AddTwoWayTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{

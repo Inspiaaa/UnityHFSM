@@ -4,6 +4,8 @@ namespace FSM
 	/// A ReverseTransition wraps another transition, but reverses it. The "from"
 	/// and "to" states are swapped. Only when the condition of the wrapped transition
 	/// is false does it transition.
+	/// The BeforeTransition and AfterTransition callbacks of the the wrapped transition
+	/// are also swapped.
 	/// </summary>
 	public class ReverseTransition<TStateId> : TransitionBase<TStateId>
 	{
@@ -39,6 +41,16 @@ namespace FSM
 		public override bool ShouldTransition()
 		{
 			return ! wrappedTransition.ShouldTransition();
+		}
+
+		public override void BeforeTransition()
+		{
+			wrappedTransition.AfterTransition();
+		}
+
+		public override void AfterTransition()
+		{
+			wrappedTransition.BeforeTransition();
 		}
 	}
 

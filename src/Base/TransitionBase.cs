@@ -4,7 +4,7 @@ namespace FSM
 	/// <summary>
 	/// The base class of all transitions
 	/// </summary>
-	public class TransitionBase<TStateId>
+	public class TransitionBase<TStateId> : ITransitionListener
 	{
 		public TStateId from;
 		public TStateId to;
@@ -52,6 +52,16 @@ namespace FSM
 		public virtual bool ShouldTransition()
 		{
 			return true;
+		}
+
+		public virtual void BeforeTransition()
+		{
+
+		}
+
+		public virtual void AfterTransition()
+		{
+
 		}
 	}
 

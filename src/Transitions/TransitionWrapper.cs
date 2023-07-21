@@ -57,6 +57,16 @@ namespace FSM
 				afterShouldTransition?.Invoke(transition);
 				return shouldTransition;
 			}
+
+			public override void BeforeTransition()
+			{
+				transition.BeforeTransition();
+			}
+
+			public override void AfterTransition()
+			{
+				transition.AfterTransition();
+			}
 		}
 
 		private Action<TransitionBase<TStateId>>
