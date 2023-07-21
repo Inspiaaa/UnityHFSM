@@ -55,6 +55,35 @@ namespace FSM
 			}
 		}
 
+		private struct PendingTransition {
+			public TStateId targetState;
+
+			public bool isExitTransition;
+
+			// Optional (may be null), used for callbacks when the transition succeeds.
+			public ITransitionListener listener;
+
+			// As this type is not nullable (it is a value type), an additional field is required
+			// to see if the pending transition has been set yet.
+			public bool isPending;
+
+			public static PendingTransition CreateForExit(ITransitionListener listener = null)
+				=> new PendingTransition {
+					targetState = default,
+					isExitTransition = true,
+					listener = listener,
+					isPending = true
+				};
+
+			public static PendingTransition CreateForState(TStateId target, ITransitionListener listener = null)
+				=> new PendingTransition {
+					targetState = target,
+					isExitTransition = false,
+					listener = listener,
+					isPending = true
+				};
+		}
+
 		// A cached empty list of transitions (For improved readability, less GC)
 		private static readonly List<TransitionBase<TStateId>> noTransitions
 			= new List<TransitionBase<TStateId>>(0);
@@ -62,7 +91,7 @@ namespace FSM
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
 		private (TStateId state, bool hasState) startState = (default, false);
-		private (TStateId state, bool isExit, bool isPending) pendingState = (default, false, false);
+		private PendingTransition pendingTransition = default;
 
 		// Central storage of states
 		private Dictionary<TStateId, StateBundle> stateBundlesByName
@@ -91,7 +120,7 @@ namespace FSM
 
 		private bool IsRootFsm => fsm == null;
 
-		public bool HasPendingTransition => pendingState.isPending;
+		public bool HasPendingTransition => pendingTransition.isPending;
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class
@@ -122,23 +151,27 @@ namespace FSM
 		/// </summary>
 		public void StateCanExit()
 		{
-			if (! pendingState.isPending)
+			if (! pendingTransition.isPending)
 				return;
 
-			if (pendingState.isExit)
+			if (pendingTransition.isExitTransition)
 			{
-				pendingState = default;
+				ITransitionListener listener = pendingTransition.listener;
+				pendingTransition = default;
+
+				listener?.BeforeTransition();
 				PerformVerticalTransition();
+				listener?.AfterTransition();
 			}
 			else {
-				TStateId state = pendingState.state;
+				TStateId state = pendingTransition.targetState;
 
 				// When the pending state is a ghost state, ChangeState() will have
 				// to try all outgoing transitions, which may overwrite the pendingState.
 				// That's why it is first cleared, and not afterwards, as that would overwrite
 				// a new, valid pending state.
-				pendingState = default;
-				ChangeState(state);
+				pendingTransition = default;
+				ChangeState(state, pendingTransition.listener);
 			}
 		}
 
@@ -146,8 +179,10 @@ namespace FSM
 		/// Instantly changes to the target state
 		/// </summary>
 		/// <param name="name">The name / identifier of the active state</param>
-		private void ChangeState(TStateId name)
+		/// <param name="listener">Optional object that receives callbacks before and after changing state</param>
+		private void ChangeState(TStateId name, ITransitionListener listener = null)
 		{
+			listener?.BeforeTransition();
 			activeState?.OnExit();
 
 			StateBundle bundle;
@@ -176,6 +211,8 @@ namespace FSM
 				}
 			}
 
+			listener?.AfterTransition();
+
 			if (activeState.isGhostState)
 			{
 				TryAllDirectTransitions();
@@ -197,15 +234,19 @@ namespace FSM
 		/// <param name="name">The name / identifier of the target state</param>
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
 		/// therefore forcing an immediate state change</param>
-		public void RequestStateChange(TStateId name, bool forceInstantly = false)
+		/// <param name="listener">Optional object that receives callbacks before and after the transition</param>
+		public void RequestStateChange(
+			TStateId name,
+			bool forceInstantly = false,
+			ITransitionListener listener = null)
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
-				ChangeState(name);
+				ChangeState(name, listener);
 			}
 			else
 			{
-				pendingState = (name, isExit: false, isPending: true);
+				pendingTransition = PendingTransition.CreateForState(name, listener);
 				activeState.OnExitRequest();
 				/**
 				 * If it can exit, the activeState would call
@@ -222,14 +263,17 @@ namespace FSM
 		/// </summary>
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
 		/// therefore forcing an immediate state change</param>
-		public void RequestExit(bool forceInstantly = false)
+		/// <param name="listener">Optional object that receives callbacks before and after the transition</param>
+		public void RequestExit(bool forceInstantly = false, ITransitionListener listener = null)
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
+				listener?.BeforeTransition();
 				PerformVerticalTransition();
+				listener?.AfterTransition();
 			}
 			else {
-				pendingState = (default, isExit: true, isPending: true);
+				pendingTransition = PendingTransition.CreateForExit(listener);
 				activeState.OnExitRequest();
 			}
 		}
@@ -244,14 +288,14 @@ namespace FSM
 				if (fsm == null || !fsm.HasPendingTransition || !transition.ShouldTransition())
 					return false;
 
-				RequestExit(transition.forceInstantly);
+				RequestExit(transition.forceInstantly, transition as ITransitionListener);
 				return true;
 			}
 			else {
 				if (!transition.ShouldTransition())
 					return false;
 
-				RequestStateChange(transition.to, transition.forceInstantly);
+				RequestStateChange(transition.to, transition.forceInstantly, transition as ITransitionListener);
 				return true;
 			}
 		}
@@ -316,7 +360,7 @@ namespace FSM
 			}
 
 			// Clear any previous pending transition from the last run
-			pendingState = default;
+			pendingTransition = default;
 
 			ChangeState(startState.state);
 
