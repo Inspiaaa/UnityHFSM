@@ -101,6 +101,10 @@
 
 - The parameters `onEnter`, `onLogic`, ... in the constructor of the `HybridStateMachine` class are now equivalent to the new parameters `afterOnEnter`, `afterOnLogic`, ...
 
+### Fixed
+
+- Multiple bugs relating to delayed transitions (pending transitions system)
+
 ---
 
 ## 1.9
