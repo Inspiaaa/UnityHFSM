@@ -69,7 +69,7 @@
   hybrid.AddAction("Action", () => print("Hybrid"));
   
   hybrid.Init();
-  hybrid.OnAction("Action");  // Prints "A" and then "Hybrid"
+  hybrid.OnAction("Action");  // Prints "Hybrid" and then "A"
   ```
 
 - Option in `HybridStateMachine` to **run custom code before and after** the `OnEnter` / `OnLogic` / ... of its active sub state. Previously, you could only add a custom callback that was run *after* the respective methods of the sub state. When migrating to this version simply replace the `onEnter` parameter with `afterOnEnter` in the constructor. For example

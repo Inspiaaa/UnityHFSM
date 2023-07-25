@@ -85,20 +85,20 @@ namespace FSM
 
 		public override void OnAction(TEvent trigger)
 		{
-			base.OnAction(trigger);
 			actionStorage?.RunAction(trigger);
+			base.OnAction(trigger);
 		}
 
 		public override void OnAction<TData>(TEvent trigger, TData data)
 		{
-			base.OnAction<TData>(trigger, data);
 			actionStorage?.RunAction<TData>(trigger, data);
+			base.OnAction<TData>(trigger, data);
 		}
 
 		/// <summary>
 		/// Adds an action that can be called with OnAction(). Actions are like the builtin events
 		/// OnEnter / OnLogic / ... but are defined by the user.
-		/// The action is run after the sub-state's action.
+		/// The action is run before the sub-state's action.
 		/// </summary>
 		/// <param name="trigger">Name of the action</param>
 		/// <param name="action">Function that should be called when the action is run</param>
@@ -115,7 +115,7 @@ namespace FSM
 		/// <summary>
 		///  Adds an action that can be called with OnAction<T>(). This overload allows you to
 		///  run a function that takes one data parameter.
-		///  The action is run after the sub-state's action.
+		///  The action is run before the sub-state's action.
 		/// </summary>
 		/// <param name="trigger">Name of the action</param>
 		/// <param name="action">Function that should be called when the action is run</param>
