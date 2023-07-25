@@ -22,9 +22,8 @@ namespace FSM
 		/// <param name="onLogic">A function that is called by the logic function of the state machine if this state is active</param>
 		/// <param name="onExit">A function that is called when the state machine exits this state</param>
 		/// <param name="canExit">(Only if needsExitTime is true):
-		/// 	Called when a state transition from this state to another state should happen.
-		/// 	If it can exit, it should call fsm.StateCanExit()
-		/// 	and if it can not exit right now, later in OnLogic() it should call fsm.StateCanExit()</param>
+		/// 	Function that determines if the state is ready to exit (true) or not (false).
+		/// 	It is called OnExitRequest and on each logic step when a transition is pending.</param>
 		/// <param name="needsExitTime">Determines if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until the state is ready for a
 		/// 	state change (true)</param>
@@ -53,6 +52,11 @@ namespace FSM
 
 		public override void OnLogic()
 		{
+			if (needsExitTime && canExit != null && fsm.HasPendingTransition && canExit(this))
+			{
+				fsm.StateCanExit();
+			}
+
 			onLogic?.Invoke(this);
 		}
 
@@ -63,15 +67,17 @@ namespace FSM
 
 		public override void OnExitRequest()
 		{
-			if (!needsExitTime || canExit != null && canExit(this))
+			if (canExit != null && canExit(this))
 			{
 				fsm.StateCanExit();
 			}
 		}
 	}
 
+	/// <inheritdoc />
 	public class State<TStateId> : State<TStateId, string>
 	{
+		/// <inheritdoc />
 		public State(
 			Action<State<TStateId, string>> onEnter = null,
 			Action<State<TStateId, string>> onLogic = null,

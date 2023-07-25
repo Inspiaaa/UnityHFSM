@@ -35,9 +35,8 @@ namespace FSM
 		/// 	It is started once the state enters and is terminated when the state exits.</param>
 		/// <param name="onExit">A function that is called when the state machine exits this state.</param>
 		/// <param name="canExit">(Only if needsExitTime is true):
-		/// 	Called when a state transition from this state to another state should happen.
-		/// 	If it can exit, it should call fsm.StateCanExit()
-		/// 	and if it can not exit right now, later in OnLogic() it should call fsm.StateCanExit().</param>
+		/// 	Function that determines if the state is ready to exit (true) or not (false).
+		/// 	It is called OnExitRequest and on each logic step when a transition is pending.</param>
 		/// <param name="loop">If true, it will loop the coroutine, running it again once it has completed.</param>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public CoState(
@@ -127,6 +126,14 @@ namespace FSM
 			}
 		}
 
+		public override void OnLogic()
+		{
+			if (needsExitTime && canExit != null && fsm.HasPendingTransition && canExit(this))
+			{
+				fsm.StateCanExit();
+			}
+		}
+
 		public override void OnExit()
 		{
 			if (activeCoroutine != null)
@@ -140,7 +147,7 @@ namespace FSM
 
 		public override void OnExitRequest()
 		{
-			if (!needsExitTime || (canExit != null && canExit(this)))
+			if (canExit != null && canExit(this))
 			{
 				fsm.StateCanExit();
 			}
