@@ -51,7 +51,12 @@ namespace FSM
 				bool isGhostState = false) : base(needsExitTime, isGhostState)
 		{
 			this.mono = mono;
-			this.coroutineCreator = coroutine != null ? () => coroutine(this) : null;
+
+			if (coroutine != null)
+			{
+				this.coroutineCreator = () => coroutine(this);
+			}
+
 			this.onEnter = onEnter;
 			this.onExit = onExit;
 			this.canExit = canExit;
