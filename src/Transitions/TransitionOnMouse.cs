@@ -12,7 +12,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, while a mouse button is down.
 			/// It behaves like Input.GetMouseButton(...).
 			/// </summary>
-			/// <param name="button">The mouse button to watch</param>
+			/// <param name="button">The mouse button to watch.</param>
 			/// <returns></returns>
 			public Down(
 					TStateId from,
@@ -37,7 +37,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, when a mouse button was just down and is up now.
 			/// It behaves like Input.GetMouseButtonUp(...).
 			/// </summary>
-			/// <param name="button">The mouse button to watch</param>
+			/// <param name="button">The mouse button to watch.</param>
 			public Release(
 					TStateId from,
 					TStateId to,
@@ -61,7 +61,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, when a mouse button was just up and is down now.
 			/// It behaves like Input.GetMouseButtonDown(...).
 			/// </summary>
-			/// <param name="button">The mouse button to watch</param>
+			/// <param name="button">The mouse button to watch.</param>
 			public Press(
 					TStateId from,
 					TStateId to,
@@ -85,7 +85,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, while a mouse button is up.
 			/// It behaves like ! Input.GetMouseButton(...).
 			/// </summary>
-			/// <param name="button">The mouse button to watch</param>
+			/// <param name="button">The mouse button to watch.</param>
 			public Up(
 					TStateId from,
 					TStateId to,

@@ -22,18 +22,16 @@ namespace FSM
 
 		public Timer timer;
 
-		/// <summary>Initialises a new instance of the HybridStateMachine class</summary>
-		/// <param name="beforeOnEnter">A function that is called before running the sub-state's OnEnter</param>
-		/// <param name="afterOnEnter">A function that is called after running the sub-state's OnEnter</param>
-		/// <param name="beforeOnLogic">A function that is called before running the sub-state's OnLogic</param>
-		/// <param name="afterOnLogic">A function that is called after running the sub-state's OnLogic</param>
-		/// <param name="beforeOnExit">A function that is called before running the sub-state's OnExit</param>
-		/// <param name="afterOnExit">A function that is called after running the sub-state's OnExit</param>
-		/// <param name="needsExitTime">
-		/// (Only for hierarchical states):
-		/// Determines whether the state machine as a state of a parent state machine is allowed to instantly
-		/// exit on a transition (false), or if it should wait until an explicit exit transition occurs.
-		/// </param>
+		/// <summary>Initialises a new instance of the HybridStateMachine class.</summary>
+		/// <param name="beforeOnEnter">A function that is called before running the sub-state's OnEnter.</param>
+		/// <param name="afterOnEnter">A function that is called after running the sub-state's OnEnter.</param>
+		/// <param name="beforeOnLogic">A function that is called before running the sub-state's OnLogic.</param>
+		/// <param name="afterOnLogic">A function that is called after running the sub-state's OnLogic.</param>
+		/// <param name="beforeOnExit">A function that is called before running the sub-state's OnExit.</param>
+		/// <param name="afterOnExit">A function that is called after running the sub-state's OnExit.</param>
+		/// <param name="needsExitTime">(Only for hierarchical states):
+		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
+		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs.</param>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public HybridStateMachine(
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> beforeOnEnter = null,

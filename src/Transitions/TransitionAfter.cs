@@ -4,7 +4,7 @@ namespace FSM
 {
 	/// <summary>
 	/// A class used to determine whether the state machine should transition to another state
-	/// depending on a delay and an optional condition
+	/// depending on a delay and an optional condition.
 	/// </summary>
 	public class TransitionAfter<TStateId> : TransitionBase<TStateId>
 	{
@@ -17,7 +17,7 @@ namespace FSM
 		public Action<TransitionAfter<TStateId>> afterTransition;
 
 		/// <summary>
-		/// Initialises a new instance of the TransitionAfter class
+		/// Initialises a new instance of the TransitionAfter class.
 		/// </summary>
 		/// <param name="delay">The delay that must elapse before the transition can occur</param>
 		/// <param name="condition">A function that returns true if the state machine

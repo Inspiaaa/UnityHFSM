@@ -18,9 +18,9 @@ namespace FSM
 		/// If the type of the existing action does not match the desired type an exception
 		/// is thrown.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
-		/// <typeparam name="TTarget">Type of the function (delegate) belonging to the action</typeparam>
-		/// <returns>The action with the specified name</returns>
+		/// <param name="trigger">Name of the action.</param>
+		/// <typeparam name="TTarget">Type of the function (delegate) belonging to the action.</typeparam>
+		/// <returns>The action with the specified name.</returns>
 		private TTarget TryGetAndCastAction<TTarget>(TEvent trigger) where TTarget : Delegate
 		{
 			Delegate action = null;
@@ -51,8 +51,8 @@ namespace FSM
 		/// Adds an action that can be called with OnAction(). Actions are like the builtin events
 		/// OnEnter / OnLogic / ... but are defined by the user.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
-		/// <param name="action">Function that should be called when the action is run</param>
+		/// <param name="trigger">Name of the action.</param>
+		/// <param name="action">Function that should be called when the action is run.</param>
 		public void AddAction(TEvent trigger, Action action)
 		{
 			actionsByEvent[trigger] = action;
@@ -62,9 +62,9 @@ namespace FSM
 		/// Adds an action that can be called with RunAction<T>(). This overload allows you to
 		/// run a function that takes one data parameter.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
-		/// <param name="action">Function that should be called when the action is run</param>
-		/// <typeparam name="TData">Data type of the parameter of the function</typeparam>
+		/// <param name="trigger">Name of the action.</param>
+		/// <param name="action">Function that should be called when the action is run.</param>
+		/// <typeparam name="TData">Data type of the parameter of the function.</typeparam>
 		public void AddAction<TData>(TEvent trigger, Action<TData> action)
 		{
 			actionsByEvent[trigger] = action;
@@ -74,7 +74,7 @@ namespace FSM
 		/// Runs an action with the given name.
 		/// If the action is not defined / hasn't been added, nothing will happen.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
+		/// <param name="trigger">Name of the action.</param>
 		public void RunAction(TEvent trigger)
 			=> TryGetAndCastAction<Action>(trigger)?.Invoke();
 
@@ -82,9 +82,9 @@ namespace FSM
 		/// Runs an action with a given name and lets you pass in one parameter to the action function.
 		/// If the action is not defined / hasn't been added, nothing will happen.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
-		/// <param name="data">Data to pass as the first parameter to the action</param>
-		/// <typeparam name="TData">Type of the data parameter</typeparam>
+		/// <param name="trigger">Name of the action.</param>
+		/// <param name="data">Data to pass as the first parameter to the action.</param>
+		/// <typeparam name="TData">Type of the data parameter.</typeparam>
 		public void RunAction<TData>(TEvent trigger, TData data)
 			=> TryGetAndCastAction<Action<TData>>(trigger)?.Invoke(data);
 	}

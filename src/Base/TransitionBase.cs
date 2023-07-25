@@ -2,7 +2,7 @@
 namespace FSM
 {
 	/// <summary>
-	/// The base class of all transitions
+	/// The base class of all transitions.
 	/// </summary>
 	public class TransitionBase<TStateId> : ITransitionListener
 	{
@@ -15,11 +15,11 @@ namespace FSM
 		public IStateMachine fsm;
 
 		/// <summary>
-		/// Initialises a new instance of the TransitionBase class
+		/// Initialises a new instance of the TransitionBase class.
 		/// </summary>
-		/// <param name="from">The name / identifier of the active state</param>
-		/// <param name="to">The name / identifier of the next state</param>
-		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
+		/// <param name="from">The name / identifier of the active state.</param>
+		/// <param name="to">The name / identifier of the next stat.e</param>
+		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true.
 		/// 	=> Forces an instant transition</param>
 		public TransitionBase(TStateId from, TStateId to, bool forceInstantly = false)
 		{
@@ -30,7 +30,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to initialise the transition, after values like fsm have been set
+		/// Called to initialise the transition, after values like fsm have been set.
 		/// </summary>
 		public virtual void Init()
 		{
@@ -38,7 +38,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called when the state machine enters the "from" state
+		/// Called when the state machine enters the "from" state.
 		/// </summary>
 		public virtual void OnEnter()
 		{
@@ -46,9 +46,9 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to determine whether the state machine should transition to the <c>to</c> state
+		/// Called to determine whether the state machine should transition to the <c>to</c> state.
 		/// </summary>
-		/// <returns>True if the state machine should change states / transition</returns>
+		/// <returns>True if the state machine should change states / transition.</returns>
 		public virtual bool ShouldTransition()
 		{
 			return true;

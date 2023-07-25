@@ -12,7 +12,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, while a key is down.
 			/// It behaves like Input.GetKey(...).
 			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch</param>
+			/// <param name="key">The KeyCode of the key to watch.</param>
 			/// <returns></returns>
 			public Down(
 					TStateId from,
@@ -37,7 +37,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, when a key was just down and is up now.
 			/// It behaves like Input.GetKeyUp(...).
 			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch</param>
+			/// <param name="key">The KeyCode of the key to watch.</param>
 			public Release(
 					TStateId from,
 					TStateId to,
@@ -61,7 +61,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, when a key was just up and is down now.
 			/// It behaves like Input.GetKeyDown(...).
 			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch</param>
+			/// <param name="key">The KeyCode of the key to watch.</param>
 			public Press(
 					TStateId from,
 					TStateId to,
@@ -85,7 +85,7 @@ namespace FSM
 			/// Initialises a new transition that triggers, while a key is up.
 			/// It behaves like ! Input.GetKey(...).
 			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch</param>
+			/// <param name="key">The KeyCode of the key to watch.</param>
 			public Up(
 					TStateId from,
 					TStateId to,

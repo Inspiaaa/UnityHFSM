@@ -4,7 +4,7 @@ namespace FSM
 {
 	/// <summary>
 	/// A class used to determine whether the state machine should transition to another state
-	/// depending on a dynamically computed delay and an optional condition
+	/// depending on a dynamically computed delay and an optional condition.
 	/// </summary>
 	public class TransitionAfterDynamic<TStateId> : TransitionBase<TStateId>
 	{
@@ -17,14 +17,12 @@ namespace FSM
 		public Action<TransitionAfterDynamic<TStateId>> afterTransition;
 
 		/// <summary>
-		/// Initialises a new instance of the TransitionAfterDynamic class
+		/// Initialises a new instance of the TransitionAfterDynamic class.
 		/// </summary>
-		/// <param name="delay">A function that dynamically computes the delay time</param>
+		/// <param name="delay">A function that dynamically computes the delay time.</param>
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
-		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
-		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>#
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public TransitionAfterDynamic(

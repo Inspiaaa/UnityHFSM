@@ -2,7 +2,7 @@
 namespace FSM
 {
 	/// <summary>
-	/// The base class of all states
+	/// The base class of all states.
 	/// </summary>
 	public class StateBase<TStateId>
 	{
@@ -13,11 +13,11 @@ namespace FSM
 		public IStateMachine fsm;
 
 		/// <summary>
-		/// Initialises a new instance of the StateBase class
+		/// Initialises a new instance of the StateBase class.
 		/// </summary>
 		/// <param name="needsExitTime">Determines if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until
-		/// 	the state is ready for a state change (true)</param>
+		/// 	the state is ready for a state change (true).</param>
 		/// <param name="isGhostState">If true, this state becomes a ghost state, a
 		/// 	state the state machine does not want to stay in. That means that if the
 		/// 	fsm transitions to this state, it will test all outgoing transitions instantly
@@ -29,7 +29,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called to initialise the state, after values like name and fsm have been set
+		/// Called to initialise the state, after values like name and fsm have been set.
 		/// </summary>
 		public virtual void Init()
 		{
@@ -37,7 +37,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called when the state machine transitions to this state (enters this state)
+		/// Called when the state machine transitions to this state (enters this state).
 		/// </summary>
 		public virtual void OnEnter()
 		{
@@ -45,14 +45,14 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Called while this state is active
+		/// Called while this state is active.
 		/// </summary>
 		public virtual void OnLogic() {
 
 		}
 
 		/// <summary>
-		/// Called when the state machine transitions from this state to another state (exits this state)
+		/// Called when the state machine transitions from this state to another state (exits this state).
 		/// </summary>
 		public virtual void OnExit()
 		{

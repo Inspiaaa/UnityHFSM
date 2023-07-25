@@ -11,7 +11,7 @@ namespace FSM
 {
 	/// <summary>
 	/// A finite state machine that can also be used as a state of a parent state machine to create
-	/// a hierarchy (-> hierarchical state machine)
+	/// a hierarchy (-> hierarchical state machine).
 	/// </summary>
 	public class StateMachine<TOwnId, TStateId, TEvent> :
 		StateBase<TOwnId>,
@@ -26,7 +26,7 @@ namespace FSM
 		/// </summary>
 		private class StateBundle
 		{
-			// By default, these fields are all null and only get a value when you need them
+			// By default, these fields are all null and only get a value when you need them.
 			// => Lazy evaluation => Memory efficient, when you only need a subset of features
 			public StateBase<TStateId> state;
 			public List<TransitionBase<TStateId>> transitions;
@@ -84,7 +84,7 @@ namespace FSM
 				};
 		}
 
-		// A cached empty list of transitions (For improved readability, less GC)
+		// A cached empty list of transitions (For improved readability, less GC).
 		private static readonly List<TransitionBase<TStateId>> noTransitions
 			= new List<TransitionBase<TStateId>>(0);
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> noTriggerTransitions
@@ -93,7 +93,7 @@ namespace FSM
 		private (TStateId state, bool hasState) startState = (default, false);
 		private PendingTransition pendingTransition = default;
 
-		// Central storage of states
+		// Central storage of states.
 		private Dictionary<TStateId, StateBundle> stateBundlesByName
 			= new Dictionary<TStateId, StateBundle>();
 
@@ -123,11 +123,11 @@ namespace FSM
 		public bool HasPendingTransition => pendingTransition.isPending;
 
 		/// <summary>
-		/// Initialises a new instance of the StateMachine class
+		/// Initialises a new instance of the StateMachine class.
 		/// </summary>
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
-		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs. </param>
+		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs.</param>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
@@ -138,8 +138,7 @@ namespace FSM
 		/// <summary>
 		/// Throws an exception if the state machine is not initialised yet.
 		/// </summary>
-		/// <param name="context">String message for which action the fsm should
-		/// 	be initialised for.</param>
+		/// <param name="context">String message for which action the fsm should be initialised for.</param>
 		private void EnsureIsInitializedFor(string context)
 		{
 			if (activeState == null)
@@ -177,10 +176,10 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Instantly changes to the target state
+		/// Instantly changes to the target state.
 		/// </summary>
-		/// <param name="name">The name / identifier of the active state</param>
-		/// <param name="listener">Optional object that receives callbacks before and after changing state</param>
+		/// <param name="name">The name / identifier of the active state.</param>
+		/// <param name="listener">Optional object that receives callbacks before and after changing state.</param>
 		private void ChangeState(TStateId name, ITransitionListener listener = null)
 		{
 			listener?.BeforeTransition();
@@ -230,12 +229,12 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Requests a state change, respecting the <c>needsExitTime</c> property of the active state
+		/// Requests a state change, respecting the <c>needsExitTime</c> property of the active state.
 		/// </summary>
-		/// <param name="name">The name / identifier of the target state</param>
+		/// <param name="name">The name / identifier of the target state.</param>
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
-		/// therefore forcing an immediate state change</param>
-		/// <param name="listener">Optional object that receives callbacks before and after the transition</param>
+		/// 	therefore forcing an immediate state change.</param>
+		/// <param name="listener">Optional object that receives callbacks before and after the transition.</param>
 		public void RequestStateChange(
 			TStateId name,
 			bool forceInstantly = false,
@@ -250,11 +249,9 @@ namespace FSM
 			{
 				pendingTransition = PendingTransition.CreateForState(name, listener);
 				activeState.OnExitRequest();
-				/**
-				 * If it can exit, the activeState would call
-				 * -> state.fsm.StateCanExit() which in turn would call
-				 * -> fsm.ChangeState(...)
-				 */
+				// If it can exit, the activeState would call
+				// -> state.fsm.StateCanExit() which in turn would call
+				// -> fsm.ChangeState(...)
 			}
 		}
 
@@ -264,8 +261,8 @@ namespace FSM
 		/// needsExitTime property of the active state.
 		/// </summary>
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
-		/// therefore forcing an immediate state change</param>
-		/// <param name="listener">Optional object that receives callbacks before and after the transition</param>
+		/// 	therefore forcing an immediate state change.</param>
+		/// <param name="listener">Optional object that receives callbacks before and after the transition.</param>
 		public void RequestExit(bool forceInstantly = false, ITransitionListener listener = null)
 		{
 			if (!activeState.needsExitTime || forceInstantly)
@@ -304,7 +301,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Tries the "global" transitions that can transition from any state
+		/// Tries the "global" transitions that can transition from any state.
 		/// </summary>
 		/// <returns>Returns true if a transition occurred.</returns>
 		private bool TryAllGlobalTransitions()
@@ -313,7 +310,7 @@ namespace FSM
 			{
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
 
-				// Don't transition to the "to" state, if that state is already the active state
+				// Don't transition to the "to" state, if that state is already the active state.
 				if (EqualityComparer<TStateId>.Default.Equals(transition.to, activeState.name))
 					continue;
 
@@ -342,7 +339,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Calls OnEnter if it is the root state machine, therefore initialising the state machine
+		/// Calls OnEnter if it is the root state machine, therefore initialising the state machine.
 		/// </summary>
 		public override void Init()
 		{
@@ -362,7 +359,7 @@ namespace FSM
 				throw FSM.Exceptions.Common.MissingStartState(context: "Running OnEnter of the state machine.");
 			}
 
-			// Clear any previous pending transition from the last run
+			// Clear any previous pending transition from the last run.
 			pendingTransition = default;
 
 			ChangeState(startState.state);
@@ -406,7 +403,7 @@ namespace FSM
 			{
 				activeState.OnExit();
 				// By setting the activeState to null, the state's onExit method won't be called
-				// a second time when the state machine enters again (and changes to the start state)
+				// a second time when the state machine enters again (and changes to the start state).
 				activeState = null;
 			}
 		}
@@ -418,9 +415,9 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Defines the entry point of the state machine
+		/// Defines the entry point of the state machine.
 		/// </summary>
-		/// <param name="name">The name / identifier of the start state</param>
+		/// <param name="name">The name / identifier of the start state.</param>
 		public void SetStartState(TStateId name)
 		{
 			startState = (name, true);
@@ -447,8 +444,8 @@ namespace FSM
 		/// <summary>
 		/// Adds a new node / state to the state machine.
 		/// </summary>
-		/// <param name="name">The name / identifier of the new state</param>
-		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c></param>
+		/// <param name="name">The name / identifier of the new state.</param>
+		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c>.</param>
 		public void AddState(TStateId name, StateBase<TStateId> state)
 		{
 			state.fsm = this;
@@ -477,7 +474,7 @@ namespace FSM
 		/// <summary>
 		/// Adds a new transition between two states.
 		/// </summary>
-		/// <param name="transition">The transition instance</param>
+		/// <param name="transition">The transition instance.</param>
 		public void AddTransition(TransitionBase<TStateId> transition)
 		{
 			InitTransition(transition);
@@ -487,10 +484,10 @@ namespace FSM
 		}
 
 		/// <summary>
-		/// Adds a new transition that can happen from any possible state
+		/// Adds a new transition that can happen from any possible state.
 		/// </summary>
 		/// <param name="transition">The transition instance; The "from" field can be
-		/// left empty, as it has no meaning in this context.</param>
+		/// 	left empty, as it has no meaning in this context.</param>
 		public void AddTransitionFromAny(TransitionBase<TStateId> transition)
 		{
 			InitTransition(transition);
@@ -502,7 +499,7 @@ namespace FSM
 		/// Adds a new trigger transition between two states that is only checked
 		/// when the specified trigger is activated.
 		/// </summary>
-		/// <param name="trigger">The name / identifier of the trigger</param>
+		/// <param name="trigger">The name / identifier of the trigger.</param>
 		/// <param name="transition">The transition instance, e.g. Transition, TransitionAfter, ...</param>
 		public void AddTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{
@@ -518,7 +515,7 @@ namespace FSM
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger</param>
 		/// <param name="transition">The transition instance; The "from" field can be
-		/// left empty, as it has no meaning in this context.</param>
+		/// 	left empty, as it has no meaning in this context.</param>
 		public void AddTriggerTransitionFromAny(TEvent trigger, TransitionBase<TStateId> transition)
 		{
 			InitTransition(transition);
@@ -586,7 +583,7 @@ namespace FSM
 		/// It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <param name="transition">The transition instance. The "to" field can be
-		/// left empty, as it has no meaning in this context.</param>
+		/// 	left empty, as it has no meaning in this context.</param>
 		public void AddExitTransition(TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
@@ -599,7 +596,7 @@ namespace FSM
 		/// to the next state. It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <param name="transition">The transition instance. The "from" and "to" fields can be
-		/// left empty, as they have no meaning in this context.</param>
+		/// 	left empty, as they have no meaning in this context.</param>
 		public void AddExitTransitionFromAny(TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
@@ -613,7 +610,7 @@ namespace FSM
 		/// to the next state. It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <param name="transition">The transition instance. The "to" field can be
-		/// left empty, as it has no meaning in this context.</param>
+		/// 	left empty, as it has no meaning in this context.</param>
 		public void AddExitTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{
 			transition.isExitTransition = true;
@@ -627,7 +624,7 @@ namespace FSM
 		/// to the next state. It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <param name="transition">The transition instance. The "from" and "to" fields can be
-		/// left empty, as they have no meaning in this context.</param>
+		/// 	left empty, as they have no meaning in this context.</param>
 		public void AddExitTriggerTransitionFromAny(TEvent trigger, TransitionBase<TStateId> transition) {
 			transition.isExitTransition = true;
 			AddTriggerTransitionFromAny(trigger, transition);
@@ -637,8 +634,8 @@ namespace FSM
 		/// Activates the specified trigger, checking all targeted trigger transitions to see whether
 		/// a transition should occur.
 		/// </summary>
-		/// <param name="trigger">The name / identifier of the trigger</param>
-		/// <returns>True when a transition occurred, otherwise false</returns>
+		/// <param name="trigger">The name / identifier of the trigger.</param>
+		/// <returns>True when a transition occurred, otherwise false.</returns>
 		private bool TryTrigger(TEvent trigger)
 		{
 			EnsureIsInitializedFor("Checking all trigger transitions of the active state");
@@ -677,7 +674,7 @@ namespace FSM
 		/// Activates the specified trigger in all active states of the hierarchy, checking all targeted
 		/// trigger transitions to see whether a transition should occur.
 		/// </summary>
-		/// <param name="trigger">The name / identifier of the trigger</param>
+		/// <param name="trigger">The name / identifier of the trigger.</param>
 		public void Trigger(TEvent trigger)
 		{
 			// If a transition occurs, then the trigger should not be activated
@@ -690,7 +687,7 @@ namespace FSM
 		/// <summary>
 		/// Only activates the specified trigger locally in this state machine.
 		/// </summary>
-		/// <param name="trigger">The name / identifier of the trigger</param>
+		/// <param name="trigger">The name / identifier of the trigger.</param>
 		public void TriggerLocally(TEvent trigger)
 		{
 			TryTrigger(trigger);
@@ -699,7 +696,7 @@ namespace FSM
 		/// <summary>
 		/// Runs an action on the currently active state.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
+		/// <param name="trigger">Name of the action.</param>
 		public virtual void OnAction(TEvent trigger)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
@@ -709,8 +706,8 @@ namespace FSM
 		/// <summary>
 		/// Runs an action on the currently active state and lets you pass one data parameter.
 		/// </summary>
-		/// <param name="trigger">Name of the action</param>
-		/// <param name="data">Any custom data for the parameter</param>
+		/// <param name="trigger">Name of the action.</param>
+		/// <param name="data">Any custom data for the parameter.</param>
 		/// <typeparam name="TData">Type of the data parameter.
 		/// 	Should match the data type of the action that was added via AddAction<T>(...).</typeparam>
 		public virtual void OnAction<TData>(TEvent trigger, TData data)

@@ -3,7 +3,7 @@ using System;
 namespace FSM
 {
 	/// <summary>
-	/// A class used to determine whether the state machine should transition to another state
+	/// A class used to determine whether the state machine should transition to another state.
 	/// </summary>
 	public class Transition<TStateId> : TransitionBase<TStateId>
 	{
@@ -12,10 +12,10 @@ namespace FSM
 		public Action<Transition<TStateId>> afterTransition;
 
 		/// <summary>
-		/// Initialises a new instance of the Transition class
+		/// Initialises a new instance of the Transition class.
 		/// </summary>
 		/// <param name="condition">A function that returns true if the state machine
-		/// 	should transition to the <c>to</c> state</param>
+		/// 	should transition to the <c>to</c> state.</param>
 		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
 		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>
 		/// <inheritdoc cref="TransitionBase{TStateId}(TStateId, TStateId, bool)" />
