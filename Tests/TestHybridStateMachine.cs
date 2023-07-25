@@ -109,14 +109,14 @@ namespace FSM.Tests
 
 			hybrid.OnAction("Normal");
 			recorder.Expect
-				.Custom("A.Normal()")
 				.Custom("Hybrid.Normal()")
+				.Custom("A.Normal()")
 				.All();
 
 			hybrid.OnAction<int>("Parameter", 10);
 			recorder.Expect
-				.Custom("A.Parameter(10)")
 				.Custom("Hybrid.Parameter(10)")
+				.Custom("A.Parameter(10)")
 				.All();
 		}
 	}
