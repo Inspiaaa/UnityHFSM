@@ -97,9 +97,24 @@
   print(fsm.GetActiveHierarchyPath());  // Prints "/Move/Jump/Falling"
   ```
 
+- Option in `CoState` to **only run the coroutine once**. E.g.
+  
+  ```csharp
+  var state = new CoState(mono, myCoroutine, loop: false);
+  ```
+
+### Improved
+
+- `canExit` feature in `State` and `CoState`: The custom `canExit` function that determines when the state is ready to exit to allow for another transition is now called on every frame when a transition is pending and not only `OnExitRequest`. This is more intuitive and can therefore prevent some unexpected behaviour from emerging.
+
+- The constructor of the `CoState` class now also allows you to pass in an IEnumerator function, that does not take the `CoState` as a parameter, as the coroutine
+
+- More documentation for classes / parameters / ... directly visible in the IDE
+
 ### Changed
 
 - The parameters `onEnter`, `onLogic`, ... in the constructor of the `HybridStateMachine` class are now equivalent to the new parameters `afterOnEnter`, `afterOnLogic`, ...
+- The `onLogic` parameter in the constructor of the `CoState` class is now called `coroutine`, is the second parameter, and no longer optional.
 
 ### Fixed
 
