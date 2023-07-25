@@ -16,9 +16,13 @@ namespace FSM
 
 		/// <summary>
 		/// Shortcut method for adding a regular state.
+		/// </summary>
+		/// <remarks>
 		/// It creates a new State() instance under the hood. => See State for more information.
 		/// For empty states with no logic it creates a new StateBase for optimal performance.
-		/// </summary>
+		/// </remarks>
+		/// <inheritdoc cref="State{TStateId, TEvent}(Action{State{TStateId, TEvent}}, Action{State{TStateId, TEvent}},
+		/// 	Action{State{TStateId, TEvent}}, Func{State{TStateId, TEvent}, bool}, bool, bool)"/>
 		public static void AddState<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId name,
@@ -83,6 +87,8 @@ namespace FSM
 		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
@@ -110,6 +116,8 @@ namespace FSM
 		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId to,
@@ -137,6 +145,8 @@ namespace FSM
 		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddTriggerTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
@@ -166,6 +176,8 @@ namespace FSM
 		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddTriggerTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
@@ -196,6 +208,8 @@ namespace FSM
 		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
 		/// of the two way transitions by creating two separate transitions.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddTwoWayTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
@@ -226,6 +240,8 @@ namespace FSM
 		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
 		/// of the two way transitions by creating two separate transitions.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddTwoWayTriggerTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
@@ -255,6 +271,8 @@ namespace FSM
 		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddExitTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TStateId from,
@@ -282,6 +300,8 @@ namespace FSM
 		/// When no condition is required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddExitTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			Func<Transition<TStateId>, bool> condition = null,
@@ -309,6 +329,8 @@ namespace FSM
 		/// When no condition is required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddExitTriggerTransition<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,
@@ -341,6 +363,8 @@ namespace FSM
 		/// When no condition is required, it creates a TransitionBase for optimal performance,
 		/// otherwise a Transition object.
 		/// </remarks>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public static void AddExitTriggerTransitionFromAny<TOwnId, TStateId, TEvent>(
 			this StateMachine<TOwnId, TStateId, TEvent> fsm,
 			TEvent trigger,

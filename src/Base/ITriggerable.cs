@@ -14,6 +14,7 @@ namespace FSM
 		void Trigger(TEvent trigger);
 	}
 
+	/// <inheritdoc />
 	public interface ITriggerable : ITriggerable<string>
 	{
 	}

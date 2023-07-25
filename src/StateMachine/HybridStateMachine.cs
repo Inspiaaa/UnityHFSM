@@ -34,11 +34,7 @@ namespace FSM
 		/// Determines whether the state machine as a state of a parent state machine is allowed to instantly
 		/// exit on a transition (false), or if it should wait until an explicit exit transition occurs.
 		/// </param>
-		/// <param name="isGhostState">
-		/// If true, this state becomes a ghost state, a state the state machine does not want to stay in.
-		/// That means that if the fsm transitions to this state, it will test all outgoing transitions instantly
-		/// and not wait until the next OnLogic call.
-		/// </param>
+		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public HybridStateMachine(
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> beforeOnEnter = null,
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> afterOnEnter = null,
@@ -117,7 +113,7 @@ namespace FSM
 		}
 
 		/// <summary>
-		///  Adds an action that can be called with RunAction<T>(). This overload allows you to
+		///  Adds an action that can be called with OnAction<T>(). This overload allows you to
 		///  run a function that takes one data parameter.
 		///  The action is run after the sub-state's action.
 		/// </summary>
@@ -135,8 +131,10 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class HybridStateMachine<TStateId, TEvent> : HybridStateMachine<TStateId, TStateId, TEvent>
 	{
+		/// <inheritdoc />
 		public HybridStateMachine(
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnEnter = null,
@@ -144,7 +142,7 @@ namespace FSM
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnLogic = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnLogic = null,
 
-			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnExit= null,
+			Action<HybridStateMachine<TStateId, TStateId, TEvent>> beforeOnExit = null,
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnExit = null,
 
 			bool needsExitTime = false,
@@ -159,8 +157,10 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class HybridStateMachine<TStateId> : HybridStateMachine<TStateId, TStateId, string>
 	{
+		/// <inheritdoc />
 		public HybridStateMachine(
 			Action<HybridStateMachine<TStateId, TStateId, string>> beforeOnEnter = null,
 			Action<HybridStateMachine<TStateId, TStateId, string>> afterOnEnter = null,
@@ -183,8 +183,10 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class HybridStateMachine : HybridStateMachine<string, string, string>
 	{
+		/// <inheritdoc />
 		public HybridStateMachine(
 			Action<HybridStateMachine<string, string, string>> beforeOnEnter = null,
 			Action<HybridStateMachine<string, string, string>> afterOnEnter = null,

@@ -142,6 +142,7 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class StateWrapper : StateWrapper<string, string>
 	{
 		public StateWrapper(

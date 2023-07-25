@@ -102,6 +102,7 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class TransitionWrapper : TransitionWrapper<string>
 	{
 		public TransitionWrapper(

@@ -11,6 +11,7 @@ namespace FSM
 		void OnAction<TData>(TEvent trigger, TData data);
 	}
 
+	/// <inheritdoc />
 	public interface IActionable : IActionable<string>
 	{
 	}

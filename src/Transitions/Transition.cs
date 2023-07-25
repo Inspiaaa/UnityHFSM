@@ -7,7 +7,6 @@ namespace FSM
 	/// </summary>
 	public class Transition<TStateId> : TransitionBase<TStateId>
 	{
-
 		public Func<Transition<TStateId>, bool> condition;
 		public Action<Transition<TStateId>> beforeTransition;
 		public Action<Transition<TStateId>> afterTransition;
@@ -15,14 +14,11 @@ namespace FSM
 		/// <summary>
 		/// Initialises a new instance of the Transition class
 		/// </summary>
-		/// <param name="from">The name / identifier of the active state</param>
-		/// <param name="to">The name / identifier of the next state</param>
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state</param>
 		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
 		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>
-		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
-		/// 	=> Forces an instant transition</param>
+		/// <inheritdoc cref="TransitionBase{TStateId}(TStateId, TStateId, bool)" />
 		public Transition(
 				TStateId from,
 				TStateId to,
@@ -48,8 +44,10 @@ namespace FSM
 		public override void AfterTransition() => afterTransition?.Invoke(this);
 	}
 
+	/// <inheritdoc />
 	public class Transition : Transition<string>
 	{
+		/// <inheritdoc />
 		public Transition(
 			string @from,
 			string to,

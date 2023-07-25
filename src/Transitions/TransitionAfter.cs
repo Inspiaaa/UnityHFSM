@@ -8,7 +8,6 @@ namespace FSM
 	/// </summary>
 	public class TransitionAfter<TStateId> : TransitionBase<TStateId>
 	{
-
 		public float delay;
 		public ITimer timer;
 
@@ -17,20 +16,15 @@ namespace FSM
 		public Action<TransitionAfter<TStateId>> beforeTransition;
 		public Action<TransitionAfter<TStateId>> afterTransition;
 
-
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfter class
 		/// </summary>
-		/// <param name="from">The name / identifier of the active state</param>
-		/// <param name="to">The name / identifier of the next state</param>
 		/// <param name="delay">The delay that must elapse before the transition can occur</param>
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
-		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
-		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>
-		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
-		/// 	=> Forces an instant transition</param>
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public TransitionAfter(
 				TStateId from,
 				TStateId to,
@@ -67,8 +61,10 @@ namespace FSM
 		public override void AfterTransition() => afterTransition?.Invoke(this);
 	}
 
+	/// <inheritdoc />
 	public class TransitionAfter : TransitionAfter<string>
 	{
+		/// <inheritdoc />
 		public TransitionAfter(
 			string @from,
 			string to,

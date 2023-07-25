@@ -96,8 +96,10 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class State : State<string, string>
 	{
+		/// <inheritdoc />
 		public State(
 			Action<State<string, string>> onEnter = null,
 			Action<State<string, string>> onLogic = null,

@@ -54,8 +54,10 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class ReverseTransition : ReverseTransition<string>
 	{
+		/// <inheritdoc />
 		public ReverseTransition(
 			TransitionBase<string> wrappedTransition,
 			bool shouldInitWrappedTransition = true)

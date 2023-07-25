@@ -54,19 +54,27 @@ namespace FSM
 			return true;
 		}
 
+		/// <summary>
+		/// Callback method that is called just before the transition happens.
+		/// </summary>
 		public virtual void BeforeTransition()
 		{
 
 		}
 
+		/// <summary>
+		/// Callback method that is called just after the transition happens.
+		/// </summary>
 		public virtual void AfterTransition()
 		{
 
 		}
 	}
 
+	/// <inheritdoc />
 	public class TransitionBase : TransitionBase<string>
 	{
+		/// <inheritdoc />
 		public TransitionBase(string @from, string to, bool forceInstantly = false) : base(@from, to, forceInstantly)
 		{
 		}

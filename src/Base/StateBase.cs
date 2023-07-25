@@ -13,7 +13,7 @@ namespace FSM
 		public IStateMachine fsm;
 
 		/// <summary>
-		/// Initialises a new instance of the BaseState class
+		/// Initialises a new instance of the StateBase class
 		/// </summary>
 		/// <param name="needsExitTime">Determines if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until
@@ -63,7 +63,7 @@ namespace FSM
 		/// (Only if needsExitTime is true):
 		/// 	Called when a state transition from this state to another state should happen.
 		/// 	If it can exit, it should call fsm.StateCanExit()
-		/// 	and if it can not exit right now, it should call fsm.StateCanExit() later in OnLogic().
+		/// 	and if it can not exit right now, it should call fsm.StateCanExit() later in e.g. OnLogic().
 		/// </summary>
 		public virtual void OnExitRequest()
 		{
@@ -82,8 +82,10 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class StateBase : StateBase<string>
 	{
+		/// <inheritdoc />
 		public StateBase(bool needsExitTime, bool isGhostState = false)
 			: base(needsExitTime, isGhostState)
 		{

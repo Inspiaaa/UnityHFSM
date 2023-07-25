@@ -7,6 +7,7 @@ namespace FSM
 	/// <summary>
 	/// Base class of states that support custom actions.
 	/// </summary>
+	/// <inheritdoc />
 	public class ActionState<TStateId, TEvent> : StateBase<TStateId>, IActionable<TEvent>
 	{
 		// Lazy initialized
@@ -68,6 +69,7 @@ namespace FSM
 			=> actionStorage?.RunAction<TData>(trigger, data);
 	}
 
+	/// <inheritdoc />
 	public class ActionState<TStateId> : ActionState<TStateId, string>
 	{
 		public ActionState(bool needsExitTime, bool isGhostState = false)
@@ -76,6 +78,7 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class ActionState : ActionState<string, string>
 	{
 		public ActionState(bool needsExitTime, bool isGhostState = false)

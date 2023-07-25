@@ -19,16 +19,14 @@ namespace FSM
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfterDynamic class
 		/// </summary>
-		/// <param name="from">The name / identifier of the active state</param>
-		/// <param name="to">The name / identifier of the next state</param>
 		/// <param name="delay">A function that dynamically computes the delay time</param>
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
 		/// <param name="onTransition">Callback function that is called just before the transition happens.</param>
-		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>
-		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true
-		/// 	=> Forces an instant transition</param>
+		/// <param name="afterTransition">Callback function that is called just after the transition happens.</param>#
+		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
+		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public TransitionAfterDynamic(
 				TStateId from,
 				TStateId to,
@@ -65,8 +63,10 @@ namespace FSM
 		public override void AfterTransition() => afterTransition?.Invoke(this);
 	}
 
+	/// <inheritdoc />
 	public class TransitionAfterDynamic : TransitionAfterDynamic<string>
 	{
+		/// <inheritdoc />
 		public TransitionAfterDynamic(
 			string @from,
 			string to,
