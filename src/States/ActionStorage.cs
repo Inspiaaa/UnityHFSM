@@ -24,7 +24,7 @@ namespace FSM
 		private TTarget TryGetAndCastAction<TTarget>(TEvent trigger) where TTarget : Delegate
 		{
 			Delegate action = null;
-			actionsByEvent?.TryGetValue(trigger, out action);
+			actionsByEvent.TryGetValue(trigger, out action);
 
 			if (action is null) {
 				return null;
