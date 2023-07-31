@@ -12,7 +12,7 @@ namespace FSM.Tests
 		private (TransitionAfter transition, TestTimer timer)
 				CreateTransitionAfterWithDelay(float delay, Func<TransitionAfter<string>, bool> condition = null)
 		{
-			TransitionAfter transition = new TransitionAfter("A", "B", delay: 0.5f, condition: condition);
+			TransitionAfter transition = new TransitionAfter("A", "B", delay: delay, condition: condition);
 			transition.OnEnter();
 			TestTimer timer = new TestTimer();
 			transition.timer = timer;
