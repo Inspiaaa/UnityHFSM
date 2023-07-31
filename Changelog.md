@@ -103,6 +103,14 @@
   var state = new CoState(mono, myCoroutine, loop: false);
   ```
 
+- Option in `TransitionAfterDynamic` to only evaluate the dynamic delay when the `from` state enters. This is useful, e.g. when the delay of a transition should be random. E.g.
+  
+  ```csharp
+  fsm.AddTransition(new TransitionAfterDynamic(
+      "A", "B", t => Random.Range(2, 10), onlyEvaluateDelayOnEnter: true
+  ));
+  ```
+
 ### Improved
 
 - `canExit` feature in `State` and `CoState`: The custom `canExit` function that determines when the state is ready to exit to allow for another transition is now called on every frame when a transition is pending and not only `OnExitRequest`. This is more intuitive and can therefore prevent some unexpected behaviour from emerging.
