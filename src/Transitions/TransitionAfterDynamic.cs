@@ -9,6 +9,8 @@ namespace FSM
 	public class TransitionAfterDynamic<TStateId> : TransitionBase<TStateId>
 	{
 		public ITimer timer;
+		private float delay;
+		public bool onlyEvaluateDelayOnEnter;
 		public Func<TransitionAfterDynamic<TStateId>, float> delayCalculator;
 
 		public Func<TransitionAfterDynamic<TStateId>, bool> condition;
@@ -23,6 +25,8 @@ namespace FSM
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.
 		/// 	It is only called after the delay has elapsed and is optional.</param>
+		/// <param name="onlyEvaluateDelayOnEnter">If true, the dynamic delay is only recalculated
+		/// 	when the <c>from</c> enters. If false, the delay is evaluated in each logic step.</param>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
 		public TransitionAfterDynamic(
@@ -30,12 +34,14 @@ namespace FSM
 				TStateId to,
 				Func<TransitionAfterDynamic<TStateId>, float> delay,
 				Func<TransitionAfterDynamic<TStateId>, bool> condition = null,
+				bool onlyEvaluateDelayOnEnter = false,
 				Action<TransitionAfterDynamic<TStateId>> onTransition = null,
 				Action<TransitionAfterDynamic<TStateId>> afterTransition = null,
 				bool forceInstantly = false) : base(from, to, forceInstantly)
 		{
 			this.delayCalculator = delay;
 			this.condition = condition;
+			this.onlyEvaluateDelayOnEnter = onlyEvaluateDelayOnEnter;
 			this.beforeTransition = onTransition;
 			this.afterTransition = afterTransition;
 			this.timer = new Timer();
@@ -44,11 +50,20 @@ namespace FSM
 		public override void OnEnter()
 		{
 			timer.Reset();
+			if (onlyEvaluateDelayOnEnter)
+			{
+				delay = delayCalculator(this);
+			}
 		}
 
 		public override bool ShouldTransition()
 		{
-			if (timer.Elapsed < delayCalculator(this))
+			if (! onlyEvaluateDelayOnEnter)
+			{
+				delay = delayCalculator(this);
+			}
+
+			if (timer.Elapsed < delay)
 				return false;
 
 			if (condition == null)
@@ -70,6 +85,7 @@ namespace FSM
 			string to,
 			Func<TransitionAfterDynamic<string>, float> delay,
 			Func<TransitionAfterDynamic<string>, bool> condition = null,
+			bool onlyEvaluateDelayOnEnter = false,
 			Action<TransitionAfterDynamic<string>> onTransition = null,
 			Action<TransitionAfterDynamic<string>> afterTransition = null,
 			bool forceInstantly = false) : base(
@@ -77,6 +93,7 @@ namespace FSM
 				to,
 				delay,
 				condition,
+				onlyEvaluateDelayOnEnter: onlyEvaluateDelayOnEnter,
 				onTransition: onTransition,
 				afterTransition: afterTransition,
 				forceInstantly: forceInstantly)
