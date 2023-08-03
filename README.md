@@ -11,7 +11,7 @@
     <img src="https://img.shields.io/npm/v/com.inspiaaa.unityhfsm?label=openupm&registry_uri=https://package.openupm.com" /></a>
 </p>
 
-A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
+A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (lambdas) for **rapid prototyping**.
 
 Thanks to overloading, it minimises boilerplate code while still supporting **generics**.
 
@@ -73,17 +73,24 @@ To get started, download the latest version of UnityHFSM from the [Releases](htt
 To add OpenUPM to your project:
 
 - Open `Edit/Project Settings/Package Manager`
+
 - Add a new Scoped Registry:
+
   ```
   Name: OpenUPM
   URL:  https://package.openupm.com/
   Scope(s): com.inspiaaa.unityhfsm
   ```
+
 - Click <kbd>Save</kbd>
+
 - Open Package Manager
+
 - Select ``My Registries`` in dropdown top left
+
 - Select ``UnityHFSM`` and click ``Install``
-</details>
+
+  </details>
 
 <details>
 <summary>Add from GitHub | <em>no updates through PackMan</em></summary>
@@ -110,7 +117,7 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
 
 Here's a simple state machine for an enemy spy in your game.
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5e1beed4003e3350c9e9a58af0a07f2fac779a7b/docs/StateDiagrams/EnemySpyExample/Simple.png)
+![](docs/StateDiagrams/EnemySpyExample/Simple.png)
 
 As you can see the enemy will try to stay outside of the player's scanning range while extracting intel. When the player goes too far away, it will follow the player again.
 
@@ -263,7 +270,7 @@ Because StateMachine inherits from StateBase, it can be treated as a normal stat
 
 ### Expanding on the previous example
 
-![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5e1beed4003e3350c9e9a58af0a07f2fac779a7b/docs/StateDiagrams/EnemySpyExample/Hierarchical.png)
+![](docs/StateDiagrams/EnemySpyExample/Hierarchical.png)
 
 So that you can see a visual difference, the enemy should be spinning when it enters the "SendData" state.
 
