@@ -1,4 +1,4 @@
-![HFSM for Unity](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/5f7b75c48c74b72bb43ee63af20741192f89a679/diagrams/Banner.jpg)
+![HFSM for Unity](docs/Banner.png)
 
 <p align="center">
   <a href="https://github.com/Inspiaaa/UnityHFSM">
@@ -8,7 +8,7 @@
   <a href="https://github.com/Inspiaaa/UnityHFSM/releases" alt="GitHub release">
     <img src="https://img.shields.io/github/release/Inspiaaa/UnityHFSM.svg" /></a>
   <a href="https://openupm.com/packages/com.inspiaaa.unityhfsm/">
-    <img src="https://img.shields.io/npm/v/com.inspiaaa.unityhfsm?label=openupm&amp;registry_uri=https://package.openupm.com" /></a>
+    <img src="https://img.shields.io/npm/v/com.inspiaaa.unityhfsm?label=openupm&registry_uri=https://package.openupm.com" /></a>
 </p>
 
 A simple yet powerful **hierarchical finite state machine** for the Unity game engine. It is scalable and customisable by being **class-based**, but also supports functions (or lambdas) for **fast prototyping**.
@@ -74,11 +74,11 @@ To add OpenUPM to your project:
 
 - Open `Edit/Project Settings/Package Manager`
 - Add a new Scoped Registry:
-```
-Name: OpenUPM
-URL:  https://package.openupm.com/
-Scope(s): com.inspiaaa.unityhfsm
-```
+  ```
+  Name: OpenUPM
+  URL:  https://package.openupm.com/
+  Scope(s): com.inspiaaa.unityhfsm
+  ```
 - Click <kbd>Save</kbd>
 - Open Package Manager
 - Select ``My Registries`` in dropdown top left
