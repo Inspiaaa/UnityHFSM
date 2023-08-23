@@ -2,7 +2,7 @@
 
 ---
 
-## In progress (1.10)
+## In progress (2.0)
 
 ### Added
 
@@ -22,7 +22,7 @@
   fsm.OnLogic(); // Prints "B" and then "C"
   ```
 
-- **Exit transitions**: Exit transitions finally provide an easy and powerful way to define the exit conditions for nested state machines, essentially levelling up the mechanics behind hierarchical state machines. Previously, the rule that determined when a nested state machine that `needsExitTime` can exit, was implicit, not versatile, and not in the control of the developer. 
+- **Exit transitions**: Exit transitions finally provide an easy and powerful way to define the exit conditions for nested state machines, essentially levelling up the mechanics behind hierarchical state machines. Previously, the rule that determined when a nested state machine that `needsExitTime` can exit, was implicit, not versatile, and not in the control of the developer.
   
   ```csharp
   var nested = new StateMachine(needsExitTime: true);
