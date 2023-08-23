@@ -13,7 +13,6 @@ namespace FSM
 			/// It behaves like Input.GetKey(...).
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch.</param>
-			/// <returns></returns>
 			public Down(
 					TStateId from,
 					TStateId to,
