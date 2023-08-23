@@ -18,7 +18,7 @@ namespace FSM
 		/// Initialises a new instance of the TransitionBase class.
 		/// </summary>
 		/// <param name="from">The name / identifier of the active state.</param>
-		/// <param name="to">The name / identifier of the next stat.e</param>
+		/// <param name="to">The name / identifier of the next state.</param>
 		/// <param name="forceInstantly">Ignores the needsExitTime of the active state if forceInstantly is true.
 		/// 	=> Forces an instant transition</param>
 		public TransitionBase(TStateId from, TStateId to, bool forceInstantly = false)
