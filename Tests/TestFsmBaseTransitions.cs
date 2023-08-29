@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TestTransitions
 	{

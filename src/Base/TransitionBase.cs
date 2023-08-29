@@ -1,5 +1,5 @@
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// The base class of all transitions.

@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TestCanExit
 	{

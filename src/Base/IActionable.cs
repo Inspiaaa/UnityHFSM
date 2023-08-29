@@ -1,5 +1,5 @@
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// Interface for states that support custom actions. Actions are like the

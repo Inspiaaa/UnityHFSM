@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// A class that allows you to run additional functions (companion code)

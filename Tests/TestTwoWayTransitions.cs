@@ -1,7 +1,7 @@
 using UnityEngine;
 using NUnit.Framework;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TesTwoWayTransitions
 	{

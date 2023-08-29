@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace FSM
+namespace UnityHFSM
 {
 	public static class TransitionOnMouse
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// A StateMachine that is also like a normal State in the sense that it allows you to run

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using FSM.Exceptions;
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// Base class of states that support custom actions.

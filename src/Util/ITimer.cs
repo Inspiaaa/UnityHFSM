@@ -1,5 +1,5 @@
 
-namespace FSM
+namespace UnityHFSM
 {
 	public interface ITimer
 	{

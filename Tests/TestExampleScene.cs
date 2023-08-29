@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	/*
 	Mermaid state diagram for reference:

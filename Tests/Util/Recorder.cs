@@ -2,9 +2,9 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Text;
-using FSM;
+using UnityHFSM;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
     public class Recorder<TStateId> {
         private enum StateAction {

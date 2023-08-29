@@ -1,6 +1,6 @@
 using System;
 
-namespace FSM
+namespace UnityHFSM
 {
 	public static class StateMachineShortcuts
 	{

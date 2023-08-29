@@ -7,7 +7,7 @@ using System.Collections.Generic;
  * Version: 1.9.0
  */
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// A finite state machine that can also be used as a state of a parent state machine to create
@@ -142,7 +142,7 @@ namespace FSM
 		private void EnsureIsInitializedFor(string context)
 		{
 			if (activeState == null)
-				throw FSM.Exceptions.Common.NotInitialized(context);
+				throw UnityHFSM.Exceptions.Common.NotInitialized(context);
 		}
 
 		/// <summary>
@@ -189,7 +189,7 @@ namespace FSM
 
 			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw FSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Switching states");
+				throw UnityHFSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Switching states");
 			}
 
 			activeTransitions = bundle.transitions ?? noTransitions;
@@ -356,7 +356,7 @@ namespace FSM
 		{
 			if (!startState.hasState)
 			{
-				throw FSM.Exceptions.Common.MissingStartState(context: "Running OnEnter of the state machine.");
+				throw UnityHFSM.Exceptions.Common.MissingStartState(context: "Running OnEnter of the state machine.");
 			}
 
 			// Clear any previous pending transition from the last run.
@@ -722,7 +722,7 @@ namespace FSM
 
 			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw FSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Getting a state");
+				throw UnityHFSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Getting a state");
 			}
 
 			return bundle.state;
@@ -737,7 +737,7 @@ namespace FSM
 
 				if (subFsm == null)
 				{
-					throw FSM.Exceptions.Common.QuickIndexerMisusedForGettingState(name.ToString());
+					throw UnityHFSM.Exceptions.Common.QuickIndexerMisusedForGettingState(name.ToString());
 				}
 
 				return subFsm;

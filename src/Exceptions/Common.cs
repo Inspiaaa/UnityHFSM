@@ -1,5 +1,5 @@
 
-namespace FSM.Exceptions
+namespace UnityHFSM.Exceptions
 {
 	public static class Common
 	{

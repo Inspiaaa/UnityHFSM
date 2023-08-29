@@ -1,6 +1,6 @@
 using System;
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// The "normal" state class that can run code on Enter, on Logic and on Exit,
