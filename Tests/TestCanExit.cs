@@ -14,9 +14,6 @@ namespace UnityHFSM.Tests
 			fsm = new StateMachine();
 		}
 
-		// TODO: canExit instantly on transition
-		// TODO: canExit later
-
 		[Test]
 		public void Test_fsm_waits_on_state_with_needsExitTime_when_canExit_false()
 		{
