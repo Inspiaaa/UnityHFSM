@@ -63,7 +63,7 @@ namespace FSM.Samples
                 {
                     // When the state has been active for more than 5 seconds,
                     // notify the fsm that the state can cleanly exit
-                    if (state.timer > 5)
+                    if (state.timer.Elapsed > 5)
                         state.fsm.StateCanExit();
 
                     // Make the enemy turn at 100 degrees per second
@@ -87,7 +87,7 @@ namespace FSM.Samples
             extractIntel.AddState("CollectData",
                 onLogic: (state) =>
                 {
-                    if (state.timer > 5) state.fsm.StateCanExit();
+                    if (state.timer.Elapsed > 5) state.fsm.StateCanExit();
                 },
                 needsExitTime: true
             );
