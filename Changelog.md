@@ -119,8 +119,11 @@
 
 - More documentation for classes / parameters / ... directly visible in the IDE
 
+- Internal refactors making the code easier to understand and read
+
 ### Changed
 
+- **Important:** The namespace of UnityHFSM has changed from `FSM` to `UnityHFSM`. This means that you have to use `using UnityHFSM` now.
 - The parameters `onEnter`, `onLogic`, ... in the constructor of the `HybridStateMachine` class are now equivalent to the new parameters `afterOnEnter`, `afterOnLogic`, ...
 - The `onLogic` parameter in the constructor of the `CoState` class is now called `coroutine`, is the second parameter, and no longer optional.
 
