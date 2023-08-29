@@ -86,11 +86,13 @@ namespace UnityHFSM
 				(state as ITriggerable<TEvent>)?.Trigger(trigger);
 			}
 
-			public void OnAction(TEvent trigger) {
+			public void OnAction(TEvent trigger)
+			{
 				(state as IActionable<TEvent>)?.OnAction(trigger);
 			}
 
-			public void OnAction<TData>(TEvent trigger, TData data) {
+			public void OnAction<TData>(TEvent trigger, TData data)
+			{
 				(state as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
 			}
 		}

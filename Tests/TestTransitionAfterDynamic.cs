@@ -54,7 +54,7 @@ namespace UnityHFSM.Tests
 				if (index >= delays.Length)
 					return delays[delays.Length - 1];
 
-				return delays[index ++];
+				return delays[index++];
 			};
 		}
 

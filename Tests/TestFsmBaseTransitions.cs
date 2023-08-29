@@ -129,7 +129,8 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_activating_non_existent_trigger_does_not_fail() {
+		public void Test_activating_non_existent_trigger_does_not_fail()
+		{
 			fsm.AddState("A");
 			fsm.Init();
 			Assert.DoesNotThrow(() => fsm.Trigger("Trigger"));

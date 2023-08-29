@@ -45,7 +45,7 @@ namespace UnityHFSM
 
 				List<TransitionBase<TStateId>> transitionsOfTrigger;
 
-				if (! triggerToTransitions.TryGetValue(trigger, out transitionsOfTrigger))
+				if (!triggerToTransitions.TryGetValue(trigger, out transitionsOfTrigger))
 				{
 					transitionsOfTrigger = new List<TransitionBase<TStateId>>();
 					triggerToTransitions.Add(trigger, transitionsOfTrigger);
@@ -55,7 +55,8 @@ namespace UnityHFSM
 			}
 		}
 
-		private struct PendingTransition {
+		private struct PendingTransition
+		{
 			public TStateId targetState;
 
 			public bool isExitTransition;
@@ -151,7 +152,7 @@ namespace UnityHFSM
 		/// </summary>
 		public void StateCanExit()
 		{
-			if (! pendingTransition.isPending)
+			if (!pendingTransition.isPending)
 				return;
 
 			ITransitionListener listener = pendingTransition.listener;
@@ -163,7 +164,8 @@ namespace UnityHFSM
 				PerformVerticalTransition();
 				listener?.AfterTransition();
 			}
-			else {
+			else
+			{
 				TStateId state = pendingTransition.targetState;
 
 				// When the pending state is a ghost state, ChangeState() will have
@@ -272,7 +274,8 @@ namespace UnityHFSM
 				PerformVerticalTransition();
 				listener?.AfterTransition();
 			}
-			else {
+			else
+			{
 				pendingTransition = PendingTransition.CreateForExit(listener);
 				activeState.OnExitRequest();
 			}
@@ -284,14 +287,16 @@ namespace UnityHFSM
 		/// </summary>
 		private bool TryTransition(TransitionBase<TStateId> transition)
 		{
-			if (transition.isExitTransition) {
+			if (transition.isExitTransition)
+			{
 				if (fsm == null || !fsm.HasPendingTransition || !transition.ShouldTransition())
 					return false;
 
 				RequestExit(transition.forceInstantly, transition as ITransitionListener);
 				return true;
 			}
-			else {
+			else
+			{
 				if (!transition.ShouldTransition())
 					return false;
 
@@ -364,14 +369,14 @@ namespace UnityHFSM
 
 			ChangeState(startState.state);
 
-			for (int i = 0; i < transitionsFromAny.Count; i ++)
+			for (int i = 0; i < transitionsFromAny.Count; i++)
 			{
 				transitionsFromAny[i].OnEnter();
 			}
 
 			foreach (List<TransitionBase<TStateId>> transitions in triggerTransitionsFromAny.Values)
 			{
-				for (int i = 0; i < transitions.Count; i ++)
+				for (int i = 0; i < transitions.Count; i++)
 				{
 					transitions[i].OnEnter();
 				}
@@ -432,7 +437,7 @@ namespace UnityHFSM
 		{
 			StateBundle bundle;
 
-			if (! stateBundlesByName.TryGetValue(name, out bundle))
+			if (!stateBundlesByName.TryGetValue(name, out bundle))
 			{
 				bundle = new StateBundle();
 				stateBundlesByName.Add(name, bundle);
@@ -625,7 +630,8 @@ namespace UnityHFSM
 		/// </summary>
 		/// <param name="transition">The transition instance. The "from" and "to" fields can be
 		/// 	left empty, as they have no meaning in this context.</param>
-		public void AddExitTriggerTransitionFromAny(TEvent trigger, TransitionBase<TStateId> transition) {
+		public void AddExitTriggerTransitionFromAny(TEvent trigger, TransitionBase<TStateId> transition)
+		{
 			transition.isExitTransition = true;
 			AddTriggerTransitionFromAny(trigger, transition);
 		}
@@ -644,7 +650,7 @@ namespace UnityHFSM
 
 			if (triggerTransitionsFromAny.TryGetValue(trigger, out triggerTransitions))
 			{
-				for (int i = 0; i < triggerTransitions.Count; i ++)
+				for (int i = 0; i < triggerTransitions.Count; i++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
@@ -658,7 +664,7 @@ namespace UnityHFSM
 
 			if (activeTriggerTransitions.TryGetValue(trigger, out triggerTransitions))
 			{
-				for (int i = 0; i < triggerTransitions.Count; i ++)
+				for (int i = 0; i < triggerTransitions.Count; i++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
@@ -744,8 +750,10 @@ namespace UnityHFSM
 			}
 		}
 
-		public override string GetActiveHierarchyPath() {
-			if (activeState == null) {
+		public override string GetActiveHierarchyPath()
+		{
+			if (activeState == null)
+			{
 				// When the state machine is not active, then the active hierarchy path
 				// is empty.
 				return "";

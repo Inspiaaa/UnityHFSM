@@ -58,7 +58,7 @@ namespace UnityHFSM
 
 		public override bool ShouldTransition()
 		{
-			if (! onlyEvaluateDelayOnEnter)
+			if (!onlyEvaluateDelayOnEnter)
 			{
 				delay = delayCalculator(this);
 			}

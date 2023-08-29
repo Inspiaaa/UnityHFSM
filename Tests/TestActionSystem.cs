@@ -67,7 +67,8 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_calling_action_with_wrong_param_type_fails() {
+		public void Test_calling_action_with_wrong_param_type_fails()
+		{
 			int value = 0;
 			var state = new ActionState(false).AddAction<int>("Action", param => value = param);
 

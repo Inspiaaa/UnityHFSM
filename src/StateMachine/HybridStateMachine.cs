@@ -111,9 +111,9 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		///  Adds an action that can be called with OnAction<T>(). This overload allows you to
-		///  run a function that takes one data parameter.
-		///  The action is run before the sub-state's action.
+		/// Adds an action that can be called with OnAction<T>(). This overload allows you to
+		/// run a function that takes one data parameter.
+		/// The action is run before the sub-state's action.
 		/// </summary>
 		/// <param name="trigger">Name of the action</param>
 		/// <param name="action">Function that should be called when the action is run</param>

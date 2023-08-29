@@ -40,7 +40,7 @@ namespace UnityHFSM
 
 		public override bool ShouldTransition()
 		{
-			return ! wrappedTransition.ShouldTransition();
+			return !wrappedTransition.ShouldTransition();
 		}
 
 		public override void BeforeTransition()

@@ -26,13 +26,15 @@ namespace UnityHFSM
 			Delegate action = null;
 			actionsByEvent.TryGetValue(trigger, out action);
 
-			if (action is null) {
+			if (action is null)
+			{
 				return null;
 			}
 
 			TTarget target = action as TTarget;
 
-			if (target is null) {
+			if (target is null)
+			{
 				throw new InvalidOperationException(ExceptionFormatter.Format(
 					context: $"Trying to call the action '{trigger}'.",
 					problem: $"The expected argument type ({typeof(TTarget)}) does not match the "

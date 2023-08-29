@@ -17,7 +17,8 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_fsm_performs_one_transition_for_non_ghost_state() {
+		public void Test_fsm_performs_one_transition_for_non_ghost_state()
+		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.TrackedState);
 			fsm.AddState("C", recorder.TrackedState);
@@ -39,7 +40,8 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_fsm_quickly_transitions_over_ghost_state_for_on_logic() {
+		public void Test_fsm_quickly_transitions_over_ghost_state_for_on_logic()
+		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.Track(new StateBase(needsExitTime: false, isGhostState: true)));
 			fsm.AddState("C", recorder.Track(new StateBase(needsExitTime: false, isGhostState: true)));
@@ -67,7 +69,8 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_fsm_respects_needsExitTime_of_ghost_state() {
+		public void Test_fsm_respects_needsExitTime_of_ghost_state()
+		{
 			fsm.AddState("A", recorder.TrackedState);
 			fsm.AddState("B", recorder.Track(
 				new State(needsExitTime: true, isGhostState: false)
