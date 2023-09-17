@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TestTransitions
 	{
@@ -78,7 +78,7 @@ namespace FSM.Tests
 		[Test]
 		public void Test_request_transition_with_a_nested_fsm()
 		{
-			var nested = new StateMachine();
+			var nested = new StateMachine(needsExitTime: false);
 			fsm.AddState("A", recorder.Track(nested));
 			fsm.AddState("B", recorder.TrackedState);
 			nested.AddState("A.X", recorder.TrackedState);
@@ -129,7 +129,8 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void Test_activating_non_existent_trigger_does_not_fail() {
+		public void Test_activating_non_existent_trigger_does_not_fail()
+		{
 			fsm.AddState("A");
 			fsm.Init();
 			Assert.DoesNotThrow(() => fsm.Trigger("Trigger"));

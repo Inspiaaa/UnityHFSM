@@ -1,5 +1,5 @@
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// Interface for states that support custom actions. Actions are like the
@@ -11,6 +11,7 @@ namespace FSM
 		void OnAction<TData>(TEvent trigger, TData data);
 	}
 
+	/// <inheritdoc />
 	public interface IActionable : IActionable<string>
 	{
 	}

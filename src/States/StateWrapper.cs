@@ -1,6 +1,6 @@
 using System;
 
-namespace FSM
+namespace UnityHFSM
 {
 	/// <summary>
 	/// A class that allows you to run additional functions (companion code)
@@ -86,11 +86,13 @@ namespace FSM
 				(state as ITriggerable<TEvent>)?.Trigger(trigger);
 			}
 
-			public void OnAction(TEvent trigger) {
+			public void OnAction(TEvent trigger)
+			{
 				(state as IActionable<TEvent>)?.OnAction(trigger);
 			}
 
-			public void OnAction<TData>(TEvent trigger, TData data) {
+			public void OnAction<TData>(TEvent trigger, TData data)
+			{
 				(state as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
 			}
 		}
@@ -142,6 +144,7 @@ namespace FSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class StateWrapper : StateWrapper<string, string>
 	{
 		public StateWrapper(

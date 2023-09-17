@@ -1,9 +1,10 @@
 
-namespace FSM
+namespace UnityHFSM
 {
 	public interface ITimer
 	{
-		float Elapsed {
+		float Elapsed
+		{
 			get;
 		}
 

@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TestTransitionAfter
 	{
 		private (TransitionAfter transition, TestTimer timer)
 				CreateTransitionAfterWithDelay(float delay, Func<TransitionAfter<string>, bool> condition = null)
 		{
-			TransitionAfter transition = new TransitionAfter("A", "B", delay: 0.5f, condition: condition);
+			TransitionAfter transition = new TransitionAfter("A", "B", delay: delay, condition: condition);
 			transition.OnEnter();
 			TestTimer timer = new TestTimer();
 			transition.timer = timer;

@@ -1,6 +1,10 @@
 
-namespace FSM
+namespace UnityHFSM
 {
+	/// <summary>
+	/// Interface for states that can receive events (triggers), such as StateMachines.
+	/// </summary>
+	/// <typeparam name="TEvent"></typeparam>
 	public interface ITriggerable<TEvent>
 	{
 		/// <summary>
@@ -10,6 +14,7 @@ namespace FSM
 		void Trigger(TEvent trigger);
 	}
 
+	/// <inheritdoc />
 	public interface ITriggerable : ITriggerable<string>
 	{
 	}

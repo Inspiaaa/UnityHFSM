@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TestActions
 	{
@@ -25,6 +25,15 @@ namespace FSM.Tests
 			Assert.IsFalse(called);
 			state.OnAction("Action");
 			Assert.IsTrue(called);
+		}
+
+		[Test]
+		public void Test_calling_non_existant_action_does_not_throw_exception_when_no_actions_added()
+		{
+			var state = new ActionState(false);
+
+			Assert.DoesNotThrow(() => state.OnAction("NonExistantAction"));
+			Assert.DoesNotThrow(() => state.OnAction<string>("NonExistantAction", ""));
 		}
 
 		[Test]
@@ -58,7 +67,8 @@ namespace FSM.Tests
 		}
 
 		[Test]
-		public void Test_calling_action_with_wrong_param_type_fails() {
+		public void Test_calling_action_with_wrong_param_type_fails()
+		{
 			int value = 0;
 			var state = new ActionState(false).AddAction<int>("Action", param => value = param);
 

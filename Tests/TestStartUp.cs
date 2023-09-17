@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
 	public class TestStartUp
 	{
@@ -80,13 +80,13 @@ namespace FSM.Tests
 		{
 			fsm.AddState("A");
 			StateBase<string> activeState;
-			Assert.Throws<FSM.Exceptions.StateMachineNotInitializedException>(() => activeState = fsm.ActiveState);
+			Assert.Throws<UnityHFSM.Exceptions.StateMachineException>(() => activeState = fsm.ActiveState);
 		}
 
 		[Test]
 		public void Test_calling_init_before_adding_a_state_fails()
 		{
-			Assert.Throws<InvalidOperationException>(() => fsm.Init());
+			Assert.Throws<UnityHFSM.Exceptions.StateMachineException>(() => fsm.Init());
 		}
 	}
 }
