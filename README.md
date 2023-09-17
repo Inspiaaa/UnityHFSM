@@ -19,32 +19,6 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 ---
 
-**In the wiki:**
-
-- [Full overview over features](https://github.com/Inspiaaa/UnityHFSM/wiki/Feature-Overview)
-
-- [How to use UnityHFSM outside of Unity](https://github.com/Inspiaaa/UnityHFSM/wiki/Using-UnityHFSM-outside-of-Unity)
-
-**Table of contents:**
-
-- [Fast prototyping](#simple-state-machine)
-
-- [Hierarchical features](#hierarchical-state-machine)
-
-- [Timing of state changes](#timing-of-state-changes)
-
-- [Hierarchical timing](#hierarchical-timing)
-
-- [Multiple state change patterns](#state-change-patterns)
-
-- [Control flow of OnLogic](#control-flow-of-onlogic)
-
-- [Unity **coroutines**](#unity-coroutines)
-
-- [Scalable (class-based)](#class-based-architecture)
-
-- [Generics](#generics)
-
 ### Why use UnityHFSM?
 
 - State machines are an amazingly easy way to write and organise game logic. (As soon as you have states, e.g. Walk, Run, Sneak, Jump, you can use a state machine)
@@ -70,6 +44,32 @@ It has a special focus on the temporal aspects of state transitions, making it i
 - By being hierarchical, it can reduce the amount of duplicate code between states
 
 ---
+
+**In the wiki:**
+
+- [Full overview over features](https://github.com/Inspiaaa/UnityHFSM/wiki/Feature-Overview)
+
+- [How to use UnityHFSM outside of Unity](https://github.com/Inspiaaa/UnityHFSM/wiki/Using-UnityHFSM-outside-of-Unity)
+
+**Table of contents:**
+
+- [Fast prototyping](#simple-state-machine)
+
+- [Hierarchical features](#hierarchical-state-machine)
+
+- [Timing of state changes](#timing-of-state-changes)
+
+- [Hierarchical timing](#hierarchical-timing)
+
+- [Multiple state change patterns](#state-change-patterns)
+
+- [Control flow of OnLogic](#control-flow-of-onlogic)
+
+- [Unity **coroutines**](#unity-coroutines)
+
+- [Scalable (class-based)](#class-based-architecture)
+
+- [Generics](#generics)
 
 ## Installation
 
