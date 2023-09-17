@@ -17,7 +17,15 @@ Thanks to overloading, it minimises boilerplate code while still supporting **ge
 
 It has a special focus on the temporal aspects of state transitions, making it ideal for timing and synchronisation sensitive problems.
 
-Full overview over features: [View the Wiki](https://github.com/Inspiaaa/UnityHFSM/wiki/Feature-Overview)
+---
+
+**In the wiki:**
+
+- [Full overview over features](https://github.com/Inspiaaa/UnityHFSM/wiki/Feature-Overview)
+
+- [How to use UnityHFSM outside of Unity](https://github.com/Inspiaaa/UnityHFSM/wiki/Using-UnityHFSM-outside-of-Unity)
+
+**Table of contents:**
 
 - [Fast prototyping](#simple-state-machine)
 
