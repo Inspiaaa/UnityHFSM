@@ -1,4 +1,4 @@
-![HFSM for Unity](docs/Banner.png)
+![HFSM for Unity](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/master/docs/Banner.png)
 
 <p align="center">
   <a href="https://github.com/Inspiaaa/UnityHFSM">
@@ -129,7 +129,7 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
 
 Here's a simple state machine for an enemy spy in a game.
 
-![](docs/StateDiagrams/EnemySpyExample/Simple.png)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/master/docs/StateDiagrams/EnemySpyExample/Simple.png)
 
 As you can see, the enemy will try to stay outside of the player's viewing range while extracting intel. When the player goes too far away, it will follow the player again.
 
@@ -362,7 +362,7 @@ Because the `StateMachine` class inherits from `StateBase`, it can be treated as
 
 ### Expanding on the previous example
 
-![](docs/StateDiagrams/EnemySpyExample/Hierarchical.png)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/master/docs/StateDiagrams/EnemySpyExample/Hierarchical.png)
 
 In the previous example, we left the `Extract Intel` state empty. Let's change this. When extracting intel, the spy should first collect data and then send it, repeating the process once completed.
 
@@ -513,7 +513,7 @@ Let's use this feature in our example. Here's what we'll be doing:
 
 - Once all the data has been collected, it should send it out, regardless of where the player is. It does not matter if the player is too far away, as the data has already been collected. To keep it simple, let's make it that the enemy also tries to finish the sending phase, even if it risks being discovered by the player by getting to close.
 
-![](docs/StateDiagrams/EnemySpyExample/HierarchicalWithExitTransition.png)
+![](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/master/docs/StateDiagrams/EnemySpyExample/HierarchicalWithExitTransition.png)
 
 ### The Implementation
 
