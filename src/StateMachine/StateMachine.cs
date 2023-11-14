@@ -93,6 +93,7 @@ namespace UnityHFSM
 
 		private (TStateId state, bool hasState) startState = (default, false);
 		private PendingTransition pendingTransition = default;
+		private bool rememberLastState = false;
 
 		// Central storage of states.
 		private Dictionary<TStateId, StateBundle> stateBundlesByName
@@ -129,11 +130,14 @@ namespace UnityHFSM
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs.</param>
+		/// <param name="rememberLastState">(Only for hierarchical states):
+		/// 	If true, the state machine will return to its last active state when it enters, instead
+		/// 	of to its original start state.</param>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
-
+			this.rememberLastState = rememberLastState;
 		}
 
 		/// <summary>
@@ -404,13 +408,18 @@ namespace UnityHFSM
 
 		public override void OnExit()
 		{
-			if (activeState != null)
+			if (activeState == null)
+				return;
+
+			if (rememberLastState)
 			{
-				activeState.OnExit();
-				// By setting the activeState to null, the state's onExit method won't be called
-				// a second time when the state machine enters again (and changes to the start state).
-				activeState = null;
+				startState = (activeState.name, true);
 			}
+
+			activeState.OnExit();
+			// By setting the activeState to null, the state's onExit method won't be called
+			// a second time when the state machine enters again (and changes to the start state).
+			activeState = null;
 		}
 
 		public override void OnExitRequest()
@@ -768,24 +777,24 @@ namespace UnityHFSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}
 
 	public class StateMachine : StateMachine<string, string, string>
 	{
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}
