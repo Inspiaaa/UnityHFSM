@@ -44,7 +44,9 @@ namespace UnityHFSM
 				Action<HybridStateMachine<TOwnId, TStateId, TEvent>> afterOnExit = null,
 
 				bool needsExitTime = false,
-				bool isGhostState = false) : base(needsExitTime, isGhostState)
+				bool isGhostState = false,
+				bool rememberLastState = false)
+				: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 			this.beforeOnEnter = beforeOnEnter;
 			this.afterOnEnter = afterOnEnter;
@@ -144,12 +146,14 @@ namespace UnityHFSM
 			Action<HybridStateMachine<TStateId, TStateId, TEvent>> afterOnExit = null,
 
 			bool needsExitTime = false,
-			bool isGhostState = false) : base(
+			bool isGhostState = false,
+			bool rememberLastState = false) : base(
 				beforeOnEnter, afterOnEnter,
 				beforeOnLogic, afterOnLogic,
 				beforeOnExit, afterOnExit,
 				needsExitTime,
-				isGhostState
+				isGhostState,
+				rememberLastState
 			)
 		{
 		}
@@ -170,12 +174,14 @@ namespace UnityHFSM
 			Action<HybridStateMachine<TStateId, TStateId, string>> afterOnExit = null,
 
 			bool needsExitTime = false,
-			bool isGhostState = false) : base(
+			bool isGhostState = false,
+			bool rememberLastState = false) : base(
 				beforeOnEnter, afterOnEnter,
 				beforeOnLogic, afterOnLogic,
 				beforeOnExit, afterOnExit,
 				needsExitTime,
-				isGhostState
+				isGhostState,
+				rememberLastState
 			)
 		{
 		}
@@ -196,12 +202,14 @@ namespace UnityHFSM
 			Action<HybridStateMachine<string, string, string>> afterOnExit = null,
 
 			bool needsExitTime = false,
-			bool isGhostState = false) : base(
+			bool isGhostState = false,
+			bool rememberLastState = false) : base(
 				beforeOnEnter, afterOnEnter,
 				beforeOnLogic, afterOnLogic,
 				beforeOnExit, afterOnExit,
 				needsExitTime,
-				isGhostState
+				isGhostState,
+				rememberLastState
 			)
 		{
 		}
