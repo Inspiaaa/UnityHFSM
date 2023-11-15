@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using FSM;  // Import UnityHFSM
+using UnityHFSM;  // Import UnityHFSM
 
-namespace FSM.Samples.GuardAI {
+namespace UnityHFSM.Samples.GuardAI {
 
 public class GuardAI : MonoBehaviour
 {
