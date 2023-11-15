@@ -52,12 +52,7 @@ namespace UnityHFSM
 				bool isGhostState = false) : base(needsExitTime, isGhostState)
 		{
 			this.mono = mono;
-
-			if (coroutine != null)
-			{
-				this.coroutineCreator = () => coroutine(this);
-			}
-
+			this.coroutineCreator = () => coroutine(this);
 			this.onEnter = onEnter;
 			this.onExit = onExit;
 			this.canExit = canExit;
