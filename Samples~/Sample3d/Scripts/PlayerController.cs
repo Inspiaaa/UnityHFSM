@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FSM.Samples
+namespace UnityHFSM.Samples.Sample3d
 {
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour

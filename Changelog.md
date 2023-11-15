@@ -8,6 +8,18 @@
 
 - **Remember last state**: This is a new parameter in the constructor of the `StateMachine` class that is interesting for nested state machines. When set to true, it makes the state machine return to its last active state when it enters, instead of its original start state. You can also use this feature in the `HybridStateMachine` class.
 
+---
+
+## 2.0.1
+
+### Fixed
+
+- Fix samples not compiling.
+
+- Reintroduced the `timer` property in the `CoState` class that was lost in the previous release.
+
+---
+
 ## 2.0
 
 ### Added
