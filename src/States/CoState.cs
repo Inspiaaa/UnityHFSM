@@ -19,6 +19,8 @@ namespace UnityHFSM
 
 		private bool shouldLoopCoroutine;
 
+		public ITimer timer;
+
 		private Coroutine activeCoroutine;
 
 		// The CoState class allows you to use either a function without any parameters or a
@@ -60,6 +62,8 @@ namespace UnityHFSM
 			this.onExit = onExit;
 			this.canExit = canExit;
 			this.shouldLoopCoroutine = loop;
+
+			timer = new Timer();
 		}
 
 		/// <inheritdoc cref="CoState{TStateId, TEvent}(
@@ -88,10 +92,14 @@ namespace UnityHFSM
 			this.onExit = onExit;
 			this.canExit = canExit;
 			this.shouldLoopCoroutine = loop;
+
+			timer = new Timer();
 		}
 
 		public override void OnEnter()
 		{
+			timer.Reset();
+
 			onEnter?.Invoke(this);
 
 			if (coroutineCreator != null)
