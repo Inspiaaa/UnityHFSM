@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FSM.Samples.GuardAI {
+namespace UnityHFSM.Samples.GuardAI {
 
 public class PlayerController : MonoBehaviour
 {

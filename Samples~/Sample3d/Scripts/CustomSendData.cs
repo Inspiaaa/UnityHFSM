@@ -1,7 +1,7 @@
 using UnityEngine;
-using FSM; // Import the required classes for the state machine
+using UnityHFSM; // Import the required classes for the state machine
 
-namespace FSM.Samples
+namespace UnityHFSM.Samples.Sample3d
 {
     class CustomSendData : StateBase
     {
