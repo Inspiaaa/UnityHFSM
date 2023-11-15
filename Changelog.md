@@ -2,6 +2,16 @@
 
 ---
 
+## 2.0.1
+
+### Fixed
+
+- Fix samples not compiling.
+
+- Reintroduced the `timer` property in the `CoState` class that was lost in the previous release.
+
+---
+
 ## 2.0
 
 ### Added
