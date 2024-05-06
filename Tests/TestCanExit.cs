@@ -59,7 +59,8 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_state_with_needsExitTime_calls_onLogic_before_transitioning_on_delayed_transition() {
+		public void Test_state_with_needsExitTime_calls_onLogic_before_transitioning_on_delayed_transition()
+		{
 			var canExit = false;
 
 			var recorder = new Recorder();
