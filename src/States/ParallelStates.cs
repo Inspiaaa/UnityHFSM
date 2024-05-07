@@ -6,6 +6,14 @@ namespace UnityHFSM
 	/// <summary>
 	/// A state that can run multiple states in parallel.
 	/// </summary>
+	/// <remarks>
+	/// If needsExitTime is set to true, it will exit when *any* one of the child states calls StateCanExit()
+	/// on this class. Note that having multiple child states that all do not need exit time and hence don't
+	/// call the StateCanExit() method, will mean that this state will never exit.
+	/// This behaviour can also be overridden by specifying a canExit function that determines
+	/// when this state may exit. This will ignore the needsExitTime and StateCanExit() calls of the child states.
+	/// It works the same as the canExit feature of the State class.
+	/// </remark>
 	public class ParallelStates<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, IActionable<TEvent>, IStateMachine
 	{
 		private List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
@@ -13,6 +21,11 @@ namespace UnityHFSM
 		// When the states are passed in via the constructor, they are not assigned names / identifiers.
 		// This means that the active hierarchy path cannot include them (which would be used for debugging purposes).
 		private bool areStatesNameless = false;
+
+		// This variable keeps track whether this state is currently active. It is used to prevent
+		// StateCanExit() calls from the child states to be passed on to the parent state machine
+		// when this state is no longer active, which would result in unwanted behaviour
+		// (e.g. two transitions).
 		private bool isActive;
 
 		private Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit;
