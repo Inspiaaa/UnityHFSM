@@ -7,26 +7,26 @@ namespace UnityHFSM
 	/// <summary>
 	/// A state that can run multiple states in parallel.
 	/// </summary>
-	public class ParallelStates<TStateId, TEvent> : StateBase<TStateId>, IActionable<TEvent>, IStateMachine
+	public class ParallelStates<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, IActionable<TEvent>, IStateMachine
 	{
 		private List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
 
 		private bool isActive;
 
-		private Func<ParallelStates<TStateId, TEvent>, bool> canExit;
+		private Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit;
 
 		public bool HasPendingTransition => fsm.HasPendingTransition;
 		public IStateMachine ParentFsm => fsm;
 
 		public ParallelStates(
-			Func<ParallelStates<TStateId, TEvent>, bool> canExit = null,
+			Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit = null,
 			bool needsExitTime = false,
 			bool isGhostState = false) : base(needsExitTime, isGhostState)
 		{
 			this.canExit = canExit;
 		}
 
-		public ParallelStates<TStateId, TEvent> AddState(TStateId id, StateBase<TStateId> state)
+		public ParallelStates<TOwnId, TStateId, TEvent> AddState(TStateId id, StateBase<TStateId> state)
 		{
 			state.fsm = this;
 			state.name = id;
@@ -138,18 +138,26 @@ namespace UnityHFSM
 		}
 	}
 
-	public class ParallelStates<TStateId> : ParallelStates<TStateId, string>
+	public class ParallelStates<TStateId, TEvent> : ParallelStates<TStateId, TStateId, TEvent>
 	{
 		public ParallelStates(
-			Func<ParallelStates<TStateId, string>, bool> canExit = null,
+			Func<ParallelStates<TStateId, TStateId, TEvent>, bool> canExit = null,
 			bool needsExitTime = false,
 			bool isGhostState = false) : base(canExit, needsExitTime, isGhostState) { }
 	}
 
-	public class ParallelStates : ParallelStates<string, string>
+	public class ParallelStates<TStateId> : ParallelStates<TStateId, TStateId, string>
 	{
 		public ParallelStates(
-			Func<ParallelStates<string, string>, bool> canExit = null,
+			Func<ParallelStates<TStateId, TStateId, string>, bool> canExit = null,
+			bool needsExitTime = false,
+			bool isGhostState = false) : base(canExit, needsExitTime, isGhostState) { }
+	}
+
+	public class ParallelStates : ParallelStates<string, string, string>
+	{
+		public ParallelStates(
+			Func<ParallelStates<string, string, string>, bool> canExit = null,
 			bool needsExitTime = false,
 			bool isGhostState = false) : base(canExit, needsExitTime, isGhostState) { }
 
@@ -161,12 +169,12 @@ namespace UnityHFSM
 			: this(null, needsExitTime, false, states) { }
 
 		public ParallelStates(
-			Func<ParallelStates<string, string>, bool> canExit,
+			Func<ParallelStates<string, string, string>, bool> canExit,
 			bool needsExitTime,
 			params StateBase<string>[] states) : this(canExit, needsExitTime, false, states) { }
 
 		public ParallelStates(
-			Func<ParallelStates<string, string>, bool> canExit,
+			Func<ParallelStates<string, string, string>, bool> canExit,
 			bool needsExitTime,
 			bool isGhostState,
 			params StateBase<string>[] states) : base(canExit, needsExitTime, isGhostState)

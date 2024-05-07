@@ -234,5 +234,17 @@ namespace UnityHFSM.Tests
 			fsm.Init();
 			Assert.AreEqual("/PS/(A & B & C/D)", fsm.GetActiveHierarchyPath());
 		}
+
+		[Test]
+		public void Test_ps_child_state_can_use_different_type_for_id()
+		{
+			var ps = new ParallelStates<string, int, string>();
+			ps.AddState(0, new State<int>());
+			ps.AddState(1, new State<int>());
+
+			fsm.AddState("A", ps);
+			fsm.Init();
+			fsm.OnLogic();
+		}
 	}
 }
