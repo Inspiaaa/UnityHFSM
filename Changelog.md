@@ -41,6 +41,8 @@
 
 - Fix incorrect execution order (timing) bug concerning the `canExit` feature of the `State` class.
 
+- Fix `Time.time` access exception bug that occurred during the deserialisation of `State` and `State`-derived classes shown in the inspector.
+
 ---
 
 ## 2.0.1
