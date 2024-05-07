@@ -12,7 +12,7 @@ namespace UnityHFSM
 
 		public Timer()
 		{
-			startTime = Time.time;
+			if(Application.isPlaying) { startTime = Time.time; }
 		}
 
 		public void Reset()
