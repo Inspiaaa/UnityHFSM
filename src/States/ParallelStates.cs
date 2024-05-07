@@ -75,7 +75,8 @@ namespace UnityHFSM
 			this.canExit = canExit;
 			this.areStatesNameless = true;
 
-			foreach (var state in states) {
+			foreach (var state in states)
+			{
 				AddState(default, state);
 			}
 		}
@@ -150,7 +151,8 @@ namespace UnityHFSM
 					state.OnExitRequest();
 				}
 			}
-			else {
+			else
+			{
 				if (fsm.HasPendingTransition && canExit(this))
 				{
 					fsm.StateCanExit();
@@ -174,10 +176,12 @@ namespace UnityHFSM
 			}
 		}
 
-		public void StateCanExit() {
+		public void StateCanExit()
+		{
 			// Try to exit as soon as any one of the child states can exit, unless the exit behaviour
 			// is overridden by canExit.
-			if (isActive && canExit == null) {
+			if (isActive && canExit == null)
+			{
 				fsm.StateCanExit();
 			}
 		}
@@ -187,12 +191,14 @@ namespace UnityHFSM
 			// The name could be null when ParallelStates is used at the top level.
 			string stringName = this.name?.ToString() ?? "";
 
-			if (areStatesNameless || states.Count == 0) {
+			if (areStatesNameless || states.Count == 0)
+			{
 				// Example path: "Parallel"
 				return stringName;
 			}
 
-			if (states.Count == 1) {
+			if (states.Count == 1)
+			{
 				// Example path: "Parallel/Move"
 				return stringName + "/" + states[0].GetActiveHierarchyPath();
 			}
@@ -200,9 +206,11 @@ namespace UnityHFSM
 			// Example path: "Parallel/(Move & Attack/Shoot)"
 			string path = stringName + "/(";
 
-			for (int i = 0; i < states.Count; i ++) {
+			for (int i = 0; i < states.Count; i++)
+			{
 				path += states[i].GetActiveHierarchyPath();
-				if (i < states.Count - 1) {
+				if (i < states.Count - 1)
+				{
 					path += " & ";
 				}
 			}
@@ -210,9 +218,6 @@ namespace UnityHFSM
 			return path + ")";
 		}
 	}
-
-	// TODO: Manually check all the overloads (also in the main constructors) to ensure that they behave correctly
-	// and call the correct functions.
 
 	/// <inheritdoc />
 	public class ParallelStates<TStateId, TEvent> : ParallelStates<TStateId, TStateId, TEvent>
@@ -307,7 +312,7 @@ namespace UnityHFSM
 			bool isGhostState,
 			params StateBase<string>[] states) : base(canExit, needsExitTime, isGhostState)
 		{
-			for (int i = 0; i < states.Length; i ++)
+			for (int i = 0; i < states.Length; i++)
 			{
 				AddState(i.ToString(), states[i]);
 			}
