@@ -165,17 +165,21 @@ namespace UnityHFSM
 		public override string GetActiveHierarchyPath()
 		{
 			if (areStatesNameless) {
+			// The name could be null when ParallelStates is used at the top level.
+			string stringName = this.name?.ToString() ?? "";
+
+			if (areStatesNameless || states.Count == 0) {
 				// Example path: "Parallel"
-				return name.ToString();
+				return stringName;
 			}
 
 			if (states.Count == 1) {
 				// Example path: "Parallel/Move"
-				return name.ToString() + "/" + states[0].GetActiveHierarchyPath();
+				return stringName + "/" + states[0].GetActiveHierarchyPath();
 			}
 
 			// Example path: "Parallel/(Move & Attack/Shoot)"
-			string path = name.ToString() + "/(";
+			string path = stringName + "/(";
 
 			for (int i = 0; i < states.Count; i ++) {
 				path += states[i].GetActiveHierarchyPath();

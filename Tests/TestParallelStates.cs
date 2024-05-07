@@ -247,6 +247,15 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
+		public void Test_ps_active_hierarchy_path_for_no_child_states()
+		{
+			fsm.AddState("PS", new ParallelStates());
+
+			fsm.Init();
+			Assert.AreEqual("/PS", fsm.GetActiveHierarchyPath());
+		}
+
+		[Test]
 		public void Test_ps_active_hierarchy_path_for_nameless_states()
 		{
 			fsm.AddState("PS", new ParallelStates<string, object, string>(
@@ -255,6 +264,16 @@ namespace UnityHFSM.Tests
 
 			fsm.Init();
 			Assert.AreEqual("/PS", fsm.GetActiveHierarchyPath());
+		}
+
+		[Test]
+		public void Test_ps_active_hierarchy_path_does_not_throw_error_when_root()
+		{
+			var root = new ParallelStates()
+				.AddState("A", new State())
+				.AddState("B", new State());
+
+			Assert.DoesNotThrow(() => root.GetActiveHierarchyPath());
 		}
 
 		[Test]
