@@ -164,7 +164,6 @@ namespace UnityHFSM
 
 		public override string GetActiveHierarchyPath()
 		{
-			if (areStatesNameless) {
 			// The name could be null when ParallelStates is used at the top level.
 			string stringName = this.name?.ToString() ?? "";
 
