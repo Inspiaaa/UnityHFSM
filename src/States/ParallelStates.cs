@@ -10,10 +10,10 @@ namespace UnityHFSM
 	/// If needsExitTime is set to true, it will exit when *any* one of the child states calls StateCanExit()
 	/// on this class. Note that having multiple child states that all do not need exit time and hence don't
 	/// call the StateCanExit() method, will mean that this state will never exit.
-	/// This behaviour can also be overridden by specifying a canExit function that determines
-	/// when this state may exit. This will ignore the needsExitTime and StateCanExit() calls of the child states.
-	/// It works the same as the canExit feature of the State class.
-	/// </remark>
+	/// This behaviour can be overridden by specifying a canExit function that determines when this state may exit.
+	/// This will ignore the needsExitTime and StateCanExit() calls of the child states. It works the same as the
+	/// canExit feature of the State class.
+	/// </remarks>
 	public class ParallelStates<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, IActionable<TEvent>, IStateMachine
 	{
 		private List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
@@ -33,6 +33,7 @@ namespace UnityHFSM
 		public bool HasPendingTransition => fsm.HasPendingTransition;
 		public IStateMachine ParentFsm => fsm;
 
+		/// <inheritdoc cref="ParallelStates{T, T, T}(Func{ParallelStates{T, T, T}, bool}, bool, bool, StateBase{T}[])"/>
 		public ParallelStates(
 			Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit = null,
 			bool needsExitTime = false,
@@ -41,17 +42,30 @@ namespace UnityHFSM
 			this.canExit = canExit;
 		}
 
+		/// <inheritdoc cref="ParallelStates{T, T, T}(Func{ParallelStates{T, T, T}, bool}, bool, bool, StateBase{T}[])"/>
 		public ParallelStates(params StateBase<TStateId>[] states)
 			: this(null, false, false, states) { }
 
+		/// <inheritdoc cref="ParallelStates{T, T, T}(Func{ParallelStates{T, T, T}, bool}, bool, bool, StateBase{T}[])"/>
 		public ParallelStates(bool needsExitTime, params StateBase<TStateId>[] states)
 			: this(null, needsExitTime, false, states) { }
 
+		/// <inheritdoc cref="ParallelStates{T, T, T}(Func{ParallelStates{T, T, T}, bool}, bool, bool, StateBase{T}[])"/>
 		public ParallelStates(
 			Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit,
 			bool needsExitTime,
 			params StateBase<TStateId>[] states) : this(canExit, needsExitTime, false, states) { }
 
+		/// <summary>
+		///	Initialises a new instance of the ParallelStates class.
+		/// </summary>
+		/// <param name="canExit">(Only if needsExitTime is true):
+		/// 	Function that determines if the state is ready to exit (true) or not (false).
+		/// 	It is called OnExitRequest and on each logic step when a transition is pending.</param>
+		/// <param name="states">States to run in parallel. Note that they are not assigned names / identifiers
+		/// 	and will therefore not be included in the active hierarchy path. If this is unwanted,
+		/// 	add the states using AddState() instead.</param>
+		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public ParallelStates(
 			Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit,
 			bool needsExitTime,
@@ -66,6 +80,12 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// Adds a new state that is run in parallel while this state is active.
+		/// </summary>
+		/// <param name="id">Name / identifier of the state. This is only used for debugging purposes.</param>
+		/// <param name="state">State to add.</param>
+		/// <returns>Itself to allow for a fluent interface.</returns>
 		public ParallelStates<TOwnId, TStateId, TEvent> AddState(TStateId id, StateBase<TStateId> state)
 		{
 			state.fsm = this;
@@ -191,24 +211,33 @@ namespace UnityHFSM
 		}
 	}
 
+	// TODO: Manually check all the overloads (also in the main constructors) to ensure that they behave correctly
+	// and call the correct functions.
+
+	/// <inheritdoc />
 	public class ParallelStates<TStateId, TEvent> : ParallelStates<TStateId, TStateId, TEvent>
 	{
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<TStateId, TStateId, TEvent>, bool> canExit = null,
 			bool needsExitTime = false,
 			bool isGhostState = false) : base(canExit, needsExitTime, isGhostState) { }
 
+		/// <inheritdoc />
 		public ParallelStates(params StateBase<TStateId>[] states)
 			: base(null, false, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(bool needsExitTime, params StateBase<TStateId>[] states)
 			: base(null, needsExitTime, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<TStateId, TStateId, TEvent>, bool> canExit,
 			bool needsExitTime,
 			params StateBase<TStateId>[] states) : base(canExit, needsExitTime, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<TStateId, TStateId, TEvent>, bool> canExit,
 			bool needsExitTime,
@@ -218,22 +247,27 @@ namespace UnityHFSM
 
 	public class ParallelStates<TStateId> : ParallelStates<TStateId, TStateId, string>
 	{
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<TStateId, TStateId, string>, bool> canExit = null,
 			bool needsExitTime = false,
 			bool isGhostState = false) : base(canExit, needsExitTime, isGhostState) { }
 
+		/// <inheritdoc />
 		public ParallelStates(params StateBase<TStateId>[] states)
 			: base(null, false, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(bool needsExitTime, params StateBase<TStateId>[] states)
 			: base(null, needsExitTime, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<TStateId, TStateId, string>, bool> canExit,
 			bool needsExitTime,
 			params StateBase<TStateId>[] states) : base(canExit, needsExitTime, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<TStateId, TStateId, string>, bool> canExit,
 			bool needsExitTime,
@@ -243,23 +277,30 @@ namespace UnityHFSM
 
 	public class ParallelStates : ParallelStates<string, string, string>
 	{
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<string, string, string>, bool> canExit = null,
 			bool needsExitTime = false,
 			bool isGhostState = false) : base(canExit, needsExitTime, isGhostState) { }
 
-
+		/// <inheritdoc />
 		public ParallelStates(params StateBase<string>[] states)
 			: this(null, false, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(bool needsExitTime, params StateBase<string>[] states)
 			: this(null, needsExitTime, false, states) { }
 
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<string, string, string>, bool> canExit,
 			bool needsExitTime,
 			params StateBase<string>[] states) : this(canExit, needsExitTime, false, states) { }
 
+		/// <param name="states">States to run in parallel. They are implicitly assigned names
+		/// 	based on their indices (e.g. the first state has the name "0", ...) which is
+		/// 	useful for debugging.</param>
+		/// <inheritdoc />
 		public ParallelStates(
 			Func<ParallelStates<string, string, string>, bool> canExit,
 			bool needsExitTime,
