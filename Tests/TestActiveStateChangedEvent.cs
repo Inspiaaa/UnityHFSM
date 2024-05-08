@@ -9,23 +9,23 @@ namespace UnityHFSM.Tests
     public class TestActiveStateChangedEvent
     {
         private StateMachine fsm;
-        private List<string> trackedStates;
+        private Recorder recorder;
 
         [SetUp]
         public void Setup()
         {
             fsm = new StateMachine();
-            trackedStates = new List<string>();
+            recorder = new Recorder();
         }
 
         [Test]
         public void Test_active_state_changed_event()
         {
-            fsm.StateChanged += state => trackedStates.Add(state != null ? state.name : "null");
+            fsm.StateChanged += state => recorder.RecordCustom($"StateChanged({state.name})");
 
-            fsm.AddState("A", new State());
-            fsm.AddState("B", new State());
-            fsm.AddState("C", new State());
+            fsm.AddState("A", recorder.TrackedState);
+            fsm.AddState("B", recorder.TrackedState);
+            fsm.AddState("C", recorder.TrackedState);
 
             fsm.AddTransition("A", "B");
             fsm.AddTransition("B", "C");
@@ -33,24 +33,31 @@ namespace UnityHFSM.Tests
             fsm.SetStartState("A");
             fsm.Init();
 
-            AssertTrackedStated(expected: new[] { "A" });
+            recorder.Expect
+                .Enter("A")
+                .Custom("StateChanged(A)")
+                .All();
 
             fsm.OnLogic();
-            AssertTrackedStated(expected: new[] { "A", "B" });
+            recorder.Expect
+                .Exit("A")
+                .Enter("B")
+                .Custom("StateChanged(B)")
+                .Logic("B")
+                .All();
 
             fsm.OnLogic();
-            AssertTrackedStated(expected: new[] { "A", "B", "C" });
+            recorder.Expect
+                .Exit("B")
+                .Enter("C")
+                .Custom("StateChanged(C)")
+                .Logic("C")
+                .All();
 
             fsm.OnExit();
-            AssertTrackedStated(expected: new[] { "A", "B", "C", "null" });
-        }
-
-        private void AssertTrackedStated(IEnumerable<string> expected)
-        {
-            if (!trackedStates.SequenceEqual(expected))
-            {
-                Assert.Fail($"Tracked active states is not equals with expected. Real: ({string.Join(",", trackedStates)}), Expected : ({string.Join(",", expected)})");
-            }
+            recorder.Expect
+                .Exit("C")
+                .All();
         }
     }
 }
