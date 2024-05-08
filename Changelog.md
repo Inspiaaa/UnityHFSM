@@ -44,6 +44,7 @@
   - `TransitionOnMouse.Press` is now `TransitionOnMouse.Pressed`
   - `TransitionOnMouse.Release` is now `TransitionOnMouse.Released`
 
+- Improved documentation
 
 ### Fixed
 
