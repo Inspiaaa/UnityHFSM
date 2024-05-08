@@ -92,6 +92,8 @@ namespace UnityHFSM
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> noTriggerTransitions
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
+		public event Action<StateBase<TStateId>> StateChanged;
+
 		private (TStateId state, bool hasState) startState = (default, false);
 		private PendingTransition pendingTransition = default;
 		private bool rememberLastState = false;
@@ -108,8 +110,6 @@ namespace UnityHFSM
 			= new List<TransitionBase<TStateId>>();
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
-
-		public event Action<StateBase<TStateId>> StateChanged;
 
 		public StateBase<TStateId> ActiveState
 		{
