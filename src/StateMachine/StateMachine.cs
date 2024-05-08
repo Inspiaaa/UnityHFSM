@@ -205,7 +205,6 @@ namespace UnityHFSM
 			activeTriggerTransitions = bundle.triggerToTransitions ?? noTriggerTransitions;
 
 			activeState = bundle.state;
-			StateChanged?.Invoke(activeState);
 			activeState.OnEnter();
 
 			for (int i = 0; i < activeTransitions.Count; i++)
@@ -222,6 +221,8 @@ namespace UnityHFSM
 			}
 
 			listener?.AfterTransition();
+
+			StateChanged?.Invoke(activeState);
 
 			if (activeState.isGhostState)
 			{
@@ -424,7 +425,6 @@ namespace UnityHFSM
 			// By setting the activeState to null, the state's onExit method won't be called
 			// a second time when the state machine enters again (and changes to the start state).
 			activeState = null;
-			StateChanged?.Invoke(activeState);
 		}
 
 		public override void OnExitRequest()
