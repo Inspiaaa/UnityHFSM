@@ -36,6 +36,14 @@
   ));
   ```
 
+### Improved
+
+- The naming of the key / mouse transition classes has been improved by following the C# naming convention for events.
+  - `TransitionOnKey.Press` is now `TransitionOnKey.Pressed`
+  - `TransitionOnKey.Release` is now `TransitionOnKey.Released`
+  - `TransitionOnMouse.Press` is now `TransitionOnMouse.Pressed`
+  - `TransitionOnMouse.Release` is now `TransitionOnMouse.Released`
+
 
 ### Fixed
 
