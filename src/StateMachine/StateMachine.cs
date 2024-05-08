@@ -109,7 +109,7 @@ namespace UnityHFSM
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
-		public event Action<StateBase<TStateId>> OnActiveStateChanged;
+		public event Action<StateBase<TStateId>> StateChanged;
 
 		public StateBase<TStateId> ActiveState
 		{
@@ -205,7 +205,7 @@ namespace UnityHFSM
 			activeTriggerTransitions = bundle.triggerToTransitions ?? noTriggerTransitions;
 
 			activeState = bundle.state;
-			OnActiveStateChanged?.Invoke(activeState);
+			StateChanged?.Invoke(activeState);
 			activeState.OnEnter();
 
 			for (int i = 0; i < activeTransitions.Count; i++)
@@ -424,7 +424,7 @@ namespace UnityHFSM
 			// By setting the activeState to null, the state's onExit method won't be called
 			// a second time when the state machine enters again (and changes to the start state).
 			activeState = null;
-			OnActiveStateChanged?.Invoke(activeState);
+			StateChanged?.Invoke(activeState);
 		}
 
 		public override void OnExitRequest()

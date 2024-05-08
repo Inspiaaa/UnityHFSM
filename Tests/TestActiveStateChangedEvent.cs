@@ -21,7 +21,7 @@ namespace UnityHFSM.Tests
         [Test]
         public void Test_active_state_changed_event()
         {
-            fsm.OnActiveStateChanged += state => trackedStates.Add(state != null ? state.name : "null");
+            fsm.StateChanged += state => trackedStates.Add(state != null ? state.name : "null");
 
             fsm.AddState("A", new State());
             fsm.AddState("B", new State());
