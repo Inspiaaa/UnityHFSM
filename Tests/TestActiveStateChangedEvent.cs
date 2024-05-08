@@ -1,10 +1,10 @@
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
     public class TestActiveStateChangedEvent
     {
@@ -49,7 +49,7 @@ namespace FSM.Tests
         {
             if (!trackedStates.SequenceEqual(expected))
             {
-                Assert.Fail($"Tracked active states is not equals with expected. Real: ({string.Join(',', trackedStates)}), Expected : ({string.Join(',', expected)})");
+                Assert.Fail($"Tracked active states is not equals with expected. Real: ({string.Join(",", trackedStates)}), Expected : ({string.Join(",", expected)})");
             }
         }
     }
