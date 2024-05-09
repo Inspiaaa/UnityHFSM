@@ -36,7 +36,24 @@
   ));
   ```
 
+- **Active State Changed Event**: The `StateMachine` class now has a new event that you can subscribe to that is triggered when its active state is changed:
+
+  E.g.
+  ```csharp
+  fsm.StateChanged += state => print(state.name);
+
+  fsm.AddState("A");
+  fsm.AddState("B");
+  fsm.AddTransition("A", "B");
+
+  fsm.Init();  // prints "A"
+
+  fsm.OnLogic();  // prints "B"
+  ```
+
 ### Improved
+
+- Improved the performance of the `OnLogic` and the `Trigger` methods of the `StateMachine` class when states have multiple outgoing transitions. Depending on the number of transitions, when using string state names, this can make the `OnLogic` method up to 15% faster.
 
 - The naming of the key / mouse transition classes has been improved by following the C# naming convention for events.
   - `TransitionOnKey.Press` is now `TransitionOnKey.Pressed`
@@ -44,7 +61,7 @@
   - `TransitionOnMouse.Press` is now `TransitionOnMouse.Pressed`
   - `TransitionOnMouse.Release` is now `TransitionOnMouse.Released`
 
-- Improved documentation
+- Improved documentation.
 
 ### Fixed
 
