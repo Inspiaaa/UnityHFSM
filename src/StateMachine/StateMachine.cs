@@ -214,14 +214,14 @@ namespace UnityHFSM
 			activeState = bundle.state;
 			activeState.OnEnter();
 
-			for (int i = 0; i < activeTransitions.Count; i++)
+			for (int i = 0, count = activeTransitions.Count; i < count; i++)
 			{
 				activeTransitions[i].OnEnter();
 			}
 
 			foreach (List<TransitionBase<TStateId>> transitions in activeTriggerTransitions.Values)
 			{
-				for (int i = 0; i < transitions.Count; i++)
+				for (int i = 0, count = transitions.Count; i < count; i++)
 				{
 					transitions[i].OnEnter();
 				}
@@ -327,7 +327,7 @@ namespace UnityHFSM
 		/// <returns>Returns true if a transition occurred.</returns>
 		private bool TryAllGlobalTransitions()
 		{
-			for (int i = 0; i < transitionsFromAny.Count; i++)
+			for (int i = 0, count = transitionsFromAny.Count; i < count; i++)
 			{
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
 
@@ -348,7 +348,7 @@ namespace UnityHFSM
 		/// <returns>Returns true if a transition occurred.</returns>
 		private bool TryAllDirectTransitions()
 		{
-			for (int i = 0; i < activeTransitions.Count; i++)
+			for (int i = 0, count = activeTransitions.Count; i < count; i++)
 			{
 				TransitionBase<TStateId> transition = activeTransitions[i];
 
@@ -385,14 +385,14 @@ namespace UnityHFSM
 
 			ChangeState(startState.state);
 
-			for (int i = 0; i < transitionsFromAny.Count; i++)
+			for (int i = 0, count = transitionsFromAny.Count; i < count; i++)
 			{
 				transitionsFromAny[i].OnEnter();
 			}
 
 			foreach (List<TransitionBase<TStateId>> transitions in triggerTransitionsFromAny.Values)
 			{
-				for (int i = 0; i < transitions.Count; i++)
+				for (int i = 0, count = transitions.Count; i < count; i++)
 				{
 					transitions[i].OnEnter();
 				}
@@ -671,7 +671,7 @@ namespace UnityHFSM
 
 			if (triggerTransitionsFromAny.TryGetValue(trigger, out triggerTransitions))
 			{
-				for (int i = 0; i < triggerTransitions.Count; i++)
+				for (int i = 0, count = triggerTransitions.Count; i < count; i++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
@@ -685,7 +685,7 @@ namespace UnityHFSM
 
 			if (activeTriggerTransitions.TryGetValue(trigger, out triggerTransitions))
 			{
-				for (int i = 0; i < triggerTransitions.Count; i++)
+				for (int i = 0, count = triggerTransitions.Count; i < count; i++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
