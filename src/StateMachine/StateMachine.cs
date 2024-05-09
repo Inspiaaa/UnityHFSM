@@ -92,6 +92,13 @@ namespace UnityHFSM
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> noTriggerTransitions
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
+		/// <summary>
+		/// Event that is raised when the active state changes.
+		/// </summary>
+		/// <remarks>
+		/// It is triggered when the state machine enters its initial state, and after a transition is performed.
+		/// Note that it is not called when the state machine exits.
+		/// </remarks>
 		public event Action<StateBase<TStateId>> StateChanged;
 
 		private (TStateId state, bool hasState) startState = (default, false);
