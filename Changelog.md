@@ -69,6 +69,8 @@
 
 - Fix `Time.time` access exception bug that occurred during the deserialisation of `State` and `State`-derived classes shown in the inspector.
 
+- Fix incorrect output of `GetActiveHierarchyPath()` in the `StateWrapper.WrappedState` class.
+
 ---
 
 ## 2.0.1
