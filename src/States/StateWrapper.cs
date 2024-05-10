@@ -95,6 +95,11 @@ namespace UnityHFSM
 			{
 				(state as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
 			}
+
+			public override string GetActiveHierarchyPath()
+			{
+				return state.GetActiveHierarchyPath();
+			}
 		}
 
 		private Action<StateBase<TStateId>>
