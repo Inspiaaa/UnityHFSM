@@ -253,7 +253,8 @@ namespace UnityHFSM
 			}
 			else
 			{
-				pendingTransition = PendingTransition.CreateForState(name, listener);
+				if (!pendingTransition.isPending)
+					pendingTransition = PendingTransition.CreateForState(name, listener);
 				activeState.OnExitRequest();
 				// If it can exit, the activeState would call
 				// -> state.fsm.StateCanExit() which in turn would call
@@ -280,7 +281,8 @@ namespace UnityHFSM
 			}
 			else
 			{
-				pendingTransition = PendingTransition.CreateForExit(listener);
+				if (!pendingTransition.isPending)
+					pendingTransition = PendingTransition.CreateForExit(listener);
 				activeState.OnExitRequest();
 			}
 		}
