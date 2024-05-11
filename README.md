@@ -258,7 +258,7 @@ fsm.AddState("FollowPlayer", onLogic: state => MoveTowardsPlayer(1));
 
 Although this example is using lambda expressions for the states' logic, you can of course also just pass normal functions.
 
-> **Side note:** To keep things simple, we're using strings for the state identifiers. Just keep in mind that UnityHFSM is not limited to this, as it allows you to use any custom type (e.g. enums) for them. See the [generics](#generics) chapter for more information.
+> **Side note:** To keep things simple, we're using strings for the state identifiers. Just keep in mind that UnityHFSM is not limited to this, as it allows you to use any custom type (e.g. enums) for the state identifiers. See the [generics](#generics) chapter for more information.
 
 #### Adding transitions
 
