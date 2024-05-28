@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace UnityHFSM.Tests
 {
-	public class TesTwoWayTransitions
+	public class TestTwoWayTransitions
 	{
 		private Recorder recorder;
 		private StateMachine fsm;

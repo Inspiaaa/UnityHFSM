@@ -114,7 +114,7 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
 - Select <kbd>Add from Git URL</kbd>
 - Paste
   - `https://github.com/Inspiaaa/UnityHFSM.git#upm` for the latest stable release (**recommended**)
-  - `https://github.com/Inspiaaa/UnityHFSM.git` for the development version
+  - `https://github.com/Inspiaaa/UnityHFSM.git#release` for the development version
   - `https://github.com/Inspiaaa/UnityHFSM.git#v1.8.0` for a specific version (`v1.8.0` here)
 - Click <kbd>Add</kbd>
 - Tip: If you're using VSCode and you're not getting any IntelliSense, you may have to regenerate the `.csproj` project files (<kbd>Edit</kbd> > <kbd>Preferences</kbd> > <kbd>External Tools</kbd> > <kbd>Regenerate project files</kbd>)
@@ -257,6 +257,8 @@ fsm.AddState("FollowPlayer", onLogic: state => MoveTowardsPlayer(1));
 ```
 
 Although this example is using lambda expressions for the states' logic, you can of course also just pass normal functions.
+
+> **Side note:** To keep things simple, we're using strings for the state identifiers. Just keep in mind that UnityHFSM is not limited to this, as it allows you to use any custom type (e.g. enums) for the state identifiers. See the [generics](#generics) chapter for more information.
 
 #### Adding transitions
 

@@ -1,31 +1,31 @@
 using NUnit.Framework;
-using FSM;
+using UnityHFSM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FSM.Tests
+namespace UnityHFSM.Tests
 {
     public class TestActiveStateChangedEvent
     {
         private StateMachine fsm;
-        private List<string> trackedStates;
+        private Recorder recorder;
 
         [SetUp]
         public void Setup()
         {
             fsm = new StateMachine();
-            trackedStates = new List<string>();
+            recorder = new Recorder();
         }
 
         [Test]
         public void Test_active_state_changed_event()
         {
-            fsm.OnActiveStateChanged += state => trackedStates.Add(state != null ? state.name : "null");
+            fsm.StateChanged += state => recorder.RecordCustom($"StateChanged({state.name})");
 
-            fsm.AddState("A", new State());
-            fsm.AddState("B", new State());
-            fsm.AddState("C", new State());
+            fsm.AddState("A", recorder.TrackedState);
+            fsm.AddState("B", recorder.TrackedState);
+            fsm.AddState("C", recorder.TrackedState);
 
             fsm.AddTransition("A", "B");
             fsm.AddTransition("B", "C");
@@ -33,24 +33,56 @@ namespace FSM.Tests
             fsm.SetStartState("A");
             fsm.Init();
 
-            AssertTrackedStated(expected: new[] { "A" });
+            recorder.Expect
+                .Enter("A")
+                .Custom("StateChanged(A)")
+                .All();
 
             fsm.OnLogic();
-            AssertTrackedStated(expected: new[] { "A", "B" });
+            recorder.Expect
+                .Exit("A")
+                .Enter("B")
+                .Custom("StateChanged(B)")
+                .Logic("B")
+                .All();
 
             fsm.OnLogic();
-            AssertTrackedStated(expected: new[] { "A", "B", "C" });
+            recorder.Expect
+                .Exit("B")
+                .Enter("C")
+                .Custom("StateChanged(C)")
+                .Logic("C")
+                .All();
 
             fsm.OnExit();
-            AssertTrackedStated(expected: new[] { "A", "B", "C", "null" });
+            recorder.Expect
+                .Exit("C")
+                .All();
         }
 
-        private void AssertTrackedStated(IEnumerable<string> expected)
+        [Test]
+        public void Test_active_state_changed_event_works_with_ghost_states()
         {
-            if (!trackedStates.SequenceEqual(expected))
-            {
-                Assert.Fail($"Tracked active states is not equals with expected. Real: ({string.Join(',', trackedStates)}), Expected : ({string.Join(',', expected)})");
-            }
+            fsm.StateChanged += state => recorder.RecordCustom($"StateChanged({state.name})");
+
+            fsm.AddState("A", recorder.Track(new State(isGhostState: true)));
+            fsm.AddState("B", recorder.Track(new State(isGhostState: true)));
+            fsm.AddState("C", recorder.Track(new State(isGhostState: true)));
+
+            fsm.AddTransition("A", "B");
+            fsm.AddTransition("B", "C");
+
+            fsm.Init();
+            recorder.Expect
+                .Enter("A")
+                .Custom("StateChanged(A)")
+                .Exit("A")
+                .Enter("B")
+                .Custom("StateChanged(B)")
+                .Exit("B")
+                .Enter("C")
+                .Custom("StateChanged(C)")
+                .All();
         }
     }
 }

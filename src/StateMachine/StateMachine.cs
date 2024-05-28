@@ -92,8 +92,18 @@ namespace UnityHFSM
 		private static readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> noTriggerTransitions
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>(0);
 
+		/// <summary>
+		/// Event that is raised when the active state changes.
+		/// </summary>
+		/// <remarks>
+		/// It is triggered when the state machine enters its initial state, and after a transition is performed.
+		/// Note that it is not called when the state machine exits.
+		/// </remarks>
+		public event Action<StateBase<TStateId>> StateChanged;
+
 		private (TStateId state, bool hasState) startState = (default, false);
 		private PendingTransition pendingTransition = default;
+		private bool rememberLastState = false;
 
 		// Central storage of states.
 		private Dictionary<TStateId, StateBundle> stateBundlesByName
@@ -108,8 +118,6 @@ namespace UnityHFSM
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
-		public event Action<StateBase<TStateId>> OnActiveStateChanged;
-		
 		public StateBase<TStateId> ActiveState
 		{
 			get
@@ -132,11 +140,14 @@ namespace UnityHFSM
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
 		/// 	exit on a transition (false), or if it should wait until an explicit exit transition occurs.</param>
+		/// <param name="rememberLastState">(Only for hierarchical states):
+		/// 	If true, the state machine will return to its last active state when it enters, instead
+		/// 	of to its original start state.</param>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
-
+			this.rememberLastState = rememberLastState;
 		}
 
 		/// <summary>
@@ -201,23 +212,24 @@ namespace UnityHFSM
 			activeTriggerTransitions = bundle.triggerToTransitions ?? noTriggerTransitions;
 
 			activeState = bundle.state;
-			OnActiveStateChanged?.Invoke(activeState);
 			activeState.OnEnter();
 
-			for (int i = 0; i < activeTransitions.Count; i++)
+			for (int i = 0, count = activeTransitions.Count; i < count; i++)
 			{
 				activeTransitions[i].OnEnter();
 			}
 
 			foreach (List<TransitionBase<TStateId>> transitions in activeTriggerTransitions.Values)
 			{
-				for (int i = 0; i < transitions.Count; i++)
+				for (int i = 0, count = transitions.Count; i < count; i++)
 				{
 					transitions[i].OnEnter();
 				}
 			}
 
 			listener?.AfterTransition();
+
+			StateChanged?.Invoke(activeState);
 
 			if (activeState.isGhostState)
 			{
@@ -315,7 +327,7 @@ namespace UnityHFSM
 		/// <returns>Returns true if a transition occurred.</returns>
 		private bool TryAllGlobalTransitions()
 		{
-			for (int i = 0; i < transitionsFromAny.Count; i++)
+			for (int i = 0, count = transitionsFromAny.Count; i < count; i++)
 			{
 				TransitionBase<TStateId> transition = transitionsFromAny[i];
 
@@ -336,7 +348,7 @@ namespace UnityHFSM
 		/// <returns>Returns true if a transition occurred.</returns>
 		private bool TryAllDirectTransitions()
 		{
-			for (int i = 0; i < activeTransitions.Count; i++)
+			for (int i = 0, count = activeTransitions.Count; i < count; i++)
 			{
 				TransitionBase<TStateId> transition = activeTransitions[i];
 
@@ -373,14 +385,14 @@ namespace UnityHFSM
 
 			ChangeState(startState.state);
 
-			for (int i = 0; i < transitionsFromAny.Count; i++)
+			for (int i = 0, count = transitionsFromAny.Count; i < count; i++)
 			{
 				transitionsFromAny[i].OnEnter();
 			}
 
 			foreach (List<TransitionBase<TStateId>> transitions in triggerTransitionsFromAny.Values)
 			{
-				for (int i = 0; i < transitions.Count; i++)
+				for (int i = 0, count = transitions.Count; i < count; i++)
 				{
 					transitions[i].OnEnter();
 				}
@@ -408,14 +420,18 @@ namespace UnityHFSM
 
 		public override void OnExit()
 		{
-			if (activeState != null)
+			if (activeState == null)
+				return;
+
+			if (rememberLastState)
 			{
-				activeState.OnExit();
-				// By setting the activeState to null, the state's onExit method won't be called
-				// a second time when the state machine enters again (and changes to the start state).
-				activeState = null;
-				OnActiveStateChanged?.Invoke(activeState);
+				startState = (activeState.name, true);
 			}
+
+			activeState.OnExit();
+			// By setting the activeState to null, the state's onExit method won't be called
+			// a second time when the state machine enters again (and changes to the start state).
+			activeState = null;
 		}
 
 		public override void OnExitRequest()
@@ -655,7 +671,7 @@ namespace UnityHFSM
 
 			if (triggerTransitionsFromAny.TryGetValue(trigger, out triggerTransitions))
 			{
-				for (int i = 0; i < triggerTransitions.Count; i++)
+				for (int i = 0, count = triggerTransitions.Count; i < count; i++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
@@ -669,7 +685,7 @@ namespace UnityHFSM
 
 			if (activeTriggerTransitions.TryGetValue(trigger, out triggerTransitions))
 			{
-				for (int i = 0; i < triggerTransitions.Count; i++)
+				for (int i = 0, count = triggerTransitions.Count; i < count; i++)
 				{
 					TransitionBase<TStateId> transition = triggerTransitions[i];
 
@@ -773,24 +789,24 @@ namespace UnityHFSM
 
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}
 
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}
 
 	public class StateMachine : StateMachine<string, string, string>
 	{
-		public StateMachine(bool needsExitTime = false, bool isGhostState = false)
-			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
+		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
+			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}

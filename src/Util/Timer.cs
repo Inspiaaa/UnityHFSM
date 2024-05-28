@@ -10,11 +10,6 @@ namespace UnityHFSM
 		public float startTime;
 		public float Elapsed => Time.time - startTime;
 
-		public Timer()
-		{
-			startTime = Time.time;
-		}
-
 		public void Reset()
 		{
 			startTime = Time.time;

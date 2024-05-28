@@ -12,6 +12,10 @@ namespace UnityHFSM
 		// Lazy initialized
 		private ActionStorage<TEvent> actionStorage;
 
+		/// <summary>
+		/// Initialises a new instance of the ActionState class.
+		/// </summary>
+		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public ActionState(bool needsExitTime, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
@@ -69,6 +73,7 @@ namespace UnityHFSM
 	/// <inheritdoc />
 	public class ActionState<TStateId> : ActionState<TStateId, string>
 	{
+		/// <inheritdoc />
 		public ActionState(bool needsExitTime, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{
@@ -78,6 +83,7 @@ namespace UnityHFSM
 	/// <inheritdoc />
 	public class ActionState : ActionState<string, string>
 	{
+		/// <inheritdoc />
 		public ActionState(bool needsExitTime, bool isGhostState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState)
 		{

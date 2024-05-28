@@ -29,7 +29,7 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Release<TStateId> : TransitionBase<TStateId>
+		public class Released<TStateId> : TransitionBase<TStateId>
 		{
 			private int button;
 
@@ -38,7 +38,7 @@ namespace UnityHFSM
 			/// It behaves like Input.GetMouseButtonUp(...).
 			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
-			public Release(
+			public Released(
 					TStateId from,
 					TStateId to,
 					int button,
@@ -53,7 +53,7 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Press<TStateId> : TransitionBase<TStateId>
+		public class Pressed<TStateId> : TransitionBase<TStateId>
 		{
 			private int button;
 
@@ -62,7 +62,7 @@ namespace UnityHFSM
 			/// It behaves like Input.GetMouseButtonDown(...).
 			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
-			public Press(
+			public Pressed(
 					TStateId from,
 					TStateId to,
 					int button,
@@ -83,7 +83,7 @@ namespace UnityHFSM
 
 			/// <summary>
 			/// Initialises a new transition that triggers, while a mouse button is up.
-			/// It behaves like ! Input.GetMouseButton(...).
+			/// It behaves like !Input.GetMouseButton(...).
 			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
 			public Up(
@@ -112,9 +112,9 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Release : Release<string>
+		public class Released : Released<string>
 		{
-			public Release(
+			public Released(
 				string @from,
 				string to,
 				int button,
@@ -123,9 +123,9 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Press : Press<string>
+		public class Pressed : Pressed<string>
 		{
-			public Press(
+			public Pressed(
 				string @from,
 				string to,
 				int button,

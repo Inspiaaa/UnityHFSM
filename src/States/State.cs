@@ -53,12 +53,15 @@ namespace UnityHFSM
 
 		public override void OnLogic()
 		{
+			onLogic?.Invoke(this);
+
+			// Check whether the state is ready to exit after calling onLogic, as it may trigger a transition.
+			// Calling onLogic beforehand would lead to invalid behaviour as it would be called, even though this state
+			// is not active anymore.
 			if (needsExitTime && canExit != null && fsm.HasPendingTransition && canExit(this))
 			{
 				fsm.StateCanExit();
 			}
-
-			onLogic?.Invoke(this);
 		}
 
 		public override void OnExit()

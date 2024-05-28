@@ -28,7 +28,7 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Release<TStateId> : TransitionBase<TStateId>
+		public class Released<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
@@ -37,7 +37,7 @@ namespace UnityHFSM
 			/// It behaves like Input.GetKeyUp(...).
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch.</param>
-			public Release(
+			public Released(
 					TStateId from,
 					TStateId to,
 					KeyCode key,
@@ -52,7 +52,7 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Press<TStateId> : TransitionBase<TStateId>
+		public class Pressed<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
@@ -61,7 +61,7 @@ namespace UnityHFSM
 			/// It behaves like Input.GetKeyDown(...).
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch.</param>
-			public Press(
+			public Pressed(
 					TStateId from,
 					TStateId to,
 					KeyCode key,
@@ -82,7 +82,7 @@ namespace UnityHFSM
 
 			/// <summary>
 			/// Initialises a new transition that triggers, while a key is up.
-			/// It behaves like ! Input.GetKey(...).
+			/// It behaves like !Input.GetKey(...).
 			/// </summary>
 			/// <param name="key">The KeyCode of the key to watch.</param>
 			public Up(
@@ -111,9 +111,9 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Release : Release<string>
+		public class Released : Released<string>
 		{
-			public Release(
+			public Released(
 				string @from,
 				string to,
 				KeyCode key,
@@ -122,9 +122,9 @@ namespace UnityHFSM
 			}
 		}
 
-		public class Press : Press<string>
+		public class Pressed : Pressed<string>
 		{
-			public Press(
+			public Pressed(
 				string @from,
 				string to,
 				KeyCode key,
