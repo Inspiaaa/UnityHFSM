@@ -5,7 +5,7 @@ using System.Collections.Generic;
  * Hierarchical finite state machine for Unity
  * by Inspiaaa
  *
- * Version: 2.0.1
+ * Version: 2.1.0
  */
 
 namespace UnityHFSM

@@ -3,7 +3,7 @@
   "displayName": "UnityHFSM",
   "description": "A simple yet powerful class-based hierarchical finite state machine for Unity3D",
 
-  "version": "2.0.1",
+  "version": "2.1.0",
   "license": "MIT",
   "keywords": ["fsm", "hierarchical", "state-machine"],
   "documentationUrl": "https://github.com/Inspiaaa/UnityHFSM",
