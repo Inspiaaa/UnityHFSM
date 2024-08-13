@@ -25,7 +25,7 @@ namespace UnityHFSM
 		/// It's useful, as you only need to do one Dictionary lookup for these three items.
 		/// => Much better performance
 		/// </summary>
-		private class StateBundle
+		internal class StateBundle
 		{
 			// By default, these fields are all null and only get a value when you need them.
 			// => Lazy evaluation => Memory efficient, when you only need a subset of features
@@ -101,21 +101,21 @@ namespace UnityHFSM
 		/// </remarks>
 		public event Action<StateBase<TStateId>> StateChanged;
 
-		private (TStateId state, bool hasState) startState = (default, false);
+		internal (TStateId state, bool hasState) startState = (default, false);
 		private PendingTransition pendingTransition = default;
 		private bool rememberLastState = false;
 
 		// Central storage of states.
-		private Dictionary<TStateId, StateBundle> stateBundlesByName
+		internal Dictionary<TStateId, StateBundle> stateBundlesByName
 			= new Dictionary<TStateId, StateBundle>();
 
 		private StateBase<TStateId> activeState = null;
 		private List<TransitionBase<TStateId>> activeTransitions = noTransitions;
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> activeTriggerTransitions = noTriggerTransitions;
 
-		private List<TransitionBase<TStateId>> transitionsFromAny
+		internal List<TransitionBase<TStateId>> transitionsFromAny
 			= new List<TransitionBase<TStateId>>();
-		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
+		internal Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
 		public StateBase<TStateId> ActiveState
