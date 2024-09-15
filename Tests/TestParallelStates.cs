@@ -287,5 +287,28 @@ namespace UnityHFSM.Tests
 			fsm.Init();
 			fsm.OnLogic();
 		}
+		
+		[Test]
+		public void Test_ps_reacts_to_global_trigger()
+		{
+			var a = new StateMachine();
+			a.AddState("A");
+			a.AddState("B");
+			a.AddTriggerTransition("T", "A", "B");
+			
+			var b = new StateMachine();
+			b.AddState("C");
+			b.AddState("D");
+			b.AddTriggerTransition("T", "C", "D");
+
+			fsm.AddState("root", new ParallelStates(a, b));
+			fsm.Init();
+			
+			fsm.Trigger("T");
+			Assert.AreEqual("B", a.ActiveStateName);
+			Assert.AreEqual("D", b.ActiveStateName);
+			
+			
+		}
 	}
 }
