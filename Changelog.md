@@ -2,6 +2,15 @@
 
 ---
 
+## 2.2 (in progress)
+
+### Fixed
+
+- Fixed bug that `StateMachine`s inside `ParallelStates` don't react to global triggers (#48).
+- Fixed event-related bug in `ParallelStates` that called certain methods (e.g. `Trigger` and `OnLogic`) on sub-states after a previous state caused an exit / transition.  
+
+---
+
 ## 2.1
 
 ### Added
