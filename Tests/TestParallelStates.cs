@@ -287,7 +287,7 @@ namespace UnityHFSM.Tests
 			fsm.Init();
 			fsm.OnLogic();
 		}
-		
+
 		[Test]
 		public void Test_ps_reacts_to_global_trigger()
 		{
@@ -295,7 +295,7 @@ namespace UnityHFSM.Tests
 			a.AddState("A");
 			a.AddState("B");
 			a.AddTriggerTransition("T", "A", "B");
-			
+
 			var b = new StateMachine();
 			b.AddState("C");
 			b.AddState("D");
@@ -303,12 +303,44 @@ namespace UnityHFSM.Tests
 
 			fsm.AddState("root", new ParallelStates(a, b));
 			fsm.Init();
-			
+
 			fsm.Trigger("T");
 			Assert.AreEqual("B", a.ActiveStateName);
 			Assert.AreEqual("D", b.ActiveStateName);
-			
-			
+		}
+
+		[Test]
+		public void Test_ps_does_not_call_OnLogic_on_second_state_after_exit()
+		{
+			var fsm = new StateMachine();
+
+			bool wasOnLogicCalledOn1 = false;
+			bool wasOnLogicCalledOn2 = false;
+
+			var ps = new ParallelStates(needsExitTime: true)
+				.AddState("1", new State(
+					onLogic: state => {
+						wasOnLogicCalledOn1 = true;
+						state.fsm.StateCanExit();
+					}
+				))
+				.AddState("2", new State(
+					onLogic: state => wasOnLogicCalledOn2 = true
+				));
+
+			fsm.AddState("A", ps);
+			fsm.AddState("B");
+
+			fsm.Init();
+			fsm.RequestStateChange("B");
+
+			Assert.AreEqual("A", fsm.ActiveStateName);
+
+			fsm.OnLogic();
+
+			Assert.AreEqual("B", fsm.ActiveStateName);
+			Assert.IsTrue(wasOnLogicCalledOn1);
+			Assert.IsFalse(wasOnLogicCalledOn2);
 		}
 	}
 }
