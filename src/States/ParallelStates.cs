@@ -25,7 +25,10 @@ namespace UnityHFSM
 		// This variable keeps track whether this state is currently active. It is used to prevent
 		// StateCanExit() calls from the child states to be passed on to the parent state machine
 		// when this state is no longer active, which would result in unwanted behaviour
-		// (e.g. two transitions).
+		// (e.g. two transitions). It is also used to prevent calling events (e.g. OnLogic) on
+		// sub-states when the state has already exited.
+		// Note that this system currently may not work, when the state exits and re-enters in the same
+		// cascade of events (call stack).
 		private bool isActive;
 
 		private Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit;
@@ -122,6 +125,11 @@ namespace UnityHFSM
 			foreach (var state in states)
 			{
 				state.OnLogic();
+
+				if (!isActive)
+				{
+					return;
+				}
 			}
 
 			if (needsExitTime && canExit != null && fsm.HasPendingTransition && canExit(this))
@@ -149,6 +157,11 @@ namespace UnityHFSM
 				foreach (var state in states)
 				{
 					state.OnExitRequest();
+
+					if (!isActive)
+					{
+						return;
+					}
 				}
 			}
 			else
@@ -185,12 +198,17 @@ namespace UnityHFSM
 				fsm.StateCanExit();
 			}
 		}
-		
+
 		public void Trigger(TEvent trigger)
 		{
 			foreach (var state in states)
 			{
 				(state as ITriggerable<TEvent>)?.Trigger(trigger);
+
+				if (!isActive)
+				{
+					return;
+				}
 			}
 		}
 
