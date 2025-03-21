@@ -14,7 +14,7 @@ namespace UnityHFSM
 	/// This will ignore the needsExitTime and StateCanExit() calls of the child states. It works the same as the
 	/// canExit feature of the State class.
 	/// </remarks>
-	public class ParallelStates<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, IActionable<TEvent>, IStateMachine
+	public class ParallelStates<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, IActionable<TEvent>, IStateMachine, ITriggerable<TEvent>
 	{
 		private List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
 
@@ -183,6 +183,14 @@ namespace UnityHFSM
 			if (isActive && canExit == null)
 			{
 				fsm.StateCanExit();
+			}
+		}
+		
+		public void Trigger(TEvent trigger)
+		{
+			foreach (var state in states)
+			{
+				(state as ITriggerable<TEvent>)?.Trigger(trigger);
 			}
 		}
 
