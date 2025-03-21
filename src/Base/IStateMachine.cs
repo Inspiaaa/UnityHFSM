@@ -3,9 +3,9 @@ namespace UnityHFSM
 {
 	/// <summary>
 	/// A subset of features that every parent state machine has to provide.
-	/// It is useful, as it allows the parent state machine to be independent from the
+	/// It is useful, as it allows the parent state machine to be independent of the
 	/// sub-states. This becomes very obvious when there isn't such an abstraction, as
-	/// every sub state would have to provide all generic type parameters of the fsm.
+	/// every sub-state would have to provide all generic type parameters of the fsm.
 	/// => An abstraction layer
 	/// </summary>
 	public interface IStateMachine
