@@ -12,7 +12,7 @@ namespace UnityHFSM
 		public bool forceInstantly;
 		public bool isExitTransition;
 
-		public IStateMachine fsm;
+		public IStateMachine<TStateId> fsm;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionBase class.

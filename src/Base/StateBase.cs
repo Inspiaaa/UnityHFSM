@@ -10,7 +10,7 @@ namespace UnityHFSM
 		public bool isGhostState;
 		public TStateId name;
 
-		public IStateMachine fsm;
+		public IStateTimingManager fsm;
 
 		/// <summary>
 		/// Initialises a new instance of the StateBase class.

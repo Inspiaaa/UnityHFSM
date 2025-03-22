@@ -2,22 +2,33 @@
 namespace UnityHFSM
 {
 	/// <summary>
-	/// A subset of features that every parent state machine has to provide.
-	/// It is useful, as it allows the parent state machine to be independent of the
-	/// sub-states. This becomes very obvious when there isn't such an abstraction, as
-	/// every sub-state would have to provide all generic type parameters of the fsm.
-	/// => An abstraction layer
+	/// An abstraction layer that provides a subset of features that every parent
+	/// state machine has to provide in order to implement the timing mechanics of
+	/// transitions. In addition to the methods provided by <c>IStateTimingManager</c>,
+	/// this interface also provides access to the current and pending states, which
+	/// can be useful for transitions.
 	/// </summary>
-	public interface IStateMachine
+	public interface IStateMachine<TStateId> : IStateTimingManager
 	{
 		/// <summary>
-		/// Tells the state machine that, if there is a state transition pending,
-		/// now is the time to perform it.
+		/// The target state of a pending (delayed) transition. Returns null if no
+		/// transition is pending or when an exit transition is pending.
 		/// </summary>
-		void StateCanExit();
+		StateBase<TStateId> PendingState { get; }
 
-		bool HasPendingTransition { get; }
+		/// <inheritdoc cref="PendingState"/>
+		TStateId PendingStateName { get; }
 
-		IStateMachine ParentFsm { get; }
+		/// <summary>
+		/// The currently active state of the state machine.
+		/// </summary>
+		/// <remarks>
+		/// Note that when a state is "active", the "ActiveState" may not return a reference to this state.
+		/// Depending on the classes used, it may for example return a reference to a wrapper state.
+		/// </remarks>
+		StateBase<TStateId> ActiveState { get; }
+
+		/// <inheritdoc cref="ActiveState"/>
+		TStateId ActiveStateName { get; }
 	}
 }

@@ -17,7 +17,7 @@ namespace UnityHFSM
 	public class StateMachine<TOwnId, TStateId, TEvent> :
 		StateBase<TOwnId>,
 		ITriggerable<TEvent>,
-		IStateMachine,
+		IStateMachine<TStateId>,
 		IActionable<TEvent>
 	{
 		/// <summary>
@@ -126,13 +126,16 @@ namespace UnityHFSM
 				return activeState;
 			}
 		}
+
 		public TStateId ActiveStateName => ActiveState.name;
 
-		public IStateMachine ParentFsm => fsm;
+		public TStateId PendingStateName => pendingTransition.targetState;
+		public StateBase<TStateId> PendingState => GetState(PendingStateName);
+		public bool HasPendingTransition => pendingTransition.isPending;
+
+		public IStateTimingManager ParentFsm => fsm;
 
 		private bool IsRootFsm => fsm == null;
-
-		public bool HasPendingTransition => pendingTransition.isPending;
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class.

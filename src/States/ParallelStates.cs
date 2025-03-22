@@ -14,7 +14,11 @@ namespace UnityHFSM
 	/// This will ignore the needsExitTime and StateCanExit() calls of the child states. It works the same as the
 	/// canExit feature of the State class.
 	/// </remarks>
-	public class ParallelStates<TOwnId, TStateId, TEvent> : StateBase<TOwnId>, IActionable<TEvent>, IStateMachine, ITriggerable<TEvent>
+	public class ParallelStates<TOwnId, TStateId, TEvent> :
+		StateBase<TOwnId>,
+		IActionable<TEvent>,
+		ITriggerable<TEvent>,
+		IStateTimingManager
 	{
 		private List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
 
@@ -34,7 +38,7 @@ namespace UnityHFSM
 		private Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit;
 
 		public bool HasPendingTransition => fsm.HasPendingTransition;
-		public IStateMachine ParentFsm => fsm;
+		public IStateTimingManager ParentFsm => fsm;
 
 		/// <inheritdoc cref="ParallelStates{T, T, T}(Func{ParallelStates{T, T, T}, bool}, bool, bool, StateBase{T}[])"/>
 		public ParallelStates(
