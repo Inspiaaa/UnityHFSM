@@ -1,6 +1,4 @@
 using NUnit.Framework;
-using UnityHFSM;
-using System;
 
 namespace UnityHFSM.Tests
 {

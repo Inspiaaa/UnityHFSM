@@ -1,4 +1,3 @@
-using UnityEngine;
 using NUnit.Framework;
 
 namespace UnityHFSM.Tests
