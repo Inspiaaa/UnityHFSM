@@ -30,5 +30,7 @@ namespace UnityHFSM
 
 		/// <inheritdoc cref="ActiveState"/>
 		TStateId ActiveStateName { get; }
+
+		StateBase<TStateId> GetState(TStateId name);
 	}
 }
