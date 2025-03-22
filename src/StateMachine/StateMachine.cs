@@ -11,8 +11,8 @@ using System.Collections.Generic;
 namespace UnityHFSM
 {
 	/// <summary>
-	/// A finite state machine that can also be used as a state of a parent state machine to create
-	/// a hierarchy (-> hierarchical state machine).
+	/// Main finite state machine class. It can be used as a child state of another state machine
+	/// in order to create a hierarchical state machine.
 	/// </summary>
 	public class StateMachine<TOwnId, TStateId, TEvent> :
 		StateBase<TOwnId>,
@@ -302,7 +302,7 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Checks if a transition can take place, and if this is the case, transition to the
-		/// "to" state and return true. Otherwise it returns false.
+		/// "to" state and return true. Otherwise, it returns false.
 		/// </summary>
 		private bool TryTransition(TransitionBase<TStateId> transition)
 		{
@@ -404,8 +404,8 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Runs one logic step. It does at most one transition itself and
-		/// calls the active state's logic function (after the state transition, if
-		/// one occurred).
+		/// calls the active state's logic function (after the state transition,
+		/// if one occurred).
 		/// </summary>
 		public override void OnLogic()
 		{
@@ -454,7 +454,7 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Gets the StateBundle belonging to the <c>name</c> state "slot" if it exists.
-		/// Otherwise it will create a new StateBundle, that will be added to the Dictionary,
+		/// Otherwise, it will create a new StateBundle, that will be added to the Dictionary,
 		/// and return the newly created instance.
 		/// </summary>
 		private StateBundle GetOrCreateStateBundle(TStateId name)
@@ -491,7 +491,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Initialises a transition, i.e. sets its fsm attribute, and then calls its Init method.
+		/// Initialises a transition, i.e. sets its <c>fsm</c> attribute, and then calls its Init method.
 		/// </summary>
 		/// <param name="transition"></param>
 		private void InitTransition(TransitionBase<TStateId> transition)
@@ -563,7 +563,7 @@ namespace UnityHFSM
 		/// <summary>
 		/// Adds two transitions:
 		/// If the condition of the transition instance is true, it transitions from the "from"
-		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// state to the "to" state. Otherwise, it performs a transition in the opposite direction,
 		/// i.e. from "to" to "from".
 		/// </summary>
 		/// <remarks>
@@ -571,7 +571,7 @@ namespace UnityHFSM
 		/// by wrapping it in a ReverseTransition.
 		/// For the reverse transition the afterTransition callback is called before the transition
 		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
-		/// of the two way transitions by creating two separate transitions.
+		/// of the two-way transitions by creating two separate transitions.
 		/// </remarks>
 		public void AddTwoWayTransition(TransitionBase<TStateId> transition)
 		{
@@ -586,7 +586,7 @@ namespace UnityHFSM
 		/// <summary>
 		/// Adds two transitions that are only checked when the specified trigger is activated:
 		/// If the condition of the transition instance is true, it transitions from the "from"
-		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// state to the "to" state. Otherwise, it performs a transition in the opposite direction,
 		/// i.e. from "to" to "from".
 		/// </summary>
 		/// <remarks>
@@ -594,7 +594,7 @@ namespace UnityHFSM
 		/// by wrapping it in a ReverseTransition.
 		/// For the reverse transition the afterTransition callback is called before the transition
 		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
-		/// of the two way transitions by creating two separate transitions.
+		/// of the two-way transitions by creating two separate transitions.
 		/// </remarks>
 		public void AddTwoWayTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{
@@ -739,7 +739,7 @@ namespace UnityHFSM
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Any custom data for the parameter.</param>
 		/// <typeparam name="TData">Type of the data parameter.
-		/// 	Should match the data type of the action that was added via AddAction<T>(...).</typeparam>
+		/// 	Should match the data type of the action that was added via <c>AddAction&lt;T&gt;(...).</c></typeparam>
 		public virtual void OnAction<TData>(TEvent trigger, TData data)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
