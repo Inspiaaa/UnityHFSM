@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 
 /**
- * Hierarchical finite state machine for Unity
- * by Inspiaaa
+ * Hierarchical Finite State Machine for Unity
+ * by Inspiaaa and contributors
  *
  * Version: 2.1.0
  */
