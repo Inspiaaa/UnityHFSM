@@ -4,6 +4,14 @@
 
 ## 2.2 (in progress)
 
+### Improved
+
+- The `StateMachine` class has two new properties: `PendingState` and `PendingStateName` that allow you to get the target state of pending (delayed) transitions. 
+
+- The `IStateMachine` interface has been reworked and split into two interfaces:
+  - `IStateTimingManager`: This is essentially the `IStateMachine` from older versions. Its new name underlines its purpose more accurately.
+  - `IStateMachine<T>`: This interface extends the `IStateTimingManager` interface and makes it easier to access some information from StateMachines without needing to perform a cast. (E.g. access to the current state, pending state, method to get a state by name)   
+
 ### Fixed
 
 - Fixed bug that `StateMachine`s inside `ParallelStates` don't react to global triggers (#48).
