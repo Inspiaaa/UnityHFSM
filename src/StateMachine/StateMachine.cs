@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 /**
  * Hierarchical Finite State Machine for Unity
@@ -25,7 +26,7 @@ namespace UnityHFSM
 		/// It's useful, as you only need to do one Dictionary lookup for these three items.
 		/// => Much better performance
 		/// </summary>
-		internal class StateBundle
+		private class StateBundle
 		{
 			// By default, these fields are all null and only get a value when you need them.
 			// => Lazy evaluation => Memory efficient, when you only need a subset of features
@@ -101,21 +102,21 @@ namespace UnityHFSM
 		/// </remarks>
 		public event Action<StateBase<TStateId>> StateChanged;
 
-		internal (TStateId state, bool hasState) startState = (default, false);
+		private (TStateId state, bool hasState) startState = (default, false);
 		private PendingTransition pendingTransition = default;
 		private bool rememberLastState = false;
 
 		// Central storage of states.
-		internal Dictionary<TStateId, StateBundle> stateBundlesByName
+		private Dictionary<TStateId, StateBundle> stateBundlesByName
 			= new Dictionary<TStateId, StateBundle>();
 
 		private StateBase<TStateId> activeState = null;
 		private List<TransitionBase<TStateId>> activeTransitions = noTransitions;
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> activeTriggerTransitions = noTriggerTransitions;
 
-		internal List<TransitionBase<TStateId>> transitionsFromAny
+		private List<TransitionBase<TStateId>> transitionsFromAny
 			= new List<TransitionBase<TStateId>>();
-		internal Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
+		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
 		public StateBase<TStateId> ActiveState
@@ -784,6 +785,95 @@ namespace UnityHFSM
 			}
 
 			return $"{name}/{activeState.GetActiveHierarchyPath()}";
+		}
+
+		/// <summary>Returns a list of the names of all currently defined states.</summary>
+		/// <remarks>Warning: this is an expensive operation.</remarks>
+		public IReadOnlyList<TStateId> GetAllStateNames()
+		{
+			return stateBundlesByName.Values
+				.Where(bundle => bundle.state != null)
+				.Select(bundle => bundle.state.name)
+				.ToArray();
+		}
+
+		/// <summary>Returns a list of all currently defined states.</summary>
+		/// <remarks>Warning: this is an expensive operation.</remarks>
+		public IReadOnlyList<StateBase<TStateId>> GetAllStates()
+		{
+			return stateBundlesByName.Values
+				.Where(bundle => bundle.state != null)
+				.Select(bundle => bundle.state)
+				.ToArray();
+		}
+
+		public TStateId GetStartStateName()
+		{
+			if (!startState.hasState)
+			{
+				throw UnityHFSM.Exceptions.Common.MissingStartState("Getting the start state");
+			}
+
+			return startState.state;
+		}
+
+		/// <summary>Returns a list of all added state transitions.</summary>
+		/// <remarks>Warning: this is an expensive operation.</remarks>
+		public IReadOnlyList<TransitionBase<TStateId>> GetAllTransitions()
+		{
+			return stateBundlesByName.Values
+				.Where(bundle => bundle.transitions != null)
+				.SelectMany(bundle => bundle.transitions)
+				.ToArray();
+		}
+
+		/// <summary>Returns a list of all added state "transitions from any".</summary>
+		public IReadOnlyList<TransitionBase<TStateId>> GetAllTransitionsFromAny()
+		{
+			return transitionsFromAny.ToArray();
+		}
+
+		/// <summary>Returns all added trigger transitions, grouped by their trigger events.</summary>
+		/// <remarks>Warning: this is an expensive operation.</remarks>
+		public IReadOnlyDictionary<TEvent, IReadOnlyList<TransitionBase<TStateId>>> GetAllTriggerTransitions()
+		{
+			var transitionsByEvent = new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
+
+			foreach (var bundle in stateBundlesByName.Values)
+			{
+				if (bundle.triggerToTransitions == null)
+					continue;
+
+				foreach ((TEvent trigger, List<TransitionBase<TStateId>> transitions) in bundle.triggerToTransitions)
+				{
+					if (!transitionsByEvent.TryGetValue(trigger, out List<TransitionBase<TStateId>> transitionsForEvent))
+					{
+						transitionsForEvent = new List<TransitionBase<TStateId>>();
+						transitionsByEvent.Add(trigger, transitionsForEvent);
+					}
+
+					transitionsForEvent.AddRange(transitions);
+				}
+			}
+
+			var immutableCopy = new Dictionary<TEvent, IReadOnlyList<TransitionBase<TStateId>>>();
+			foreach ((TEvent trigger, List<TransitionBase<TStateId>> transitions) in transitionsByEvent)
+			{
+				immutableCopy.Add(trigger, transitions);
+			}
+			return immutableCopy;
+		}
+
+		/// <summary>Returns all added "trigger transitions from any", grouped by their trigger events.</summary>
+		/// <remarks>Warning: this is an expensive operation.</remarks>
+		public IReadOnlyDictionary<TEvent, IReadOnlyList<TransitionBase<TStateId>>> GetAllTriggerTransitionsFromAny()
+		{
+			var immutableCopy = new Dictionary<TEvent, IReadOnlyList<TransitionBase<TStateId>>>();
+			foreach ((TEvent trigger, List<TransitionBase<TStateId>> transitions) in triggerTransitionsFromAny)
+			{
+				immutableCopy.Add(trigger, transitions);
+			}
+			return immutableCopy;
 		}
 	}
 
