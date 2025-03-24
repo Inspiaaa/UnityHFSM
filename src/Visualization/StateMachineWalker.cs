@@ -31,8 +31,15 @@ namespace UnityHFSM.Visualization
 		{
 			visitor.VisitStateMachine(path, fsm);
 
-			foreach (var state in fsm.GetAllStates())
+			foreach (var originalState in fsm.GetAllStates())
 			{
+				// Unwrap the state.
+				StateBase<TStateId> state = originalState;
+				while (state is DecoratedState<TStateId, TEvent> decoratedState)
+				{
+					state = decoratedState.state;
+				}
+
 				var childPath = new StateMachinePath<TStateId>(path, state.name);
 
 				// As a child state machine may use different generic type parameters (which are only known at runtime)

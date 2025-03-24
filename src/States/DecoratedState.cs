@@ -19,7 +19,7 @@ namespace UnityHFSM
         	beforeOnExit,
         	afterOnExit;
 
-        private readonly StateBase<TStateId> state;
+        public readonly StateBase<TStateId> state;
 
         public DecoratedState(
         	StateBase<TStateId> state,
