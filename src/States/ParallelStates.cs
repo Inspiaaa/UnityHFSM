@@ -280,6 +280,7 @@ namespace UnityHFSM
 			params StateBase<TStateId>[] states) : base(canExit, needsExitTime, isGhostState, states) { }
 	}
 
+	/// <inheritdoc />
 	public class ParallelStates<TStateId> : ParallelStates<TStateId, TStateId, string>
 	{
 		/// <inheritdoc />
@@ -310,6 +311,7 @@ namespace UnityHFSM
 			params StateBase<TStateId>[] states) : base(canExit, needsExitTime, isGhostState, states) { }
 	}
 
+	/// <inheritdoc />
 	public class ParallelStates : ParallelStates<string, string, string>
 	{
 		/// <inheritdoc />
