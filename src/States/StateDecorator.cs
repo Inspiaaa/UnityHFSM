@@ -9,100 +9,7 @@ namespace UnityHFSM
 	/// </summary>
 	public class StateDecorator<TStateId, TEvent>
 	{
-		public class WrappedState : StateBase<TStateId>, ITriggerable<TEvent>, IActionable<TEvent>
-		{
-			private Action<StateBase<TStateId>>
-				beforeOnEnter,
-				afterOnEnter,
-
-				beforeOnLogic,
-				afterOnLogic,
-
-				beforeOnExit,
-				afterOnExit;
-
-			private StateBase<TStateId> state;
-
-			public WrappedState(
-					StateBase<TStateId> state,
-
-					Action<StateBase<TStateId>> beforeOnEnter = null,
-					Action<StateBase<TStateId>> afterOnEnter = null,
-
-					Action<StateBase<TStateId>> beforeOnLogic = null,
-					Action<StateBase<TStateId>> afterOnLogic = null,
-
-					Action<StateBase<TStateId>> beforeOnExit = null,
-					Action<StateBase<TStateId>> afterOnExit = null) : base(state.needsExitTime, state.isGhostState)
-			{
-				this.state = state;
-
-				this.beforeOnEnter = beforeOnEnter;
-				this.afterOnEnter = afterOnEnter;
-
-				this.beforeOnLogic = beforeOnLogic;
-				this.afterOnLogic = afterOnLogic;
-
-				this.beforeOnExit = beforeOnExit;
-				this.afterOnExit = afterOnExit;
-			}
-
-			public override void Init()
-			{
-				state.name = name;
-				state.fsm = fsm;
-
-				state.Init();
-			}
-
-			public override void OnEnter()
-			{
-				beforeOnEnter?.Invoke(this);
-				state.OnEnter();
-				afterOnEnter?.Invoke(this);
-			}
-
-			public override void OnLogic()
-			{
-				beforeOnLogic?.Invoke(this);
-				state.OnLogic();
-				afterOnLogic?.Invoke(this);
-			}
-
-			public override void OnExit()
-			{
-				beforeOnExit?.Invoke(this);
-				state.OnExit();
-				afterOnExit?.Invoke(this);
-			}
-
-			public override void OnExitRequest()
-			{
-				state.OnExitRequest();
-			}
-
-			public void Trigger(TEvent trigger)
-			{
-				(state as ITriggerable<TEvent>)?.Trigger(trigger);
-			}
-
-			public void OnAction(TEvent trigger)
-			{
-				(state as IActionable<TEvent>)?.OnAction(trigger);
-			}
-
-			public void OnAction<TData>(TEvent trigger, TData data)
-			{
-				(state as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
-			}
-
-			public override string GetActiveHierarchyPath()
-			{
-				return state.GetActiveHierarchyPath();
-			}
-		}
-
-		private Action<StateBase<TStateId>>
+		private readonly Action<StateBase<TStateId>>
 			beforeOnEnter,
 			afterOnEnter,
 
@@ -113,7 +20,7 @@ namespace UnityHFSM
 			afterOnExit;
 
 		/// <summary>
-		/// Initialises a new instance of the StateWrapper class
+		/// Initialises a new instance of the StateDecorator class.
 		/// </summary>
 		public StateDecorator(
 				Action<StateBase<TStateId>> beforeOnEnter = null,
@@ -135,9 +42,9 @@ namespace UnityHFSM
 			this.afterOnExit = afterOnExit;
 		}
 
-		public WrappedState Wrap(StateBase<TStateId> state)
+		public DecoratedState<TStateId, TEvent> Decorate(StateBase<TStateId> state)
 		{
-			return new WrappedState(
+			return new DecoratedState<TStateId, TEvent>(
 				state,
 				beforeOnEnter,
 				afterOnEnter,

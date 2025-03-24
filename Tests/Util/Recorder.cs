@@ -208,7 +208,7 @@ namespace UnityHFSM.Tests
 
 		public StateBase<TStateId> Track(StateBase<TStateId> state)
 		{
-			return tracker.Wrap(state);
+			return tracker.Decorate(state);
 		}
 
 		private string CreateTraceback()
