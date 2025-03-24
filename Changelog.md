@@ -6,14 +6,25 @@
 
 ### Added
 
-- **Improved inspection**:
+- **Advanced state machine inspection via code**:
   - The `StateMachine` provides new methods that let you extract the added states and transitions at runtime. They can be used to implement dynamic tools that operate on state machines.
     - `GetStartStateName`
     - `GetAllStates` and `GetAllStateNames`
     - `GetAllTransitions`, `GetAllTransitionsFromAny`, `GetAllTriggerTransitions`, `GetAllTriggerTransitionsFromAny`
   - The `StateMachine` class has two new properties: `PendingState` and `PendingStateName` that allow you to get the target state of pending (delayed) transitions.
 
+- **New callbacks in `DecoratedTransition`**: (see below for more information regarding the changes to the wrapper classes). The wrapper class allows you to add custom callbacks that are run when and after the transition occurs:
+```csharp
+fsm.AddTransition(new DecoratedTransition(someTransition, 
+    beforeOnTransition: t => Debug.Log("Called before onTransition of wrapped transition")
+));
+```
+
 ### Improved
+
+- The state and transition wrapper classes have been reworked:
+  - The classes have been renamed to reflect the underlying design pattern: `StateWrapper -> StateDecorator`, `WrappedState -> DecoratedState`, `TransitionWrapper -> TransitionDecorator`, `WrappedTransition -> DecoratedTransition`
+  - The actual "wrapper" classes which were previously nested inside the decorators, have been made independent classes in their own files. This makes them easier to use for "single-use" applications and improves their visibility within the codebase. 
 
 - The `IStateMachine` interface has been reworked and split into two interfaces:
   - `IStateTimingManager`: This is essentially the `IStateMachine` from older versions. Its new name underlines its purpose more accurately.
@@ -23,7 +34,7 @@
 
 - Fixed bug that `StateMachine`s inside `ParallelStates` don't react to global triggers (#48).
 
-- Fixed event-related bug in `ParallelStates` that called certain methods (e.g. `Trigger` and `OnLogic`) on sub-states after a previous state caused an exit / transition.  
+- Fixed event-related bug in `ParallelStates` that incorrectly called certain methods (e.g. `Trigger` and `OnLogic`) on sub-states after a previous state caused an exit / transition.  
 
 ---
 
