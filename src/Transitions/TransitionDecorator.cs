@@ -3,101 +3,62 @@
 namespace UnityHFSM
 {
 	/// <summary>
-	/// A class that allows you to run additional functions (companion code)
-	/// before and after the wrapped state's code.
+	/// A helper class that helps you decorate multiple transitions with the same user code.
+	/// It produces <c>DecoratedTransition</c> objects based on the provided parameters.
 	/// </summary>
 	public class TransitionDecorator<TStateId>
 	{
-		public class WrappedTransition : TransitionBase<TStateId>
-		{
-			private Action<TransitionBase<TStateId>>
-				beforeOnEnter,
-				afterOnEnter,
-
-				beforeShouldTransition,
-				afterShouldTransition;
-
-			private TransitionBase<TStateId> transition;
-
-			public WrappedTransition(
-					TransitionBase<TStateId> transition,
-
-					Action<TransitionBase<TStateId>> beforeOnEnter = null,
-					Action<TransitionBase<TStateId>> afterOnEnter = null,
-
-					Action<TransitionBase<TStateId>> beforeShouldTransition = null,
-					Action<TransitionBase<TStateId>> afterShouldTransition = null) : base(
-					transition.from, transition.to, forceInstantly: transition.forceInstantly)
-			{
-				this.transition = transition;
-
-				this.beforeOnEnter = beforeOnEnter;
-				this.afterOnEnter = afterOnEnter;
-
-				this.beforeShouldTransition = beforeShouldTransition;
-				this.afterShouldTransition = afterShouldTransition;
-			}
-
-			public override void Init()
-			{
-				transition.fsm = this.fsm;
-			}
-
-			public override void OnEnter()
-			{
-				beforeOnEnter?.Invoke(transition);
-				transition.OnEnter();
-				afterOnEnter?.Invoke(transition);
-			}
-
-			public override bool ShouldTransition()
-			{
-				beforeShouldTransition?.Invoke(transition);
-				bool shouldTransition = transition.ShouldTransition();
-				afterShouldTransition?.Invoke(transition);
-				return shouldTransition;
-			}
-
-			public override void BeforeTransition()
-			{
-				transition.BeforeTransition();
-			}
-
-			public override void AfterTransition()
-			{
-				transition.AfterTransition();
-			}
-		}
-
-		private Action<TransitionBase<TStateId>>
+		private readonly Action<TransitionBase<TStateId>>
 			beforeOnEnter,
 			afterOnEnter,
 
 			beforeShouldTransition,
-			afterShouldTransition;
+			afterShouldTransition,
+
+			beforeOnTransition,
+			afterOnTransition,
+
+			beforeAfterTransition,
+			afterAfterTransition;
 
 		public TransitionDecorator(
-				Action<TransitionBase<TStateId>> beforeOnEnter = null,
-				Action<TransitionBase<TStateId>> afterOnEnter = null,
+			Action<TransitionBase<TStateId>> beforeOnEnter = null,
+			Action<TransitionBase<TStateId>> afterOnEnter = null,
 
-				Action<TransitionBase<TStateId>> beforeShouldTransition = null,
-				Action<TransitionBase<TStateId>> afterShouldTransition = null)
+			Action<TransitionBase<TStateId>> beforeShouldTransition = null,
+			Action<TransitionBase<TStateId>> afterShouldTransition = null,
+
+			Action<TransitionBase<TStateId>> beforeOnTransition = null,
+			Action<TransitionBase<TStateId>> afterOnTransition = null,
+
+			Action<TransitionBase<TStateId>> beforeAfterTransition = null,
+			Action<TransitionBase<TStateId>> afterAfterTransition = null)
 		{
 			this.beforeOnEnter = beforeOnEnter;
 			this.afterOnEnter = afterOnEnter;
 
 			this.beforeShouldTransition = beforeShouldTransition;
 			this.afterShouldTransition = afterShouldTransition;
+
+			this.beforeOnTransition = beforeOnTransition;
+			this.afterOnTransition = afterOnTransition;
+
+			this.beforeAfterTransition = beforeAfterTransition;
+			this.afterAfterTransition = afterAfterTransition;
 		}
 
-		public WrappedTransition Wrap(TransitionBase<TStateId> transition)
+		public DecoratedTransition<TStateId> Decorate(TransitionBase<TStateId> transition)
 		{
-			return new WrappedTransition(
+			return new DecoratedTransition<TStateId>(
 				transition,
 				beforeOnEnter,
 				afterOnEnter,
 				beforeShouldTransition,
-				afterShouldTransition
+				afterShouldTransition,
+				beforeOnTransition,
+				afterOnTransition,
+				beforeAfterTransition,
+				afterAfterTransition
 			);
 		}
 	}
@@ -108,12 +69,20 @@ namespace UnityHFSM
 		public TransitionDecorator(
 			Action<TransitionBase<string>> beforeOnEnter = null,
 			Action<TransitionBase<string>> afterOnEnter = null,
-
 			Action<TransitionBase<string>> beforeShouldTransition = null,
-			Action<TransitionBase<string>> afterShouldTransition = null) : base(
-			beforeOnEnter, afterOnEnter,
-			beforeShouldTransition, afterShouldTransition)
-		{
-		}
+			Action<TransitionBase<string>> afterShouldTransition = null,
+			Action<TransitionBase<string>> beforeOnTransition = null,
+			Action<TransitionBase<string>> afterOnTransition = null,
+			Action<TransitionBase<string>> beforeAfterTransition = null,
+			Action<TransitionBase<string>> afterAfterTransition = null)
+		: base(
+			beforeOnEnter,
+			afterOnEnter,
+			beforeShouldTransition,
+			afterShouldTransition,
+			beforeOnTransition,
+			afterOnTransition,
+			beforeAfterTransition,
+			afterAfterTransition) { }
 	}
 }
