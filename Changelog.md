@@ -4,9 +4,16 @@
 
 ## 2.2 (in progress)
 
-### Improved
+### Added
 
-- The `StateMachine` class has two new properties: `PendingState` and `PendingStateName` that allow you to get the target state of pending (delayed) transitions. 
+- **Improved inspection**:
+  - The `StateMachine` provides new methods that let you extract the added states and transitions at runtime. They can be used to implement dynamic tools that operate on state machines.
+    - `GetStartStateName`
+    - `GetAllStates` and `GetAllStateNames`
+    - `GetAllTransitions`, `GetAllTransitionsFromAny`, `GetAllTriggerTransitions`, `GetAllTriggerTransitionsFromAny`
+  - The `StateMachine` class has two new properties: `PendingState` and `PendingStateName` that allow you to get the target state of pending (delayed) transitions.
+
+### Improved
 
 - The `IStateMachine` interface has been reworked and split into two interfaces:
   - `IStateTimingManager`: This is essentially the `IStateMachine` from older versions. Its new name underlines its purpose more accurately.
@@ -15,6 +22,7 @@
 ### Fixed
 
 - Fixed bug that `StateMachine`s inside `ParallelStates` don't react to global triggers (#48).
+
 - Fixed event-related bug in `ParallelStates` that called certain methods (e.g. `Trigger` and `OnLogic`) on sub-states after a previous state caused an exit / transition.  
 
 ---
