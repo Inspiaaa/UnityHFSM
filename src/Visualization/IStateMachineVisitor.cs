@@ -20,7 +20,7 @@ namespace UnityHFSM.Visualization
 
 		/// <summary>
 		/// Called after the current state machine and all its child states (and child state machines) have
-		/// been visisted.
+		/// been visited.
 		/// </summary>
 		void ExitStateMachine<TOwnId, TStateId, TEvent>(
 			StateMachinePath fsmPath,
