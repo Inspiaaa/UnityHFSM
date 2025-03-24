@@ -6,7 +6,7 @@ namespace UnityHFSM
 	/// A class that allows you to run additional functions (companion code)
 	/// before and after the wrapped state's code.
 	/// </summary>
-	public class TransitionWrapper<TStateId>
+	public class TransitionDecorator<TStateId>
 	{
 		public class WrappedTransition : TransitionBase<TStateId>
 		{
@@ -76,7 +76,7 @@ namespace UnityHFSM
 			beforeShouldTransition,
 			afterShouldTransition;
 
-		public TransitionWrapper(
+		public TransitionDecorator(
 				Action<TransitionBase<TStateId>> beforeOnEnter = null,
 				Action<TransitionBase<TStateId>> afterOnEnter = null,
 
@@ -103,9 +103,9 @@ namespace UnityHFSM
 	}
 
 	/// <inheritdoc />
-	public class TransitionWrapper : TransitionWrapper<string>
+	public class TransitionDecorator : TransitionDecorator<string>
 	{
-		public TransitionWrapper(
+		public TransitionDecorator(
 			Action<TransitionBase<string>> beforeOnEnter = null,
 			Action<TransitionBase<string>> afterOnEnter = null,
 

@@ -7,7 +7,7 @@ namespace UnityHFSM
 	/// before and after the wrapped state's code.
 	/// It does not interfere with the wrapped state's timing / needsExitTime / ... behaviour.
 	/// </summary>
-	public class StateWrapper<TStateId, TEvent>
+	public class StateDecorator<TStateId, TEvent>
 	{
 		public class WrappedState : StateBase<TStateId>, ITriggerable<TEvent>, IActionable<TEvent>
 		{
@@ -115,7 +115,7 @@ namespace UnityHFSM
 		/// <summary>
 		/// Initialises a new instance of the StateWrapper class
 		/// </summary>
-		public StateWrapper(
+		public StateDecorator(
 				Action<StateBase<TStateId>> beforeOnEnter = null,
 				Action<StateBase<TStateId>> afterOnEnter = null,
 
@@ -150,9 +150,9 @@ namespace UnityHFSM
 	}
 
 	/// <inheritdoc />
-	public class StateWrapper : StateWrapper<string, string>
+	public class StateDecorator : StateDecorator<string, string>
 	{
-		public StateWrapper(
+		public StateDecorator(
 			Action<StateBase<string>> beforeOnEnter = null,
 			Action<StateBase<string>> afterOnEnter = null,
 

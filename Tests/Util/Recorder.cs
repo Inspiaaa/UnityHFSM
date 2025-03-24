@@ -173,7 +173,7 @@ namespace UnityHFSM.Tests
 		}
 
 		private Queue<Event> recordedEvents;
-		private StateWrapper<TStateId, string> tracker;
+		private StateDecorator<TStateId, string> tracker;
 
 		// Fluent interface for checking the validity of the recorded events.
 		public RecorderQuery Expect => new RecorderQuery(this);
@@ -184,7 +184,7 @@ namespace UnityHFSM.Tests
 		public Recorder()
 		{
 			recordedEvents = new Queue<Event>();
-			tracker = new StateWrapper<TStateId, string>(
+			tracker = new StateDecorator<TStateId, string>(
 				beforeOnEnter: s => RecordEnter(s.name),
 				beforeOnLogic: s => RecordLogic(s.name),
 				beforeOnExit: s => RecordExit(s.name)
