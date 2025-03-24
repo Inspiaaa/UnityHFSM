@@ -1,5 +1,9 @@
 namespace UnityHFSM.Visualization
 {
+	/// <summary>
+	/// Interface for objects that recursively traverse the states of a state machine
+	/// via a <see cref="StateMachineWalker"/>.
+	/// </summary>
 	public interface IStateMachineVisitor
 	{
 		void VisitStateMachine<TOwnId, TStateId, TEvent>(

@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace UnityHFSM.Visualization
 {
+	/// <summary>
+	/// Light-weight, hashable and equatable type that represents the path to a state within a hierarchical
+	/// state machine, supporting different state ID types for each level. Each instance represents a node
+	/// that is linked to the <c>StateMachinePath</c> of its parent node.
+	/// </summary>
 	public abstract class StateMachinePath : IEquatable<StateMachinePath>
 	{
 		public static readonly StateMachinePath Root = new RootStateMachinePath();
@@ -39,6 +44,9 @@ namespace UnityHFSM.Visualization
 		}
 	}
 
+	/// <summary>
+	/// Represents a state / state machine within a <see cref="StateMachinePath"/>.
+	/// </summary>
 	public class StateMachinePath<TStateId> : StateMachinePath, IEquatable<StateMachinePath<TStateId>>
 	{
 		public readonly TStateId name;
@@ -90,6 +98,9 @@ namespace UnityHFSM.Visualization
 		}
 	}
 
+	/// <summary>
+	/// Represents the <see cref="StateMachinePath"/> of the root state machine.
+	/// </summary>
 	public class RootStateMachinePath : StateMachinePath, IEquatable<RootStateMachinePath>
 	{
 		public RootStateMachinePath() : base(null) { }
