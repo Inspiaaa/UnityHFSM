@@ -3,9 +3,8 @@ using System;
 namespace UnityHFSM
 {
 	/// <summary>
-	/// A class that allows you to run additional functions (companion code)
-	/// before and after the wrapped state's code.
-	/// It does not interfere with the wrapped state's timing / needsExitTime / ... behaviour.
+	/// A helper class that helps you decorate multiple states with the same user code.
+	/// It produces <c>DecoratedState</c> objects based on the provided parameters.
 	/// </summary>
 	public class StateDecorator<TStateId, TEvent>
 	{
