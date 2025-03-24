@@ -9,288 +9,375 @@ using UnityEngine;
 #if UNITY_EDITOR
 namespace UnityHFSM.Visualization
 {
-	public static class HfsmAnimatorGraph
+public static class HfsmAnimatorGraph
+{
+	/// <summary>
+	/// Helper class that records the current layout of the animator states so that it can be restored
+	/// once the animator graph has been regenerated.
+	/// </summary>
+	private class StateMachinePositionInformation
 	{
-		/// <summary>
-		/// Prints the animator states and transitions to an Animator for easy viewing.
-		/// Only call this after all states and transitions have been added!
-		/// </summary>
-		/// <param name="pathToCreateDebugAnimator">
-		///		Leave this empty if you want to use the default path of Assets/DebugAnimators/</param>
-		public static void PrintToAnimator<TOwnId, TStateId, TEvent>(
-			this StateMachine<TOwnId, TStateId, TEvent> hfsm,
-			string pathToFolderForDebugAnimator = "",
-			string animatorName = "StateMachineDebugger.controller")
+		// Positions of the "special" states within this state machine.
+		private readonly Vector3 entryPosition;
+		private readonly Vector3 exitPosition;
+		private readonly Vector3 anyStatePosition;
+		private readonly Vector3 parentStateMachinePosition;
+
+		// Positions of child states and child state machines.
+		private readonly Dictionary<string, Vector3> statePositions
+			= new Dictionary<string, Vector3>();
+		private readonly Dictionary<string, StateMachinePositionInformation> childStateMachines
+			= new Dictionary<string, StateMachinePositionInformation>();
+
+		private StateMachinePositionInformation(AnimatorStateMachine animator)
 		{
-			if (hfsm.stateBundlesByName.Count == 0)
+			entryPosition = animator.entryPosition;
+			exitPosition = animator.exitPosition;
+			anyStatePosition = animator.anyStatePosition;
+			parentStateMachinePosition = animator.parentStateMachinePosition;
+
+			foreach (var child in animator.states)
 			{
-				Debug.LogError(
-					"Trying to print an empty HFSM. You probably forgot to add the states and transitions before calling this method.");
+				statePositions[child.state.name] = child.position;
+			}
+
+			foreach (var child in animator.stateMachines)
+			{
+				statePositions[child.stateMachine.name] = child.position;
+				childStateMachines[child.stateMachine.name] =
+					new StateMachinePositionInformation(child.stateMachine);
+			}
+		}
+
+		public static StateMachinePositionInformation ExtractFromAnimator(AnimatorStateMachine animator)
+		{
+			return new StateMachinePositionInformation(animator);
+		}
+
+		/// <summary>
+		/// Recursively updates the positions of the states in the given animator state machine to match
+		/// the positions specified by this object. If no information is known, the current position is
+		/// left as-is.
+		/// </summary>
+		public void Apply(AnimatorStateMachine animator)
+		{
+			animator.entryPosition = entryPosition;
+			animator.exitPosition = exitPosition;
+			animator.anyStatePosition = anyStatePosition;
+			animator.parentStateMachinePosition = parentStateMachinePosition;
+
+			// Overwriting the states / stateMachines arrays is the only way to update the positions.
+
+			animator.states = animator.states
+				.Select(state => {
+					string name = state.state.name;
+					if (statePositions.TryGetValue(name, out Vector3 position))
+					{
+						state.position = position;
+					}
+					return state;
+				})
+				.ToArray();
+
+			animator.stateMachines = animator.stateMachines
+				.Select(stateMachine => {
+					string name = stateMachine.stateMachine.name;
+					if (statePositions.TryGetValue(name, out Vector3 position))
+					{
+						stateMachine.position = position;
+					}
+					return stateMachine;
+				})
+				.ToArray();
+
+			// Recursively update the positions within each nested state machine.
+			foreach (var stateMachine in animator.stateMachines)
+			{
+				string name = stateMachine.stateMachine.name;
+				if (childStateMachines.TryGetValue(name, out StateMachinePositionInformation positionInformation))
+				{
+					positionInformation.Apply(stateMachine.stateMachine);
+				}
+			}
+		}
+	}
+
+	private class AnimatorGraphGenerator : IStateMachineVisitor
+	{
+		// Used to suppress Animator warnings about transitions not having transition conditions.
+		public const string dummyProperty = "See Code";
+
+		private Dictionary<StateMachinePath, AnimatorStateMachine> animatorStateMachines
+			= new Dictionary<StateMachinePath, AnimatorStateMachine>();
+		private Dictionary<StateMachinePath, AnimatorState> animatorStates
+			= new Dictionary<StateMachinePath, AnimatorState>();
+
+		public AnimatorGraphGenerator(AnimatorStateMachine rootStateMachine)
+		{
+			animatorStateMachines.Add(StateMachinePath.Root, rootStateMachine);
+		}
+
+		public void VisitStateMachine<TOwnId, TStateId, TEvent>(
+			StateMachinePath fsmPath,
+			StateMachine<TOwnId, TStateId, TEvent> fsm)
+		{
+			// States are added in the VisitRegularChildState() and VisitChildStateMachine() methods.
+			// Transitions are finally added in the ExitStateMachine() call.
+		}
+
+		public void ExitStateMachine<TOwnId, TStateId, TEvent>(
+			StateMachinePath fsmPath,
+			StateMachine<TOwnId, TStateId, TEvent> fsm)
+		{
+			// At this point, all states have been added. Now, we can add the transitions.
+			var animator = animatorStateMachines[fsmPath];
+
+			// Normal transitions.
+			foreach (var transition in fsm.GetAllTransitions())
+			{
+				AddTransition(animator, fsmPath, transition);
+			}
+
+			// Trigger transitions (treated the same as normal transitions).
+			// TODO: Use the trigger (event) as the transition condition instead?
+			foreach (var transition in fsm.GetAllTriggerTransitions().Values.SelectMany(list => list))
+			{
+				AddTransition(animator, fsmPath, transition);
+			}
+
+			// Transitions from any.
+			foreach (var transition in fsm.GetAllTransitionsFromAny())
+			{
+				AddTransitionFromAny(animator, fsmPath, transition);
+			}
+
+			// Trigger transitions from any.
+			foreach (var transition in fsm.GetAllTriggerTransitionsFromAny().Values.SelectMany(list => list))
+			{
+				AddTransitionFromAny(animator, fsmPath, transition);
+			}
+		}
+
+		private void AddTransition<TStateId>(
+			AnimatorStateMachine animator,
+			StateMachinePath fsmPath,
+			TransitionBase<TStateId> transition)
+		{
+			var fromPath = new StateMachinePath<TStateId>(fsmPath, transition.from);
+
+			if (transition.isExitTransition)
+			{
+				AddExitTransition(animator, fromPath);
+			}
+			else
+			{
+				var toPath = new StateMachinePath<TStateId>(fsmPath, transition.to);
+				AddTransition(animator, fromPath, toPath);
+			}
+		}
+
+		private void AddExitTransition(AnimatorStateMachine animator, StateMachinePath fromPath)
+		{
+			if (animatorStates.TryGetValue(fromPath, out AnimatorState state))
+			{
+				SetupAnimatorTransition(state.AddExitTransition());
+			}
+			else if (animatorStateMachines.TryGetValue(fromPath, out AnimatorStateMachine childStateMachine))
+			{
+				SetupAnimatorTransition(animator.AddStateMachineExitTransition(childStateMachine));
+			}
+		}
+
+		private void AddTransition(AnimatorStateMachine animator, StateMachinePath fromPath, StateMachinePath toPath)
+		{
+			var fromState = animatorStates.GetValueOrDefault(fromPath, null);
+			var fromStateMachine = animatorStateMachines.GetValueOrDefault(fromPath, null);
+
+			var toState = animatorStates.GetValueOrDefault(toPath, null);
+			var toStateMachine = animatorStateMachines.GetValueOrDefault(toPath, null);
+
+			if (fromState != null)
+			{
+				SetupAnimatorTransition(toState != null
+					? fromState.AddTransition(toState)
+					: fromState.AddTransition(toStateMachine));
+			}
+			else
+			{
+				SetupAnimatorTransition(toState != null
+					? animator.AddStateMachineTransition(fromStateMachine, toState)
+					: animator.AddStateMachineTransition(fromStateMachine, toStateMachine));
+			}
+		}
+
+		private void AddTransitionFromAny<TStateId>(
+			AnimatorStateMachine animator,
+			StateMachinePath fsmPath,
+			TransitionBase<TStateId> transition)
+		{
+			if (transition.isExitTransition)
+			{
+				Debug.LogWarning("Exit transitions from any are currently not supported in the animator graph.");
 				return;
 			}
 
-			if (!animatorName.Contains(".controller"))
+			var toPath = new StateMachinePath<TStateId>(transition.to);
+
+			if (animatorStates.TryGetValue(toPath, out AnimatorState state))
 			{
-				animatorName = string.Concat(animatorName, ".controller");
+				SetupAnimatorTransition(animator.AddAnyStateTransition(state));
 			}
-
-			if (pathToFolderForDebugAnimator == "")
-				pathToFolderForDebugAnimator = Path.Combine("Assets", "DebugAnimators" + Path.DirectorySeparatorChar);
-
-			if (!Directory.Exists(pathToFolderForDebugAnimator))
-				Directory.CreateDirectory(pathToFolderForDebugAnimator);
-
-			var fullPathToDebugAnimator = Path.Combine(pathToFolderForDebugAnimator, animatorName);
-
-			var animatorMirror = AssetDatabase.LoadAssetAtPath<AnimatorController>(fullPathToDebugAnimator);
-			if (animatorMirror == null)
-				animatorMirror = AnimatorController.CreateAnimatorControllerAtPath(fullPathToDebugAnimator);
-
-			// Suppress Animator warnings about transitions not having transition conditions.
-			animatorMirror.parameters = new AnimatorControllerParameter[0];
-			animatorMirror.AddParameter(AnimatorExtensions.globalParameterName, AnimatorControllerParameterType.Bool);
-
-			// Remove old transitions from state machine before setting it up freshly.
-			RemoveTransitionsFromStateMachine(animatorMirror.layers[0].stateMachine);
-
-			SetupAnimatorStateMachine(animatorMirror.layers[0].stateMachine, hfsm, new(), new());
-		}
-
-		// Sets up an AnimatorStateMachine based upon the HFSM supplied as a parameter.
-		// Called recursively when entering a sub-state of an HFSM.
-		private static void SetupAnimatorStateMachine<TOwnId, TStateId, TEvent>(
-			AnimatorStateMachine animatorStateMachine,
-			StateMachine<TOwnId, TStateId, TEvent> hfsm,
-			Dictionary<TStateId, AnimatorState> animatorStateDict,
-			Dictionary<TStateId, AnimatorStateMachine> animatorStateMachineDict)
-		{
-			// Add Animator states mirroring HFSM states.
-			foreach (StateBase<TStateId> state in hfsm.stateBundlesByName.Values?.Select(bundle => bundle.state))
+			else if (animatorStateMachines.TryGetValue(toPath, out AnimatorStateMachine childStateMachine))
 			{
-				if (state is StateMachine<TOwnId, TStateId, TEvent> subFsm)
-					AddStateMachineToAnimator(subFsm, state.name, animatorStateMachine, animatorStateMachineDict,
-						animatorStateDict);
-				else
-					AddStateToAnimator(state, hfsm, animatorStateMachine, animatorStateDict);
-			}
-
-			RemoveTransitionsFromStateMachine(animatorStateMachine); // Remove all transitions so that they can be re-placed.
-
-			// Add transitions to Animator which mirror transitions in the HFSM.
-			// This cannot be in the same loop as above because the state which is receiving a
-			// transition might not have been created yet.
-			foreach (StateMachine<TOwnId, TStateId, TEvent>.StateBundle stateBundle in hfsm.stateBundlesByName.Values)
-			{
-				if (stateBundle.state is StateMachine<TOwnId, TStateId, TEvent> subFsm)
-					AddStateMachineTransitionsToAnimator(stateBundle, subFsm, animatorStateMachineDict, animatorStateDict);
-				else
-				{
-					RemoveTransitionsFromState(
-						animatorStateDict
-							[stateBundle.state.name]); //remove existing transitions so that they can be replaced
-					AddStateTransitionsToAnimator(stateBundle, animatorStateDict, animatorStateMachineDict);
-				}
-			}
-
-			// Trigger transitions are treated exactly the same as normal transitions,
-			// so concatenate them into one IEnumerable.
-			hfsm.transitionsFromAny
-				.Concat(hfsm.triggerTransitionsFromAny.Values.SelectMany(x => x))
-				.ForEach(transition
-					=> animatorStateMachine.AddTransitionFromAnyStateWithCondition(animatorStateDict[transition.to]));
-		}
-
-		private static void AddStateTransitionsToAnimator<TOwnId, TStateId, TEvent>(
-			StateMachine<TOwnId, TStateId, TEvent>.StateBundle stateBundle,
-			Dictionary<TStateId, AnimatorState> animatorStateDict,
-			Dictionary<TStateId, AnimatorStateMachine> animatorStateMachineDict)
-		{
-			var fromState = animatorStateDict[stateBundle.state.name];
-
-			foreach (var transition in stateBundle.transitions ?? Enumerable.Empty<TransitionBase<TStateId>>())
-			{
-				if (animatorStateDict.ContainsKey(transition.to))
-				{
-					fromState.AddTransitionToStateWithCondition(animatorStateDict[transition.to]);
-				}
-				else // If the destination is not a state, then it must be a state machine.
-				{
-					fromState.AddTransitionToStateMachineWithCondition(animatorStateMachineDict[transition.to]);
-				}
-			}
-
-			foreach (var transition in stateBundle.triggerToTransitions?.Values?.SelectMany(x => x)
-			         ?? Enumerable.Empty<TransitionBase<TStateId>>())
-			{
-				fromState.AddTransitionToStateWithCondition(animatorStateDict[transition.to]);
+				SetupAnimatorTransition(animator.AddAnyStateTransition(childStateMachine));
 			}
 		}
 
-		// Removes transitions between a state and other states.
-		private static void RemoveTransitionsFromState(AnimatorState state)
+		private void SetupAnimatorTransition(AnimatorTransition transition)
 		{
-			foreach (AnimatorStateTransition animatorTransition in state.transitions)
-				Undo.DestroyObjectImmediate(animatorTransition);
-
-			state.transitions = new AnimatorStateTransition[0];
+			transition.AddCondition(AnimatorConditionMode.If, 1f, dummyProperty);
 		}
 
-		// This removes entry and any-state transitions to and from the state machine itself.
-		// It does not remove transitions between states.
-		private static void RemoveTransitionsFromStateMachine(AnimatorStateMachine animatorStateMachine)
+		private void SetupAnimatorTransition(AnimatorStateTransition transition)
 		{
-			// Remove all entry transitions.
-			foreach (AnimatorTransition animatorTransition in animatorStateMachine.entryTransitions)
-				Undo.DestroyObjectImmediate(animatorTransition);
-
-			animatorStateMachine.entryTransitions = new AnimatorTransition[0];
-
-			// Remove any-state transitions.
-			foreach (AnimatorStateTransition animatorTransition in animatorStateMachine.anyStateTransitions)
-				Undo.DestroyObjectImmediate(animatorTransition);
-
-			animatorStateMachine.anyStateTransitions = new AnimatorStateTransition[0];
+			transition.AddCondition(AnimatorConditionMode.If, 1f, dummyProperty);
 		}
 
-		// Adds transitions within a nested StateMachine.
-		private static void AddStateMachineTransitionsToAnimator<TOwnId, TStateId, TEvent>(
-			StateMachine<TOwnId, TStateId, TEvent>.StateBundle stateBundle,
-			StateMachine<TOwnId, TStateId, TEvent> subFsm,
-			Dictionary<TStateId, AnimatorStateMachine> animatorStatemachineDict,
-			Dictionary<TStateId, AnimatorState> animatorStateDict)
+		public void VisitRegularChildState<TParentId, TStateId, TEvent>(
+			StateMachinePath parentPath,
+			StateMachine<TParentId, TStateId, TEvent> parentFsm,
+			StateMachinePath childPath,
+			StateBase<TStateId> state)
 		{
-			AnimatorStateMachine animatorStateMachine = animatorStatemachineDict[stateBundle.state.name];
+			var animator = animatorStateMachines[parentPath];
+			var animatorState = animator.AddState(state.name.ToString());
 
-			// Add transitionsFromAny and triggerTransitionsFromAny. Both are represented as AnyStateTransitions
-			// in the Animator.
-			IEnumerable<TransitionBase<TStateId>> subFsmTransitionsFromAny =
-				subFsm.transitionsFromAny.Concat(subFsm.triggerTransitionsFromAny.Values.SelectMany(x => x));
-			foreach (var transition in subFsmTransitionsFromAny)
-				animatorStateMachine.AddTransitionFromAnyStateWithCondition(animatorStateDict[transition.to]);
+			animatorStates[childPath] = animatorState;
 
-			// Trigger transitions are treated exactly the same as normal transitions, so concatenate them
-			// into one IEnumerable.
-			IEnumerable<TransitionBase<TStateId>> transitionsFromAny = stateBundle.transitions;
-			if (stateBundle.triggerToTransitions != null)
-				transitionsFromAny.Concat(stateBundle.triggerToTransitions.Values.SelectMany(x => x));
-
-			foreach (var transition in transitionsFromAny)
+			if (parentFsm.GetStartStateName().Equals(state.name))
 			{
-				// AnimatorStateMachine is not interchangeable with AnimatorState, so we must check each dictionary separately.
-				if (animatorStatemachineDict.ContainsKey(transition.to))
-				{
-					animatorStateMachine.AddTransitionToStateMachineWithCondition(animatorStatemachineDict[transition.to]);
-				}
-				else // If the destination is not a state machine, then it must be a state.
-				{
-					animatorStateMachine.AddTransitionToStateWithCondition(animatorStateDict[transition.to]);
-				}
+				animator.defaultState = animatorState;
 			}
 		}
 
-		private static void AddStateToAnimator<TOwnId, TStateId, TEvent>(
-			StateBase<TStateId> stateToAdd,
-			StateMachine<TOwnId, TStateId, TEvent> parentFSM,
-			AnimatorStateMachine animatorStateMachine,
-			Dictionary<TStateId, AnimatorState> animatorStateDict)
+		public void VisitChildStateMachine<TParentId, TOwnId, TStateId, TEvent>(
+			StateMachinePath parentPath,
+			StateMachine<TParentId, TOwnId, TEvent> parentFsm,
+			StateMachinePath childPath,
+			StateMachine<TOwnId, TStateId, TEvent> fsm)
 		{
-			// Search to see if the state machine contains a state with the same name as the stateToAdd.
-			var (foundStateWithSameName, foundChildState) =
-				animatorStateMachine.states.FirstOrFalse(state => state.state.name == stateToAdd.name.ToString());
+			var animator = animatorStateMachines[parentPath];
+			var animatorStateMachine = animator.AddStateMachine(fsm.name.ToString());
+			animatorStateMachines[childPath] = animatorStateMachine;
 
-			if (!foundStateWithSameName)
-				foundChildState.state = animatorStateMachine.AddState(stateToAdd.name.ToString());
-
-			// If the parent fsm doesn't have a start state or we are the start state, then make this state
-			// the default in the animator.
-			if (parentFSM.startState.hasState == false
-			    || parentFSM.startState.state.ToString() == stateToAdd.name.ToString())
-				animatorStateMachine.defaultState = foundChildState.state;
-
-			animatorStateDict.Add(stateToAdd.name, foundChildState.state);
-		}
-
-		private static void AddStateMachineToAnimator<TOwnId, TStateId, TEvent>(
-			StateMachine<TOwnId, TStateId, TEvent> subFsm,
-			TStateId stateMachineName,
-			AnimatorStateMachine parentAnimatorStateMachine,
-			Dictionary<TStateId, AnimatorStateMachine> stateMachineDictionary,
-			Dictionary<TStateId, AnimatorState> animatorStateDict)
-		{
-			// Search to see if the state machine contains a child state machine with the same name as stateToAdd.
-			var (didFindStateMachine, childStateMachine) =
-				parentAnimatorStateMachine.stateMachines.FirstOrFalse(childStateMachine
-					=> childStateMachine.stateMachine.name == subFsm.name.ToString());
-
-			if (!didFindStateMachine)
-				childStateMachine.stateMachine = parentAnimatorStateMachine.AddStateMachine(subFsm.name.ToString());
-
-			stateMachineDictionary.Add(stateMachineName, childStateMachine.stateMachine);
-
-			SetupAnimatorStateMachine(childStateMachine.stateMachine, subFsm, animatorStateDict, stateMachineDictionary);
-		}
-
-		private static (bool didFind, T element) FirstOrFalse<T>(this IEnumerable<T> collection, Func<T, bool> predicate)
-		{
-			foreach (T element in collection)
+			if (parentFsm.GetStartStateName().Equals(fsm.name))
 			{
-				if (predicate(element))
-					return (true, element);
+				animator.AddEntryTransition(animatorStateMachine);
 			}
-
-			return (false, default(T));
 		}
+	};
 
-		private static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
-		{
-			foreach (T t in source)
-				action.Invoke(t);
-		}
-	}
-
-	public static class AnimatorExtensions
+	/// <summary>
+	/// Prints the animator states and transitions to an Animator for easy viewing.
+	/// Only call this after all states and transitions have been added!
+	/// </summary>
+	public static AnimatorController CreateAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
+		StateMachine<TOwnId, TStateId, TEvent> fsm,
+		string outputFolderPath = "Assets/DebugAnimators",
+		string animatorName = "StateMachineAnimatorGraph.controller")
 	{
-		// Used to suppress Animator warnings about transitions not having transition conditions.
-		public const string globalParameterName = "Generated Parameter";
-
-		public static void AddTransitionFromAnyStateWithCondition(
-			this AnimatorStateMachine fromStateMachine,
-			AnimatorState destinationState)
+		if (fsm.GetAllStates().Count == 0)
 		{
-			AnimatorStateTransition animatorTransition = fromStateMachine.AddAnyStateTransition(destinationState);
-			animatorTransition.AddCondition(AnimatorConditionMode.If, 1f, globalParameterName);
+			throw new InvalidOperationException(UnityHFSM.Exceptions.ExceptionFormatter.Format(
+				context: "Generating an animator graph from a state machine.",
+				problem: "The state machine is empty.",
+				solution: "Only call this method after adding the states and transitions to the state machine."));
 		}
 
-		public static void AddTransitionToStateMachineWithCondition(
-			this AnimatorStateMachine fromStateMachine,
-			AnimatorStateMachine destinationStateMachine)
+		if (!animatorName.Contains(".controller"))
 		{
-			AnimatorTransition animatorTransition = fromStateMachine.AddStateMachineTransition(destinationStateMachine);
-			animatorTransition.AddCondition(AnimatorConditionMode.If, 1f, globalParameterName);
+			animatorName = string.Concat(animatorName, ".controller");
 		}
 
-		public static void AddTransitionToStateWithCondition(
-			this AnimatorStateMachine fromStateMachine,
-			AnimatorState destinationState)
+		if (!Directory.Exists(outputFolderPath))
+			Directory.CreateDirectory(outputFolderPath);
+
+		var fullPathToDebugAnimator = Path.Combine(outputFolderPath, animatorName);
+
+		var animator = AssetDatabase.LoadAssetAtPath<AnimatorController>(fullPathToDebugAnimator);
+		if (animator == null)
 		{
-			AnimatorTransition animatorTransition =
-				fromStateMachine.AddStateMachineTransition(fromStateMachine, destinationState);
-			animatorTransition.AddCondition(AnimatorConditionMode.If, 1f, globalParameterName);
+			animator = CreateNewAnimatorFromStateMachine(fsm, fullPathToDebugAnimator);
+		}
+		else
+		{
+			UpdateExistingAnimatorFromStateMachine(animator, fsm);
 		}
 
-		public static void AddTransitionToStateWithCondition(this AnimatorState fromState, AnimatorState destinationState)
+		return animator;
+	}
+
+	private static AnimatorController CreateNewAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
+		StateMachine<TOwnId, TStateId, TEvent> fsm,
+		string outputPath)
+	{
+		var animator = AnimatorController.CreateAnimatorControllerAtPath(outputPath);
+		UpdateExistingAnimatorFromStateMachine(animator, fsm);
+		return animator;
+	}
+
+	private static void UpdateExistingAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
+		AnimatorController animator,
+		StateMachine<TOwnId, TStateId, TEvent> fsm)
+	{
+		// Save the current state positions in the animator so that they can be restored after regeneration.
+		StateMachinePositionInformation layout = null;
+		if (animator.layers.Length > 0)
 		{
-			AnimatorStateTransition animatorTransition = fromState.AddTransition(destinationState);
-			animatorTransition.AddCondition(AnimatorConditionMode.If, 1f, globalParameterName);
+			layout = StateMachinePositionInformation.ExtractFromAnimator(animator.layers[0].stateMachine);
 		}
 
-		public static void AddTransitionToStateMachineWithCondition(
-			this AnimatorState fromState,
-			AnimatorStateMachine destinationStateMachine)
+		// Clear the animator.
+		animator.parameters = new AnimatorControllerParameter[0];
+		ClearAnimatorLayers(animator);
+		var rootStateMachine = animator.layers[0].stateMachine;
+		ClearAnimatorStateMachine(rootStateMachine);
+
+		// Introduce a parameter to suppress Animator warnings about transitions not
+		// having transition conditions.
+		animator.AddParameter(AnimatorGraphGenerator.dummyProperty, AnimatorControllerParameterType.Bool);
+
+		// Add states and transitions.
+		var generator = new AnimatorGraphGenerator(rootStateMachine);
+		StateMachineWalker walker = new StateMachineWalker(generator);
+		walker.Walk(fsm);
+
+		// Restore the original layout.
+		layout?.Apply(rootStateMachine);
+	}
+
+	private static void ClearAnimatorLayers(AnimatorController animator)
+	{
+		for (int i = 0, count = animator.layers.Length - 1; i < count; i++)
 		{
-			AnimatorStateTransition animatorTransition = fromState.AddTransition(destinationStateMachine);
-			animatorTransition.AddCondition(AnimatorConditionMode.If, 1f, globalParameterName);
+			animator.RemoveLayer(1);
+		}
+
+		if (animator.layers.Length == 0)
+		{
+			animator.AddLayer("State Machine");
+		}
+		else
+		{
+			animator.layers[0].name = "State Machine";
 		}
 	}
+
+	private static void ClearAnimatorStateMachine(AnimatorStateMachine animator)
+	{
+		animator.states = new ChildAnimatorState[0];
+		animator.stateMachines = new ChildAnimatorStateMachine[0];
+	}
+}
 }
 #endif
