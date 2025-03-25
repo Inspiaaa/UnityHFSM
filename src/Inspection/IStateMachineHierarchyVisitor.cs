@@ -4,23 +4,15 @@ namespace UnityHFSM.Inspection
 	/// Interface for objects that recursively traverse the states of a state machine
 	/// via a <see cref="StateMachineWalker"/>.
 	/// </summary>
-	public interface IStateMachineVisitor
+	public interface IStateMachineHierarchyVisitor
 	{
 		void VisitStateMachine<TOwnId, TStateId, TEvent>(
 			StateMachinePath fsmPath,
 			StateMachine<TOwnId, TStateId, TEvent> fsm);
 
-		void VisitRegularChildState<TParentId, TStateId, TEvent>(
-			StateMachinePath parentPath,
-			StateMachine<TParentId, TStateId, TEvent> parentFsm,
-			StateMachinePath childPath,
+		void VisitRegularState<TStateId>(
+			StateMachinePath statePath,
 			StateBase<TStateId> state);
-
-		void VisitChildStateMachine<TParentId, TOwnId, TStateId, TEvent>(
-			StateMachinePath parentPath,
-            StateMachine<TParentId, TOwnId, TEvent> parentFsm,
-			StateMachinePath childPath,
-            StateMachine<TOwnId, TStateId, TEvent> fsm);
 
 		/// <summary>
 		/// Called after the current state machine and all its child states (and child state machines) have

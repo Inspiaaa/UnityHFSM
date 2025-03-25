@@ -103,15 +103,19 @@ public static class HfsmAnimatorGraph
 		}
 	}
 
-	private class AnimatorGraphGenerator : IStateMachineVisitor
+	private class AnimatorGraphGenerator : IStateMachineHierarchyVisitor
 	{
 		// Used to suppress Animator warnings about transitions not having transition conditions.
 		public const string dummyProperty = "See Code";
 
 		private Dictionary<StateMachinePath, AnimatorStateMachine> animatorStateMachines
 			= new Dictionary<StateMachinePath, AnimatorStateMachine>();
+
 		private Dictionary<StateMachinePath, AnimatorState> animatorStates
 			= new Dictionary<StateMachinePath, AnimatorState>();
+
+		private HashSet<StateMachinePath> startStates
+			= new HashSet<StateMachinePath>();
 
 		public AnimatorGraphGenerator(AnimatorStateMachine rootStateMachine)
 		{
@@ -122,8 +126,35 @@ public static class HfsmAnimatorGraph
 			StateMachinePath fsmPath,
 			StateMachine<TOwnId, TStateId, TEvent> fsm)
 		{
-			// States are added in the VisitRegularChildState() and VisitChildStateMachine() methods.
+			startStates.Add(new StateMachinePath<TStateId>(fsmPath, fsm.GetStartStateName()));
+
+			if (fsmPath.IsRoot)
+				return;
+
+			var animator = animatorStateMachines[fsmPath.parentPath];
+			var animatorStateMachine = animator.AddStateMachine(fsm.name.ToString());
+			animatorStateMachines[fsmPath] = animatorStateMachine;
+
+			if (startStates.Contains(fsmPath))
+			{
+				animator.AddEntryTransition(animatorStateMachine);
+			}
+
+			// The child states are added in subsequent VisitRegularState() and VisitStateMachine() calls.
 			// Transitions are finally added in the ExitStateMachine() call.
+		}
+
+		public void VisitRegularState<TStateId>(StateMachinePath statePath, StateBase<TStateId> state)
+		{
+			var animator = animatorStateMachines[statePath.parentPath];
+			var animatorState = animator.AddState(state.name.ToString());
+
+			animatorStates[statePath] = animatorState;
+
+			if (startStates.Contains(statePath))
+			{
+				animator.defaultState = animatorState;
+			}
 		}
 
 		public void ExitStateMachine<TOwnId, TStateId, TEvent>(
@@ -222,7 +253,7 @@ public static class HfsmAnimatorGraph
 				return;
 			}
 
-			var toPath = new StateMachinePath<TStateId>(transition.to);
+			var toPath = new StateMachinePath<TStateId>(fsmPath, transition.to);
 
 			if (animatorStates.TryGetValue(toPath, out AnimatorState state))
 			{
@@ -242,39 +273,6 @@ public static class HfsmAnimatorGraph
 		private void SetupAnimatorTransition(AnimatorStateTransition transition)
 		{
 			transition.AddCondition(AnimatorConditionMode.If, 1f, dummyProperty);
-		}
-
-		public void VisitRegularChildState<TParentId, TStateId, TEvent>(
-			StateMachinePath parentPath,
-			StateMachine<TParentId, TStateId, TEvent> parentFsm,
-			StateMachinePath childPath,
-			StateBase<TStateId> state)
-		{
-			var animator = animatorStateMachines[parentPath];
-			var animatorState = animator.AddState(state.name.ToString());
-
-			animatorStates[childPath] = animatorState;
-
-			if (parentFsm.GetStartStateName().Equals(state.name))
-			{
-				animator.defaultState = animatorState;
-			}
-		}
-
-		public void VisitChildStateMachine<TParentId, TOwnId, TStateId, TEvent>(
-			StateMachinePath parentPath,
-			StateMachine<TParentId, TOwnId, TEvent> parentFsm,
-			StateMachinePath childPath,
-			StateMachine<TOwnId, TStateId, TEvent> fsm)
-		{
-			var animator = animatorStateMachines[parentPath];
-			var animatorStateMachine = animator.AddStateMachine(fsm.name.ToString());
-			animatorStateMachines[childPath] = animatorStateMachine;
-
-			if (parentFsm.GetStartStateName().Equals(fsm.name))
-			{
-				animator.AddEntryTransition(animatorStateMachine);
-			}
 		}
 	};
 
@@ -350,8 +348,7 @@ public static class HfsmAnimatorGraph
 
 		// Add states and transitions.
 		var generator = new AnimatorGraphGenerator(rootStateMachine);
-		StateMachineWalker walker = new StateMachineWalker(generator);
-		walker.Walk(fsm);
+		StateMachineWalker.Walk(fsm, generator);
 
 		// Restore the original layout.
 		layout?.Apply(rootStateMachine);
