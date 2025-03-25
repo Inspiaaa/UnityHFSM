@@ -2,8 +2,7 @@
 namespace UnityHFSM.Inspection
 {
 	/// <summary>
-	/// Class that can iterate over all states of a state machine. It recursively walks through the
-	/// state machine hierarchy, calling the relevant methods of the provided <see cref="IStateMachineHierarchyVisitor"/>.
+	/// Utility class for methods that traverse a hierarchical state machine.
 	/// </summary>
 	public class StateMachineWalker
 	{
