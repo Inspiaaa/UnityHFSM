@@ -5,7 +5,7 @@ namespace UnityHFSM.Inspection
 {
 	/// <summary>
 	/// Light-weight, hashable and equatable type that represents the path to a state within a hierarchical
-	/// state machine, supporting different state ID types for each level. Each instance represents a node
+	/// state machine. It supports different state ID types for each level. Each instance represents a node
 	/// that is linked to the <c>StateMachinePath</c> of its parent node.
 	/// </summary>
 	public abstract class StateMachinePath : IEquatable<StateMachinePath>
