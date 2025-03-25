@@ -7,7 +7,6 @@ namespace UnityHFSM.Inspection
 	/// </summary>
 	public class StateMachineWalker
 	{
-
 		private class HierarchyWalker : IStateVisitor
 		{
 			private StateMachinePath path;
@@ -45,6 +44,25 @@ namespace UnityHFSM.Inspection
 			}
 		}
 
+		private class ActiveStateVisitor : IStateVisitor
+		{
+			public StateMachinePath activePath;
+
+			public void VisitStateMachine<TOwnId, TStateId, TEvent>(StateMachine<TOwnId, TStateId, TEvent> fsm)
+			{
+				activePath = activePath is null
+					? StateMachinePath.Root
+					: new StateMachinePath<TOwnId>(activePath, fsm.name);
+
+				fsm.ActiveState.AcceptVisitor(this);
+			}
+
+			public void VisitRegularState<TStateId>(StateBase<TStateId> state)
+			{
+				activePath = new StateMachinePath<TStateId>(activePath, state.name);
+			}
+		}
+
 		/// <summary>
 		/// Recursively traverses the state machine in a pre-order manner, calling the visitor methods
 		/// on each state machine / child state / child fsm.
@@ -54,6 +72,13 @@ namespace UnityHFSM.Inspection
 			IStateMachineHierarchyVisitor visitor)
 		{
 			new HierarchyWalker(visitor).VisitStateMachine(fsm);
+		}
+
+		public static StateMachinePath GetActiveStatePath<TOwnId, TStateId, TEvent>(StateMachine<TOwnId, TStateId, TEvent> fsm)
+		{
+			var visitor = new ActiveStateVisitor();
+			visitor.VisitStateMachine(fsm);
+			return visitor.activePath;
 		}
 	}
 }

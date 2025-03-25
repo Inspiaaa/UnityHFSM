@@ -316,6 +316,20 @@ public static class HfsmAnimatorGraph
 		return animator;
 	}
 
+	public static void PreviewStateMachineInAnimator<TOwnId, TStateId, TEvent>(
+		StateMachine<TOwnId, TStateId, TEvent> fsm,
+		Animator animator)
+	{
+		StateMachinePath path = StateMachineWalker.GetActiveStatePath(fsm);
+		string activeState = path.LastNodeName;
+
+		int hashCode = Animator.StringToHash(activeState);
+		if (animator.HasState(0, hashCode))
+		{
+			animator.Play(hashCode);
+		}
+	}
+
 	private static AnimatorController CreateNewAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
 		StateMachine<TOwnId, TStateId, TEvent> fsm,
 		string outputPath)
