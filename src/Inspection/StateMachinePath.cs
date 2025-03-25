@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UnityHFSM.Visualization
+namespace UnityHFSM.Inspection
 {
 	/// <summary>
 	/// Light-weight, hashable and equatable type that represents the path to a state within a hierarchical
@@ -12,9 +12,11 @@ namespace UnityHFSM.Visualization
 	{
 		public static readonly StateMachinePath Root = new RootStateMachinePath();
 
-		public readonly StateMachinePath parentPath;
+		public StateMachinePath parentPath;
 
 		public bool IsRoot => this is RootStateMachinePath;
+
+		public abstract string LastNodeName { get; }
 
 		protected StateMachinePath(StateMachinePath parentPath) {
 			this.parentPath = parentPath;
@@ -50,6 +52,8 @@ namespace UnityHFSM.Visualization
 	public class StateMachinePath<TStateId> : StateMachinePath, IEquatable<StateMachinePath<TStateId>>
 	{
 		public readonly TStateId name;
+
+		public override string LastNodeName => name.ToString();
 
 		public StateMachinePath(TStateId name) : base(null)
 		{
@@ -103,11 +107,15 @@ namespace UnityHFSM.Visualization
 	/// </summary>
 	public class RootStateMachinePath : StateMachinePath, IEquatable<RootStateMachinePath>
 	{
+		private const string name = "Root";
+
+		public override string LastNodeName => name;
+
 		public RootStateMachinePath() : base(null) { }
 
 		public override int GetHashCode()
 		{
-			return "Root".GetHashCode();
+			return name.GetHashCode();
 		}
 
 		public override bool Equals(StateMachinePath other)
@@ -122,7 +130,7 @@ namespace UnityHFSM.Visualization
 
 		public override string ToString()
 		{
-			return "Root";
+			return name;
 		}
 	}
 }

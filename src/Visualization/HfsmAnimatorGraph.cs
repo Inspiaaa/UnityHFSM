@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor.Animations;
 using UnityEditor;
 using UnityEngine;
+using UnityHFSM.Inspection;
 
 #if UNITY_EDITOR
 namespace UnityHFSM.Visualization

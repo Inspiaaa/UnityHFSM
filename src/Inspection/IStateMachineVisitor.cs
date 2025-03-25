@@ -1,4 +1,4 @@
-namespace UnityHFSM.Visualization
+namespace UnityHFSM.Inspection
 {
 	/// <summary>
 	/// Interface for objects that recursively traverse the states of a state machine

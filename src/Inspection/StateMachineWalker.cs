@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 
 #if UNITY_EDITOR
-namespace UnityHFSM.Visualization
+namespace UnityHFSM.Inspection
 {
 	/// <summary>
 	/// Class that can iterate over all states of a state machine. It recursively walks through the
