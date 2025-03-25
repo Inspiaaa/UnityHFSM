@@ -2,13 +2,16 @@
 using System;
 using System.Reflection;
 
-#if UNITY_EDITOR
 namespace UnityHFSM.Inspection
 {
 	/// <summary>
 	/// Class that can iterate over all states of a state machine. It recursively walks through the
 	/// state machine hierarchy, calling the relevant methods of the provided <see cref="IStateMachineVisitor"/>.
 	/// </summary>
+	/// <remarks>
+	/// This class relies on reflection to navigate the hierarchy, which may have performance overhead
+	/// and should be used with caution in performance-critical scenarios.
+	/// </remarks>
 	public class StateMachineWalker
 	{
 		private readonly IStateMachineVisitor visitor;
@@ -103,4 +106,3 @@ namespace UnityHFSM.Inspection
 		}
 	}
 }
-#endif
