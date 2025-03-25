@@ -103,23 +103,67 @@ public static class HfsmAnimatorGraph
 		}
 	}
 
+	/// <summary>
+	/// Helper class that creates unique names for each state, avoiding naming collisions. It is necessary,
+	/// as the live previewer feature, which uses an Animator component, needs to supply the name of the active
+	/// state. If the state names are not unique, the animator may show the wrong state as being active.
+	/// </summary>
+	private class StateNamingInformation
+	{
+		private readonly Dictionary<StateMachinePath, string> namesByState
+			= new Dictionary<StateMachinePath, string>();
+
+		private readonly HashSet<string> usedNames = new HashSet<string>();
+
+		public string CreateUniqueNameForState(StateMachinePath path)
+		{
+			string name = path.LastNodeName;
+
+			int counter = 0;
+			string uniqueName = name;
+			while (usedNames.Contains(uniqueName))
+			{
+				uniqueName = name + "'" + counter;
+				counter++;
+			}
+
+			usedNames.Add(uniqueName);
+			namesByState[path] = uniqueName;
+			return uniqueName;
+		}
+
+		public string GetNameForState(StateMachinePath path)
+		{
+			if (!namesByState.TryGetValue(path, out string name))
+			{
+				Debug.LogError($"Cannot find string name of state {path}.");
+				return path.LastNodeName;
+			}
+
+			return name;
+		}
+	}
+
 	private class AnimatorGraphGenerator : IStateMachineHierarchyVisitor
 	{
 		// Used to suppress Animator warnings about transitions not having transition conditions.
 		public const string dummyProperty = "See Code";
 
-		private Dictionary<StateMachinePath, AnimatorStateMachine> animatorStateMachines
+		private readonly Dictionary<StateMachinePath, AnimatorStateMachine> animatorStateMachines
 			= new Dictionary<StateMachinePath, AnimatorStateMachine>();
 
-		private Dictionary<StateMachinePath, AnimatorState> animatorStates
+		private readonly Dictionary<StateMachinePath, AnimatorState> animatorStates
 			= new Dictionary<StateMachinePath, AnimatorState>();
 
-		private HashSet<StateMachinePath> startStates
+		private readonly HashSet<StateMachinePath> startStates
 			= new HashSet<StateMachinePath>();
+
+		public readonly StateNamingInformation stateNamingInformation;
 
 		public AnimatorGraphGenerator(AnimatorStateMachine rootStateMachine)
 		{
 			animatorStateMachines.Add(StateMachinePath.Root, rootStateMachine);
+			stateNamingInformation = new StateNamingInformation();
 		}
 
 		public void VisitStateMachine<TOwnId, TStateId, TEvent>(
@@ -144,7 +188,9 @@ public static class HfsmAnimatorGraph
 		public void VisitRegularState<TStateId>(StateMachinePath statePath, StateBase<TStateId> state)
 		{
 			var animator = animatorStateMachines[statePath.parentPath];
-			var animatorState = animator.AddState(state.name.ToString());
+
+			string name = stateNamingInformation.CreateUniqueNameForState(statePath);
+			var animatorState = animator.AddState(name);
 
 			animatorStates[statePath] = animatorState;
 
@@ -298,11 +344,53 @@ public static class HfsmAnimatorGraph
 		}
 	};
 
+	public interface IPreviewer
+	{
+		public void PreviewStateMachineInAnimator<TOwnId, TStateId, TEvent>(
+			StateMachine<TOwnId, TStateId, TEvent> fsm,
+			Animator animator);
+
+		public void PreviewStateMachineInAnimator(Animator animator);
+	}
+
+	private class Previewer<TFsmOwnId, TFsmStateId, TFsmEvent> : IPreviewer
+	{
+		private readonly StateMachine<TFsmOwnId, TFsmStateId, TFsmEvent> originalFsm;
+		private readonly StateNamingInformation stateNamingInformation;
+
+		public Previewer(
+			StateMachine<TFsmOwnId, TFsmStateId, TFsmEvent> fsm,
+			StateNamingInformation stateNamingInformation)
+		{
+			this.originalFsm = fsm;
+			this.stateNamingInformation = stateNamingInformation;
+		}
+
+		public void PreviewStateMachineInAnimator(Animator animator)
+		{
+			PreviewStateMachineInAnimator(originalFsm, animator);
+		}
+
+		public void PreviewStateMachineInAnimator<TOwnId, TStateId, TEvent>(
+			StateMachine<TOwnId, TStateId, TEvent> fsm,
+			Animator animator)
+		{
+			StateMachinePath path = StateMachineWalker.GetActiveStatePath(fsm);
+			string activeStateName = stateNamingInformation.GetNameForState(path);
+
+			int hashCode = Animator.StringToHash(activeStateName);
+			if (animator.HasState(0, hashCode))
+			{
+				animator.Play(hashCode);
+			}
+		}
+	}
+
 	/// <summary>
 	/// Prints the animator states and transitions to an Animator for easy viewing.
 	/// Only call this after all states and transitions have been added!
 	/// </summary>
-	public static AnimatorController CreateAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
+	public static (AnimatorController, IPreviewer) CreateAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
 		StateMachine<TOwnId, TStateId, TEvent> fsm,
 		string outputFolderPath = "Assets/DebugAnimators",
 		string animatorName = "StateMachineAnimatorGraph.controller")
@@ -326,16 +414,17 @@ public static class HfsmAnimatorGraph
 		var fullPathToDebugAnimator = Path.Combine(outputFolderPath, animatorName);
 
 		var animator = AssetDatabase.LoadAssetAtPath<AnimatorController>(fullPathToDebugAnimator);
+		StateNamingInformation stateNamingInformation;
 		if (animator == null)
 		{
-			animator = CreateNewAnimatorFromStateMachine(fsm, fullPathToDebugAnimator);
+			(animator, stateNamingInformation) = CreateNewAnimatorFromStateMachine(fsm, fullPathToDebugAnimator);
 		}
 		else
 		{
-			UpdateExistingAnimatorFromStateMachine(animator, fsm);
+			stateNamingInformation = UpdateExistingAnimatorFromStateMachine(animator, fsm);
 		}
 
-		return animator;
+		return (animator, new Previewer<TOwnId, TStateId, TEvent>(fsm, stateNamingInformation));
 	}
 
 	public static void PreviewStateMachineInAnimator<TOwnId, TStateId, TEvent>(
@@ -352,16 +441,16 @@ public static class HfsmAnimatorGraph
 		}
 	}
 
-	private static AnimatorController CreateNewAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
+	private static (AnimatorController, StateNamingInformation) CreateNewAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
 		StateMachine<TOwnId, TStateId, TEvent> fsm,
 		string outputPath)
 	{
 		var animator = AnimatorController.CreateAnimatorControllerAtPath(outputPath);
-		UpdateExistingAnimatorFromStateMachine(animator, fsm);
-		return animator;
+		var stateNamingInformation = UpdateExistingAnimatorFromStateMachine(animator, fsm);
+		return (animator, stateNamingInformation);
 	}
 
-	private static void UpdateExistingAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
+	private static StateNamingInformation UpdateExistingAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
 		AnimatorController animator,
 		StateMachine<TOwnId, TStateId, TEvent> fsm)
 	{
@@ -388,6 +477,8 @@ public static class HfsmAnimatorGraph
 
 		// Restore the original layout.
 		layout?.Apply(rootStateMachine);
+
+		return generator.stateNamingInformation;
 	}
 
 	private static void ClearAnimatorLayers(AnimatorController animator)
