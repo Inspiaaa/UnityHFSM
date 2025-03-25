@@ -10,6 +10,12 @@ using UnityHFSM.Inspection;
 #if UNITY_EDITOR
 namespace UnityHFSM.Visualization
 {
+/// <summary>
+/// A visualisation / debugging tool that allows you to generate a Unity <see cref="AnimatorController"/>
+/// that reflects the structure of a given hierarchical state machine. This gives you a visual representation
+/// of a hierarchy that you can view in the editor.
+/// It can also be configured to show you which state is active at runtime (live preview).
+/// </summary>
 public static class HfsmAnimatorGraph
 {
 	/// <summary>
@@ -144,6 +150,10 @@ public static class HfsmAnimatorGraph
 		}
 	}
 
+	/// <summary>
+	/// Recursively walks through the state machine, setting up a Unity <see cref="AnimatorController"/> to
+	/// reflect the states and structure of the hierarchy.
+	/// </summary>
 	private class AnimatorGraphGenerator : IStateMachineHierarchyVisitor
 	{
 		// Used to suppress Animator warnings about transitions not having transition conditions.
@@ -344,6 +354,16 @@ public static class HfsmAnimatorGraph
 		}
 	};
 
+	/// <summary>
+	/// Enables a live preview of a state machine via an animator. It sets the active state of the animator
+	/// (which can be viewed in the Unity editor) to the active state of the state machine.
+	/// Using this type is the recommended way to implement a live preview via an animator, as it can deal
+	/// with naming collisions between states in different nested state machines.
+	/// </summary>
+	/// <remarks>
+	/// Although the previewer is bound to one state machine instance, it can also be used to display
+	/// other state machine instances with the same structure in an animator.
+	/// </remarks>
 	public interface IPreviewer
 	{
 		public void PreviewStateMachineInAnimator<TOwnId, TStateId, TEvent>(
@@ -353,6 +373,11 @@ public static class HfsmAnimatorGraph
 		public void PreviewStateMachineInAnimator(Animator animator);
 	}
 
+	// Default implementation of the IPreviewer type. An interface is used in order to better encapsulate
+	// and hide the implementation details of the previewer. Amongst other things, this choice also makes the
+	// IPreviewer type less cumbersome to use in code, as the user does not have to provide the generic type
+	// parameters used by the internal state machine instance.
+	/// <inheritdoc cref="IPreviewer"/>
 	private class Previewer<TFsmOwnId, TFsmStateId, TFsmEvent> : IPreviewer
 	{
 		private readonly StateMachine<TFsmOwnId, TFsmStateId, TFsmEvent> originalFsm;
@@ -387,9 +412,19 @@ public static class HfsmAnimatorGraph
 	}
 
 	/// <summary>
-	/// Prints the animator states and transitions to an Animator for easy viewing.
-	/// Only call this after all states and transitions have been added!
+	/// Creates a new <see cref="AnimatorController"/> for a given hierarchical finite state machine. The animator is
+	/// written to a file in the Assets folder (see parameters for customisation), which can also be viewed
+	/// in the editor outside the play mode.
+	/// If the animator file already exists from a previous call, the user-defined positions of states (layout)
+	/// will be preserved.
 	/// </summary>
+	/// <remarks>
+	/// Only call this method when the state machine has been fully set up (start state, states, transitions).
+	/// </remarks>
+	/// <returns>
+	/// Returns the generated <see cref="AnimatorController"/> and an <see cref="IPreviewer"/> object that can
+	/// be used for live preview.
+	/// </returns>
 	public static (AnimatorController, IPreviewer) CreateAnimatorFromStateMachine<TOwnId, TStateId, TEvent>(
 		StateMachine<TOwnId, TStateId, TEvent> fsm,
 		string outputFolderPath = "Assets/DebugAnimators",
@@ -427,6 +462,16 @@ public static class HfsmAnimatorGraph
 		return (animator, new Previewer<TOwnId, TStateId, TEvent>(fsm, stateNamingInformation));
 	}
 
+	/// <summary>
+	/// Enables a live preview of a state machine via an animator. It sets the active state of the animator
+	/// (which can be viewed in the Unity editor) to the active state of the state machine.
+	/// </summary>
+	/// <remarks>
+	/// This is a convenience method and comes with a caveat: If two child states in different nested state machines
+	/// have the same name, then the preview will not be correct. If possible, the <see cref="IPreviewer"/> returned
+	/// by <see cref="CreateAnimatorFromStateMachine{TOwnId,TStateId,TEvent}"/> should be used, as it does not
+	/// suffer from this problem.
+	/// </remarks>
 	public static void PreviewStateMachineInAnimator<TOwnId, TStateId, TEvent>(
 		StateMachine<TOwnId, TStateId, TEvent> fsm,
 		Animator animator)
