@@ -1,4 +1,6 @@
 
+using UnityHFSM.Inspection;
+
 namespace UnityHFSM
 {
 	/// <summary>
@@ -80,6 +82,17 @@ namespace UnityHFSM
 		public virtual string GetActiveHierarchyPath()
 		{
 			return name.ToString();
+		}
+
+		/// <summary>
+		/// Accepts a visitor that can perform operations on the current state.
+		/// This method is part of the Visitor Pattern, which allows adding new behavior
+		/// to state machine states without modifying their class structure. It is used to
+		/// implement dynamic inspection tools for hierarchical state machines.
+		/// </summary>
+		public virtual void AcceptVisitor(IStateVisitor visitor)
+		{
+			visitor.VisitRegularState(this);
 		}
 	}
 

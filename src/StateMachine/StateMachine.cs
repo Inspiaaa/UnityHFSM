@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityHFSM.Inspection;
 
 /**
  * Hierarchical Finite State Machine for Unity
@@ -874,6 +875,11 @@ namespace UnityHFSM
 				immutableCopy.Add(trigger, transitions);
 			}
 			return immutableCopy;
+		}
+
+		public override void AcceptVisitor(IStateVisitor visitor)
+		{
+			visitor.VisitStateMachine(this);
 		}
 	}
 
