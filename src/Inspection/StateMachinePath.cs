@@ -22,6 +22,19 @@ namespace UnityHFSM.Inspection
 			this.parentPath = parentPath;
 		}
 
+		public bool IsChildPathOf(StateMachinePath parent)
+		{
+			for (StateMachinePath ancestor = parentPath; ancestor != null; ancestor = ancestor.parentPath)
+			{
+				if (ancestor == parent)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as StateMachinePath);

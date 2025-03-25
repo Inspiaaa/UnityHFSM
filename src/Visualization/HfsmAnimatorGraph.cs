@@ -135,11 +135,8 @@ public static class HfsmAnimatorGraph
 			var animatorStateMachine = animator.AddStateMachine(fsm.name.ToString());
 			animatorStateMachines[fsmPath] = animatorStateMachine;
 
-			if (startStates.Contains(fsmPath))
-			{
-				animator.AddEntryTransition(animatorStateMachine);
-			}
-
+			// If this state machine is the start state of its parent state machine, then
+			// the entry transition will be set in ExitStateMachine().
 			// The child states are added in subsequent VisitRegularState() and VisitStateMachine() calls.
 			// Transitions are finally added in the ExitStateMachine() call.
 		}
@@ -161,6 +158,18 @@ public static class HfsmAnimatorGraph
 			StateMachinePath fsmPath,
 			StateMachine<TOwnId, TStateId, TEvent> fsm)
 		{
+			// Set the start state.
+			if (startStates.Contains(fsmPath))
+			{
+				// As a state machine cannot be the "default state" of an animator state machine, which implicitly
+				// comes with the entry transition, we have to instead set the start state to one of the states
+				// within the child state machine. In this case, we choose the start state of the child state machine
+				// (and if it is also a state machine, then its start state, and so forth...).
+				var parentAnimator = animatorStateMachines[fsmPath.parentPath];
+				var trueNestedStartState = FindMostNestedChildStartState(fsmPath);
+				parentAnimator.defaultState = animatorStates[trueNestedStartState];
+			}
+
 			// At this point, all states have been added. Now, we can add the transitions.
 			var animator = animatorStateMachines[fsmPath];
 
@@ -188,6 +197,19 @@ public static class HfsmAnimatorGraph
 			{
 				AddTransitionFromAny(animator, fsmPath, transition);
 			}
+		}
+
+		private StateMachinePath FindMostNestedChildStartState(StateMachinePath startStatePath)
+		{
+			foreach (var state in startStates)
+			{
+				if (state.IsChildPathOf(startStatePath))
+				{
+					startStatePath = state;
+				}
+			}
+
+			return startStatePath;
 		}
 
 		private void AddTransition<TStateId>(
