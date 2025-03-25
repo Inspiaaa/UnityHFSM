@@ -8,11 +8,15 @@ namespace UnityHFSM.Inspection
 	/// state machine. It supports different state ID types for each level. Each instance represents a node
 	/// that is linked to the <c>StateMachinePath</c> of its parent node.
 	/// </summary>
+	/// <remarks>
+	/// In contrast to string-based paths, this type does not suffer from accidental naming-collisions
+	/// when "magic characters" are used in state names.
+	/// </remarks>
 	public abstract class StateMachinePath : IEquatable<StateMachinePath>
 	{
 		public static readonly StateMachinePath Root = new RootStateMachinePath();
 
-		public StateMachinePath parentPath;
+		public readonly StateMachinePath parentPath;
 
 		public bool IsRoot => this is RootStateMachinePath;
 
