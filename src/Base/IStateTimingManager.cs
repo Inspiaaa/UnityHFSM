@@ -15,10 +15,7 @@ namespace UnityHFSM
 	/// </remarks>
 	public interface IStateTimingManager
 	{
-		/// <summary>
-		/// Tells the state machine that, if there is a state transition pending,
-		/// now is the time to perform it.
-		/// </summary>
+		/// <inheritdoc cref="StateMachine{TOwnId,TStateId,TEvent}.StateCanExit"/>
 		void StateCanExit();
 
 		bool HasPendingTransition { get; }

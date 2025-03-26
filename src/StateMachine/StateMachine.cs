@@ -166,9 +166,17 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Notifies the state machine that the state can cleanly exit,
-		/// and if a state change is pending, it will execute it.
+		/// Notifies the state machine that the active state can cleanly exit. If a transition is pending,
+		/// the state machine will execute it now.
 		/// </summary>
+		/// <remarks>
+		/// This signal is only valid for this exact point in time. It does not tell the state machine that
+		/// it is still safe to perform a transition at a later point in the future; it is not "saved" or
+		/// remembered. <para />
+		/// As it only has an effect when a transition is pending and transitions are only ever
+		/// checked after the <c>OnEnter</c> call, calling this method during <c>OnEnter</c>
+		/// has no effect.
+		/// </remarks>
 		public void StateCanExit()
 		{
 			if (!pendingTransition.isPending)
