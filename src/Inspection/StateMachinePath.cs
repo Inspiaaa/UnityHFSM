@@ -14,7 +14,7 @@ namespace UnityHFSM.Inspection
 	/// </remarks>
 	public abstract class StateMachinePath : IEquatable<StateMachinePath>
 	{
-		public static readonly StateMachinePath Root = new RootStateMachinePath();
+		public static readonly StateMachinePath Root = RootStateMachinePath.instance;
 
 		public readonly StateMachinePath parentPath;
 
@@ -60,6 +60,11 @@ namespace UnityHFSM.Inspection
 		public static bool operator !=(StateMachinePath left, StateMachinePath right)
 		{
 			return !(left == right);
+		}
+
+		public StateMachinePath Join<TStateId>(TStateId name)
+		{
+			return new StateMachinePath<TStateId>(this, name);
 		}
 	}
 
@@ -125,10 +130,11 @@ namespace UnityHFSM.Inspection
 	public class RootStateMachinePath : StateMachinePath, IEquatable<RootStateMachinePath>
 	{
 		public const string name = "Root";
+		public static readonly RootStateMachinePath instance = new RootStateMachinePath();
 
 		public override string LastNodeName => name;
 
-		public RootStateMachinePath() : base(null) { }
+		private RootStateMachinePath() : base(null) { }
 
 		public override int GetHashCode()
 		{
