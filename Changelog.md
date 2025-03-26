@@ -17,11 +17,11 @@
   - The `StateMachine` class has two new properties: `PendingState` and `PendingStateName` that allow you to get the target state of pending (delayed) transitions.
 
 - **New callbacks in `DecoratedTransition`**: (see below for more information regarding the changes to the wrapper classes). The wrapper class allows you to add custom callbacks that are run when and after the transition occurs:
-```csharp
-fsm.AddTransition(new DecoratedTransition(someTransition, 
-    beforeOnTransition: t => Debug.Log("Called before onTransition of wrapped transition")
-));
-```
+  ```csharp
+  fsm.AddTransition(new DecoratedTransition(someTransition, 
+      beforeOnTransition: t => Debug.Log("Called before onTransition of wrapped transition")
+  ));
+  ```
 
 ### Improved
 
@@ -35,13 +35,13 @@ fsm.AddTransition(new DecoratedTransition(someTransition,
 
 - Error messages have been improved thanks to the new introspection infrastructure: State machine exceptions now include information about where in the hierarchy the issue occurred. E.g.
 
-```
-StateMachineException: 
-In state machine 'Root/Fight'
-Context: Running OnLogic
-Problem: The active state is null because the state machine has not been set up yet.
-Solution: Call fsm.SetStartState(...) and fsm.Init() or fsm.OnEnter() to initialize the state machine.
-```
+  ```
+  StateMachineException: 
+  In state machine 'Root/Fight'
+  Context: Running OnLogic
+  Problem: The active state is null because the state machine has not been set up yet.
+  Solution: Call fsm.SetStartState(...) and fsm.Init() or fsm.OnEnter() to initialize the state machine.
+  ```
 
 ### Fixed
 
