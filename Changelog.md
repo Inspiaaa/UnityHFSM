@@ -31,7 +31,17 @@ fsm.AddTransition(new DecoratedTransition(someTransition,
 
 - The `IStateMachine` interface has been reworked and split into two interfaces:
   - `IStateTimingManager`: This is essentially the `IStateMachine` from older versions. Its new name underlines its purpose more accurately.
-  - `IStateMachine<T>`: This interface extends the `IStateTimingManager` interface and makes it easier to access some information from StateMachines without needing to perform a cast. (E.g. access to the current state, pending state, method to get a state by name)   
+  - `IStateMachine<T>`: This interface extends the `IStateTimingManager` interface and makes it easier to access some information from StateMachines without needing to perform a cast. (E.g. access to the current state, pending state, method to get a state by name)
+
+- Error messages have been improved thanks to the new introspection infrastructure: State machine exceptions now include information about where in the hierarchy the issue occurred. E.g.
+
+```
+StateMachineException: 
+In state machine 'Root/Fight'
+Context: Running OnLogic
+Problem: The active state is null because the state machine has not been set up yet.
+Solution: Call fsm.SetStartState(...) and fsm.Init() or fsm.OnEnter() to initialize the state machine.
+```
 
 ### Fixed
 
