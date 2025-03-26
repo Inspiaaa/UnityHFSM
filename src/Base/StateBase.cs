@@ -6,7 +6,7 @@ namespace UnityHFSM
 	/// <summary>
 	/// The base class of all states.
 	/// </summary>
-	public class StateBase<TStateId>
+	public class StateBase<TStateId> : IVisitableState
 	{
 		public bool needsExitTime;
 		public bool isGhostState;
