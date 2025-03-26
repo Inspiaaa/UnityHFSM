@@ -7,7 +7,7 @@
 ### Added
 
 - **Advanced state machine inspection via code**: The ability to inspect and analyse a hierarchical state machine from code has been greatly improved. This lays the foundation for dynamic tools that operate on state hierarchies, such as the new animator graph generator.
-  - Implemented a visitor pattern on the state types that allow you to interact with the different (generic) classes more easily. See the new `AcceptVisitor(...)` method in `StateBase` and the `IStateVisitor` interface.
+  - Implemented a visitor pattern on the state types that allows you to interact with the different (generic) classes more easily. See the new `AcceptVisitor(...)` method in `StateBase` and the `IStateVisitor` interface.
   - The new `StateMachineWalker` class can be used to recursively traverse a state hierarchy. It supports the use of different generic type parameters for each layer out of the box.
   - `StateMachinePath` is a new class used by the inspection-related code. It is a light-weight, hashable and equatable type that can be used to uniquely identify states in a hierarchy, avoiding possible naming collisions that can arise using a simpler string-based approach. It, too, supports different state ID types for each level.
   - `StateMachine`s provide new methods that let you extract the added states and transitions at runtime. 
