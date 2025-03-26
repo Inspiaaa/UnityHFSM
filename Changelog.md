@@ -6,6 +6,34 @@
 
 ### Added
 
+- **Animator Graph debugging and visualisation tool**: A new code-based tool has been added to UnityHFSM that allows you to generate an AnimatorController from a hierarchical state machine. This lets you explore a state hierarchy visually in the Unity editor, and at the same time, can be used to display a live preview at runtime.
+
+  ![Animator Graph Example](./docs/Images/AnimatorGraphExample.png)
+
+  Example usage:
+  ```csharp
+  void Start() {
+      // Setup fsm here ...
+  
+      // Creates an AnimatorController that can be viewed in the Unity Editor.
+      HfsmAnimatorGraph.CreateAnimatorFromStateMachine(
+          fsm,
+          outputFolderPath: "Assets/DebugAnimators",
+          animatorName: "StateMachine.controller");
+          
+      fsm.Init();
+  }
+  
+  void Update() {
+      fsm.OnLogic();
+  
+      // Previews the active state by updating an Animator component attached to
+      // a game object. By clicking on this game object and opening the animator
+      // controller, you can see which state the state machine is in at runtime.
+      HfsmAnimatorGraph.PreviewStateMachineInAnimator(fsm, animator);
+  }
+  ```
+
 - **Advanced state machine inspection via code**: The ability to inspect and analyse a hierarchical state machine from code has been greatly improved. This lays the foundation for dynamic tools that operate on state hierarchies, such as the new animator graph generator.
   - Implemented a visitor pattern on the state types that allows you to interact with the different (generic) classes more easily. See the new `AcceptVisitor(...)` method in `StateBase` and the `IStateVisitor` interface.
   - The new `StateMachineWalker` class can be used to recursively traverse a state hierarchy. It supports the use of different generic type parameters for each layer out of the box.
