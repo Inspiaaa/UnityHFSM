@@ -137,7 +137,7 @@ namespace UnityHFSM
 
 		public IStateTimingManager ParentFsm => fsm;
 
-		private bool IsRootFsm => fsm == null;
+		public bool IsRootFsm => fsm == null;
 
 		/// <summary>
 		/// Initialises a new instance of the StateMachine class.
@@ -162,7 +162,7 @@ namespace UnityHFSM
 		private void EnsureIsInitializedFor(string context)
 		{
 			if (activeState == null)
-				throw UnityHFSM.Exceptions.Common.NotInitialized(context);
+				throw UnityHFSM.Exceptions.Common.NotInitialized(this, context);
 		}
 
 		/// <summary>
@@ -210,7 +210,7 @@ namespace UnityHFSM
 
 			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw UnityHFSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Switching states");
+				throw UnityHFSM.Exceptions.Common.StateNotFound(this, name.ToString(), context: "Switching states");
 			}
 
 			activeTransitions = bundle.transitions ?? noTransitions;
@@ -382,7 +382,7 @@ namespace UnityHFSM
 		{
 			if (!startState.hasState)
 			{
-				throw UnityHFSM.Exceptions.Common.MissingStartState(context: "Running OnEnter of the state machine.");
+				throw UnityHFSM.Exceptions.Common.MissingStartState(this, context: "Running OnEnter of the state machine.");
 			}
 
 			// Clear any previous pending transition from the last run.
@@ -754,7 +754,7 @@ namespace UnityHFSM
 
 			if (!stateBundlesByName.TryGetValue(name, out bundle) || bundle.state == null)
 			{
-				throw UnityHFSM.Exceptions.Common.StateNotFound(name.ToString(), context: "Getting a state");
+				throw UnityHFSM.Exceptions.Common.StateNotFound(this, name.ToString(), context: "Getting a state");
 			}
 
 			return bundle.state;
@@ -769,7 +769,7 @@ namespace UnityHFSM
 
 				if (subFsm == null)
 				{
-					throw UnityHFSM.Exceptions.Common.QuickIndexerMisusedForGettingState(name.ToString());
+					throw UnityHFSM.Exceptions.Common.QuickIndexerMisusedForGettingState(this, name.ToString());
 				}
 
 				return subFsm;
@@ -812,7 +812,11 @@ namespace UnityHFSM
 		{
 			if (!startState.hasState)
 			{
-				throw UnityHFSM.Exceptions.Common.MissingStartState("Getting the start state");
+				throw UnityHFSM.Exceptions.Common.MissingStartState(
+					this,
+					"Getting the start state",
+					"Make sure that there is at least one state in the state machine before running "
+					+ "GetStartStateName() by calling fsm.AddState(...).");
 			}
 
 			return startState.state;

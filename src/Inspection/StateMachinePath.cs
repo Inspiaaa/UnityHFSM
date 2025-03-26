@@ -124,7 +124,7 @@ namespace UnityHFSM.Inspection
 	/// </summary>
 	public class RootStateMachinePath : StateMachinePath, IEquatable<RootStateMachinePath>
 	{
-		private const string name = "Root";
+		public const string name = "Root";
 
 		public override string LastNodeName => name;
 
