@@ -814,8 +814,8 @@ namespace UnityHFSM
 			{
 				throw UnityHFSM.Exceptions.Common.MissingStartState(
 					this,
-					"Getting the start state",
-					"Make sure that there is at least one state in the state machine before running "
+					context: "Getting the start state",
+					solution: "Make sure that there is at least one state in the state machine before running "
 					+ "GetStartStateName() by calling fsm.AddState(...).");
 			}
 
