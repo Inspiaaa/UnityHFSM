@@ -23,7 +23,6 @@ namespace UnityHFSM.Tests
 			Assert.AreEqual(pathA1.GetHashCode(), pathB1.GetHashCode());
 			Assert.AreEqual(pathA2.GetHashCode(), pathB2.GetHashCode());
 
-			Assert.True(root == root);
 			Assert.True(pathA1 == pathB1);
 			Assert.True(pathA2 == pathB2);
 		}
