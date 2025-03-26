@@ -474,8 +474,8 @@ flowchart TD
 
   NeedsExitTime -->|No| End([Change State])
 
-  NeedsExitTime -->|Yes| OnExitRequest["FSM calls<br> activeState.OnExitRequest()"]
-  OnExitRequest --> StateCanExit{"Does the active state <br> call fsm.StateCanExit()?"}
+  NeedsExitTime -->|Yes| OnExitRequest["FSM calls<br>activeState.OnExitRequest()"]
+  OnExitRequest --> StateCanExit{"Does the active state<br>call fsm.StateCanExit()?"}
   StateCanExit -->|Yes| End
   StateCanExit -->|No| Later
 
