@@ -70,6 +70,7 @@
   Problem: The active state is null because the state machine has not been set up yet.
   Solution: Call fsm.SetStartState(...) and fsm.Init() or fsm.OnEnter() to initialize the state machine.
   ```
+- Improved documentation
 
 ### Fixed
 
