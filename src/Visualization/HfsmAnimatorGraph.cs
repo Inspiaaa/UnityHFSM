@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +9,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityHFSM.Inspection;
 
-#if UNITY_EDITOR
 namespace UnityHFSM.Visualization
 {
 /// <summary>
