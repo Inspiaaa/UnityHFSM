@@ -117,7 +117,7 @@ You can also add it directly from GitHub on Unity 2019.4+. Note that you won't b
   - `https://github.com/Inspiaaa/UnityHFSM.git#release` for the development version
   - `https://github.com/Inspiaaa/UnityHFSM.git#v1.8.0` for a specific version (`v1.8.0` here)
 - Click <kbd>Add</kbd>
-- Tip: If you're using VSCode and you're not getting any IntelliSense, you may have to regenerate the `.csproj` project files (<kbd>Edit</kbd> > <kbd>Preferences</kbd> > <kbd>External Tools</kbd> > <kbd>Regenerate project files</kbd>)
+- Tip: If you're using VSCode, and you're not getting any IntelliSense, you may have to regenerate the `.csproj` project files (<kbd>Edit</kbd> > <kbd>Preferences</kbd> > <kbd>External Tools</kbd> > <kbd>Regenerate project files</kbd>)
 
 </details>
 
@@ -635,7 +635,7 @@ The state machine supports three ways of changing states:
    fsm.Trigger("OnCollision");
    ```
 
-Therefore UnityHFSM supports **both polling-based and event-based** transitions, as well as the feature to bypass the concept of transitions all together. That's pretty cool.
+Therefore, UnityHFSM supports **both polling-based and event-based** transitions, as well as the feature to bypass the concept of transitions all together. That's pretty cool.
 
 There is also a slight variation of the `Transition` state change behaviour, that allows you to change to a specific state **from any** other state (a "global" transition as opposed to a "local" / "direct" transition). They have the same `forceInstantly` / `needsExitTime` handling as normal transitions.
 
@@ -778,7 +778,7 @@ void Start()
 }
 ```
 
-The `CoState` class also allows you to pass in an iterator function that takes the `CoState` as a parameter. One of the side-effects of the way the UnityHFSM is internally implemented regarding its inheritance hierarchy and its support for generics, is that the function has to take the state as a `CoState<string, string>` object and not simply as `CoState`:
+The `CoState` class also allows you to pass in an iterator function that takes the `CoState` as a parameter. One of the side effects of the way the UnityHFSM is internally implemented regarding its inheritance hierarchy and its support for generics, is that the function has to take the state as a `CoState<string, string>` object and not simply as `CoState`:
 
 ```csharp
 IEnumerator SendData(CoState<string, string> state)
