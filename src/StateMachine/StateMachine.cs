@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityHFSM.Inspection;
 
 /**
@@ -58,34 +59,51 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// Represents a delayed / pending transition.
+		/// </summary>
+		/// <remarks>
+		/// This struct is mutable and its methods mutate the state of the struct. This requires great
+		/// caution ("mutable structs are evil"), but has lead to a significant increase in performance.
+		/// </remarks>
 		private struct PendingTransition
 		{
-			public TStateId targetState;
-
-			public bool isExitTransition;
+			// The following fields have been arranged so that they minimise the size of this struct type,
+			// specifically for small TStateId types (see automatic sequential layout of structs).
 
 			// Optional (may be null), used for callbacks when the transition succeeds.
 			public ITransitionListener listener;
+
+			public TStateId targetState;
 
 			// As this type is not nullable (it is a value type), an additional field is required
 			// to see if the pending transition has been set yet.
 			public bool isPending;
 
-			public static PendingTransition CreateForExit(ITransitionListener listener = null)
-				=> new PendingTransition {
-					targetState = default,
-					isExitTransition = true,
-					listener = listener,
-					isPending = true
-				};
+			public bool isExitTransition;
 
-			public static PendingTransition CreateForState(TStateId target, ITransitionListener listener = null)
-				=> new PendingTransition {
-					targetState = target,
-					isExitTransition = false,
-					listener = listener,
-					isPending = true
-				};
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public void Clear()
+			{
+				this.isPending = false;
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public void SetToExit(ITransitionListener listener = null)
+			{
+				this.listener = listener;
+				this.isExitTransition = true;
+				this.isPending = true;
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public void SetToState(TStateId target, ITransitionListener listener = null)
+			{
+				this.listener = listener;
+				this.targetState = target;
+				this.isExitTransition = false;
+				this.isPending = true;
+			}
 		}
 
 		// A cached empty list of transitions (For improved readability, less GC).
@@ -266,6 +284,7 @@ namespace UnityHFSM
 		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
 		/// 	therefore forcing an immediate state change.</param>
 		/// <param name="listener">Optional object that receives callbacks before and after the transition.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void RequestStateChange(
 			TStateId name,
 			bool forceInstantly = false,
@@ -278,7 +297,7 @@ namespace UnityHFSM
 			}
 			else
 			{
-				pendingTransition = PendingTransition.CreateForState(name, listener);
+				pendingTransition.SetToState(name, listener);
 				activeState.OnExitRequest();
 				// If it can exit, the activeState would call
 				// -> state.fsm.StateCanExit() which in turn would call
@@ -298,14 +317,14 @@ namespace UnityHFSM
 		{
 			if (!activeState.needsExitTime || forceInstantly)
 			{
-				pendingTransition = default;
+				pendingTransition.Clear();
 				listener?.BeforeTransition();
 				PerformVerticalTransition();
 				listener?.AfterTransition();
 			}
 			else
 			{
-				pendingTransition = PendingTransition.CreateForExit(listener);
+				pendingTransition.SetToExit(listener);
 				activeState.OnExitRequest();
 			}
 		}
@@ -314,6 +333,7 @@ namespace UnityHFSM
 		/// Checks if a transition can take place, and if this is the case, transition to the
 		/// "to" state and return true. Otherwise, it returns false.
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private bool TryTransition(TransitionBase<TStateId> transition)
 		{
 			if (transition.isExitTransition)
@@ -394,7 +414,7 @@ namespace UnityHFSM
 			}
 
 			// Clear any previous pending transition from the last run.
-			pendingTransition = default;
+			pendingTransition.Clear();
 
 			ChangeState(startState.state);
 
