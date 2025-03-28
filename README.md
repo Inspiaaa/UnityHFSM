@@ -584,11 +584,11 @@ The state machine supports three ways of changing states:
    
    ```csharp
    fsm.AddTransition(
-       new Transition(
-           from,
-           to,
-           condition
-       )
+       new Transition(
+           from,
+           to,
+           condition
+       )
    );
    ```
 
