@@ -85,6 +85,8 @@ namespace UnityHFSM
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public void Clear()
 			{
+				// It suffices just to clear this field, as the other fields are not checked when
+				// isPending is false.
 				this.isPending = false;
 			}
 
@@ -94,6 +96,7 @@ namespace UnityHFSM
 				this.listener = listener;
 				this.isExitTransition = true;
 				this.isPending = true;
+				// The targetState is irrelevant in this case.
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
