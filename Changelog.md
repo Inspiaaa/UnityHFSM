@@ -53,9 +53,10 @@
 
 ### Improved and Changed
 
-- Improved the performance of the state machine class:
+- **Improved the performance** of UnityHFSM:
   - The general performance of transitions has been improved.
-  - Delayed / pending transitions are about 20% faster now.
+  - Transitions from states with exit time that can instantly exit are about 20% faster now.
+  - The overhead of having a transition that is delayed each frame has been reduced by up to 60%
 
 - The state and transition wrapper classes have been reworked:
   - The classes have been renamed to reflect the underlying design pattern: `StateWrapper -> StateDecorator`, `WrappedState -> DecoratedState`, `TransitionWrapper -> TransitionDecorator`, `WrappedTransition -> DecoratedTransition`
