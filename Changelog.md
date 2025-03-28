@@ -51,7 +51,11 @@
   ));
   ```
 
-### Improved
+### Improved and Changed
+
+- Improved the performance of the state machine class:
+  - The general performance of transitions has been improved.
+  - Delayed / pending transitions are about 20% faster now.
 
 - The state and transition wrapper classes have been reworked:
   - The classes have been renamed to reflect the underlying design pattern: `StateWrapper -> StateDecorator`, `WrappedState -> DecoratedState`, `TransitionWrapper -> TransitionDecorator`, `WrappedTransition -> DecoratedTransition`
