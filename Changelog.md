@@ -77,6 +77,8 @@
   ```
 - **Improved documentation**: The XML documentation comments in the code (which show in the IDE when inspecting a method / class) has been improved regarding wording, coverage and formatting. 
 
+- Refactor: Many state and transition fields have been made readonly (and partially also private) in order to make the codebase easier to maintain and to prevent bugs from accidental changes to fields that should have been constant. If you relied on them being mutable for dynamic behaviour, please simply remove the `readonly` property in your local copy of UnityHFSM. 
+
 ### Fixed
 
 - Fixed bug that `StateMachine`s inside `ParallelStates` don't react to global triggers (#48).
