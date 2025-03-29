@@ -18,7 +18,7 @@ namespace UnityHFSM
 		/// Shortcut method for adding a regular state.
 		/// </summary>
 		/// <remarks>
-		/// It creates a new State() instance under the hood. => See State for more information.
+		/// It creates a new <see cref="State"/> instance under the hood. => See <see cref="State"/> for more information.
 		/// For empty states with no logic it creates a new StateBase for optimal performance.
 		/// </remarks>
 		/// <inheritdoc cref="State{TStateId, TEvent}(Action{State{TStateId, TEvent}}, Action{State{TStateId, TEvent}},
@@ -81,11 +81,11 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Shortcut method for adding a regular transition.
-		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// It creates a new <see cref="Transition"/> instance under the hood.
 		/// </summary>
 		/// <remarks>
-		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -110,11 +110,11 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Shortcut method for adding a regular transition that can happen from any state.
-		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// It creates a new <see cref="Transition"/> instance under the hood.
 		/// </summary>
 		/// <remarks>
-		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -139,11 +139,11 @@ namespace UnityHFSM
 		/// <summary>
 		/// Shortcut method for adding a new trigger transition between two states that is only checked
 		/// when the specified trigger is activated.
-		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// It creates a new <see cref="Transition"/> instance under the hood.
 		/// </summary>
 		/// <remarks>
-		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -170,11 +170,11 @@ namespace UnityHFSM
 		/// <summary>
 		/// Shortcut method for adding a new trigger transition that can happen from any possible state, but is only
 		/// checked when the specified trigger is activated.
-		/// It creates a new Transition() instance under the hood. => See Transition for more information.
+		/// It creates a new <see cref="Transition"/> instance under the hood.
 		/// </summary>
 		/// <remarks>
-		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -200,13 +200,17 @@ namespace UnityHFSM
 		/// <summary>
 		/// Shortcut method for adding two transitions:
 		/// If the condition function is true, the fsm transitions from the "from"
-		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// state to the "to" state. Otherwise, it performs a transition in the opposite direction,
 		/// i.e. from "to" to "from".
 		/// </summary>
 		/// <remarks>
-		/// For the reverse transition the afterTransition callback is called before the transition
-		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// For the reverse transition the <c>afterTransition</c> callback is called before the transition
+		/// and the <c>onTransition</c> callback afterwards. If this is not desired then replicate the behaviour
 		/// of the two way transitions by creating two separate transitions.
+		/// </remarks>
+		/// <remarks>
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -232,12 +236,12 @@ namespace UnityHFSM
 		/// <summary>
 		/// Shortcut method for adding two transitions that are only checked when the specified trigger is activated:
 		/// If the condition function is true, the fsm transitions from the "from"
-		/// state to the "to" state. Otherwise it performs a transition in the opposite direction,
+		/// state to the "to" state. Otherwise, it performs a transition in the opposite direction,
 		/// i.e. from "to" to "from".
 		/// </summary>
 		/// <remarks>
-		/// For the reverse transition the afterTransition callback is called before the transition
-		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// For the reverse transition the <c>afterTransition</c> callback is called before the transition
+		/// and the <c>onTransition</c> callback afterwards. If this is not desired then replicate the behaviour
 		/// of the two way transitions by creating two separate transitions.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
@@ -268,8 +272,8 @@ namespace UnityHFSM
 		/// It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <remarks>
-		/// When no condition or callbacks are required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -297,8 +301,8 @@ namespace UnityHFSM
 		/// It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <remarks>
-		/// When no condition is required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -326,8 +330,8 @@ namespace UnityHFSM
 		/// It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <remarks>
-		/// When no condition is required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />
@@ -360,8 +364,8 @@ namespace UnityHFSM
 		/// It is only checked if the parent fsm has a pending transition.
 		/// </summary>
 		/// <remarks>
-		/// When no condition is required, it creates a TransitionBase for optimal performance,
-		/// otherwise a Transition object.
+		/// When no condition or callbacks are required, it creates a <see cref="TransitionBase"/>
+		/// for optimal performance, otherwise a <see cref="Transition"/> object.
 		/// </remarks>
 		/// <inheritdoc cref="Transition{TStateId}(TStateId, TStateId, Func{Transition{TStateId}, bool},
 		/// 	Action{Transition{TStateId}}, Action{Transition{TStateId}}, bool)" />

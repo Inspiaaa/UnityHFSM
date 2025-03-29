@@ -7,12 +7,12 @@ namespace UnityHFSM
 	/// A state that can run multiple states in parallel.
 	/// </summary>
 	/// <remarks>
-	/// If needsExitTime is set to true, it will exit when *any* one of the child states calls StateCanExit()
+	/// If <c>needsExitTime</c> is set to true, it will exit when *any* one of the child states calls <c>StateCanExit()</c>
 	/// on this class. Note that having multiple child states that all do not need exit time and hence don't
-	/// call the StateCanExit() method, will mean that this state will never exit.
-	/// This behaviour can be overridden by specifying a canExit function that determines when this state may exit.
-	/// This will ignore the needsExitTime and StateCanExit() calls of the child states. It works the same as the
-	/// canExit feature of the State class.
+	/// call the <c>StateCanExit()</c> method, will mean that this state will never exit.
+	/// This behaviour can be overridden by specifying a <c>canExit</c> function that determines when this state may exit.
+	/// This will ignore the <c>needsExitTime</c> and <c>StateCanExit()</c> calls of the child states.
+	/// It works the same as the <c>canExit</c> feature of the <see cref="State"/> class.
 	/// </remarks>
 	public class ParallelStates<TOwnId, TStateId, TEvent> :
 		StateBase<TOwnId>,
@@ -66,12 +66,12 @@ namespace UnityHFSM
 		/// <summary>
 		///	Initialises a new instance of the ParallelStates class.
 		/// </summary>
-		/// <param name="canExit">(Only if needsExitTime is true):
+		/// <param name="canExit">(Only if <c>needsExitTime</c> is true):
 		/// 	Function that determines if the state is ready to exit (true) or not (false).
 		/// 	It is called OnExitRequest and on each logic step when a transition is pending.</param>
 		/// <param name="states">States to run in parallel. Note that they are not assigned names / identifiers
 		/// 	and will therefore not be included in the active hierarchy path. If this is unwanted,
-		/// 	add the states using AddState() instead.</param>
+		/// 	add the states using <c>AddState()</c> instead.</param>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public ParallelStates(
 			Func<ParallelStates<TOwnId, TStateId, TEvent>, bool> canExit,

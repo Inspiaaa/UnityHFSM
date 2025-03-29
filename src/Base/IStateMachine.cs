@@ -4,7 +4,7 @@ namespace UnityHFSM
 	/// <summary>
 	/// An abstraction layer that provides a subset of features that every parent
 	/// state machine has to provide in order to implement the timing mechanics of
-	/// transitions. In addition to the methods provided by <c>IStateTimingManager</c>,
+	/// transitions. In addition to the methods provided by <see cref="IStateTimingManager"/>,
 	/// this interface also provides access to the current and pending states, which
 	/// can be useful for transitions.
 	/// </summary>

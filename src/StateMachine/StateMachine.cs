@@ -284,7 +284,7 @@ namespace UnityHFSM
 		/// Requests a state change, respecting the <c>needsExitTime</c> property of the active state.
 		/// </summary>
 		/// <param name="name">The name / identifier of the target state.</param>
-		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
+		/// <param name="forceInstantly">Overrides the <c>needsExitTime</c> of the active state if true,
 		/// 	therefore forcing an immediate state change.</param>
 		/// <param name="listener">Optional object that receives callbacks before and after the transition.</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -313,7 +313,7 @@ namespace UnityHFSM
 		/// to allow the parent fsm to transition to the next state. It respects the
 		/// needsExitTime property of the active state.
 		/// </summary>
-		/// <param name="forceInstantly">Overrides the needsExitTime of the active state if true,
+		/// <param name="forceInstantly">Overrides the <c>needsExitTime</c> of the active state if true,
 		/// 	therefore forcing an immediate state change.</param>
 		/// <param name="listener">Optional object that receives callbacks before and after the transition.</param>
 		public void RequestExit(bool forceInstantly = false, ITransitionListener listener = null)
@@ -396,7 +396,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Calls OnEnter if it is the root state machine, therefore initialising the state machine.
+		/// Calls <c>OnEnter</c> if it is the root state machine, therefore initialising the state machine.
 		/// </summary>
 		public override void Init()
 		{
@@ -406,7 +406,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Initialises the state machine and must be called before OnLogic is called.
+		/// Initialises the state machine and must be called before <c>OnLogic</c> is called.
 		/// It sets the activeState to the selected startState.
 		/// </summary>
 		public override void OnEnter()
@@ -436,7 +436,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Runs one logic step. It does at most one transition itself and
+		/// Runs one logic step. It performs at most one transition itself and
 		/// calls the active state's logic function (after the state transition,
 		/// if one occurred).
 		/// </summary>
@@ -507,7 +507,8 @@ namespace UnityHFSM
 		/// Adds a new node / state to the state machine.
 		/// </summary>
 		/// <param name="name">The name / identifier of the new state.</param>
-		/// <param name="state">The new state instance, e.g. <c>State</c>, <c>CoState</c>, <c>StateMachine</c>.</param>
+		/// <param name="state">The new state instance,
+		///		e.g. <see cref="State"/>, <see cref="CoState"/>, <see cref="StateMachine"/>.</param>
 		public void AddState(TStateId name, StateBase<TStateId> state)
 		{
 			state.fsm = this;
@@ -524,7 +525,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Initialises a transition, i.e. sets its <c>fsm</c> attribute, and then calls its Init method.
+		/// Initialises a transition, i.e. sets its <c>fsm</c> attribute, and then calls its <c>Init</c> method.
 		/// </summary>
 		/// <param name="transition"></param>
 		private void InitTransition(TransitionBase<TStateId> transition)
@@ -562,7 +563,8 @@ namespace UnityHFSM
 		/// when the specified trigger is activated.
 		/// </summary>
 		/// <param name="trigger">The name / identifier of the trigger.</param>
-		/// <param name="transition">The transition instance, e.g. Transition, TransitionAfter, ...</param>
+		/// <param name="transition">The transition instance,
+		///		e.g. <see cref="Transition"/>, <see cref="TransitionAfter"/>, ...</param>
 		public void AddTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
 		{
 			InitTransition(transition);
@@ -601,9 +603,9 @@ namespace UnityHFSM
 		/// </summary>
 		/// <remarks>
 		/// Internally the same transition instance will be used for both transitions
-		/// by wrapping it in a ReverseTransition.
-		/// For the reverse transition the afterTransition callback is called before the transition
-		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// by wrapping it in a <see cref="ReverseTransition"/>.
+		/// For the reverse transition the <c>afterTransition</c> callback is called before the transition
+		/// and the <c>onTransition</c> callback afterwards. If this is not desired then replicate the behaviour
 		/// of the two-way transitions by creating two separate transitions.
 		/// </remarks>
 		public void AddTwoWayTransition(TransitionBase<TStateId> transition)
@@ -624,9 +626,9 @@ namespace UnityHFSM
 		/// </summary>
 		/// <remarks>
 		/// Internally the same transition instance will be used for both transitions
-		/// by wrapping it in a ReverseTransition.
-		/// For the reverse transition the afterTransition callback is called before the transition
-		/// and the onTransition callback afterwards. If this is not desired then replicate the behaviour
+		/// by wrapping it in a <see cref="ReverseTransition"/>.
+		/// For the reverse transition the <c>afterTransition</c> callback is called before the transition
+		/// and the <c>onTransition</c> callback afterwards. If this is not desired then replicate the behaviour
 		/// of the two-way transitions by creating two separate transitions.
 		/// </remarks>
 		public void AddTwoWayTriggerTransition(TEvent trigger, TransitionBase<TStateId> transition)
@@ -791,6 +793,10 @@ namespace UnityHFSM
 			return bundle.state;
 		}
 
+		/// <summary>
+		/// Only for state machines using string types: Returns a nested state machine with the given name.
+		/// This is a convenience function when working with string hierarchical state machines.
+		/// </summary>
 		public StateMachine<string, string, string> this[TStateId name]
 		{
 			get
@@ -921,14 +927,17 @@ namespace UnityHFSM
 	// Overloaded classes to allow for an easier usage of the StateMachine for common cases.
 	// E.g. new StateMachine() instead of new StateMachine<string, string, string>()
 
+	/// <inheritdoc />
 	public class StateMachine<TStateId, TEvent> : StateMachine<TStateId, TStateId, TEvent>
 	{
+		/// <inheritdoc />
 		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{
 		}
 	}
 
+	/// <inheritdoc />
 	public class StateMachine<TStateId> : StateMachine<TStateId, TStateId, string>
 	{
 		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
@@ -937,8 +946,10 @@ namespace UnityHFSM
 		}
 	}
 
+	/// <inheritdoc />
 	public class StateMachine : StateMachine<string, string, string>
 	{
+		/// <inheritdoc />
 		public StateMachine(bool needsExitTime = false, bool isGhostState = false, bool rememberLastState = false)
 			: base(needsExitTime: needsExitTime, isGhostState: isGhostState, rememberLastState: rememberLastState)
 		{

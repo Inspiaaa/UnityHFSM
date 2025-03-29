@@ -4,7 +4,7 @@ namespace UnityHFSM
 {
 	/// <summary>
 	/// A helper class that helps you decorate multiple states with the same user code.
-	/// It produces <c>DecoratedState</c> objects based on the provided parameters.
+	/// It produces <see cref="DecoratedState"/> objects based on the provided parameters.
 	/// </summary>
 	public class StateDecorator<TStateId, TEvent>
 	{

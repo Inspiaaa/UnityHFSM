@@ -4,7 +4,7 @@ namespace UnityHFSM
 {
 	/// <summary>
 	/// A helper class that helps you decorate multiple transitions with the same user code.
-	/// It produces <c>DecoratedTransition</c> objects based on the provided parameters.
+	/// It produces <see cref="DecoratedTransition"/> objects based on the provided parameters.
 	/// </summary>
 	public class TransitionDecorator<TStateId>
 	{

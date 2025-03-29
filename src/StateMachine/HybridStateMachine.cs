@@ -3,12 +3,13 @@
 namespace UnityHFSM
 {
 	/// <summary>
-	/// A StateMachine that is also like a normal State in the sense that it allows you to run
+	/// A StateMachine that is also like a normal <see cref="State"/> in the sense that it allows you to run
 	/// custom code on enter, on logic, ... besides its active state's code.
 	/// It is especially handy for hierarchical state machines, as it allows you to factor out
 	/// common code from the sub states into the HybridStateMachines, essentially removing
 	/// duplicate code.
-	/// The HybridStateMachine can also be seen as a StateWrapper around a normal StateMachine.
+	/// The HybridStateMachine can also be seen as a state wrapper / decorator around
+	/// a normal <see cref="StateMachine"/>.
 	/// </summary>
 	public class HybridStateMachine<TOwnId, TStateId, TEvent> : StateMachine<TOwnId, TStateId, TEvent>
 	{
@@ -96,8 +97,8 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Adds an action that can be called with OnAction(). Actions are like the builtin events
-		/// OnEnter / OnLogic / ... but are defined by the user.
+		/// Adds an action that can be called with <c>OnAction()</c>. Actions are like the builtin events
+		/// <c>OnEnter</c> / <c>OnLogic</c> / ... but are defined by the user.
 		/// The action is run before the sub-state's action.
 		/// </summary>
 		/// <param name="trigger">Name of the action</param>
@@ -113,7 +114,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Adds an action that can be called with OnAction<T>(). This overload allows you to
+		/// Adds an action that can be called with <c>OnAction&lt;T&gt;()</c>. This overload allows you to
 		/// run a function that takes one data parameter.
 		/// The action is run before the sub-state's action.
 		/// </summary>

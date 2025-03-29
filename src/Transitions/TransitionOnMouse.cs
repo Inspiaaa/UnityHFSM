@@ -2,18 +2,20 @@
 
 namespace UnityHFSM
 {
+	/// <summary>
+	/// Built-in mouse-related transition types to increase readability and reduce boilerplate.
+	/// </summary>
 	public static class TransitionOnMouse
 	{
+		/// <summary>
+		/// A transition type that triggers while a mouse button is down.
+		/// It behaves like <c>Input.GetMouseButton(...)</c>.
+		/// </summary>
 		public class Down<TStateId> : TransitionBase<TStateId>
 		{
 			private int button;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, while a mouse button is down.
-			/// It behaves like Input.GetMouseButton(...).
-			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
-			/// <returns></returns>
 			public Down(
 					TStateId from,
 					TStateId to,
@@ -29,14 +31,15 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// A transition type that triggers when a mouse button was just down and is up now.
+		/// It behaves like <c>Input.GetMouseButtonUp(...)</c>.
+		/// </summary>
+		/// <typeparam name="TStateId"></typeparam>
 		public class Released<TStateId> : TransitionBase<TStateId>
 		{
 			private int button;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, when a mouse button was just down and is up now.
-			/// It behaves like Input.GetMouseButtonUp(...).
-			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
 			public Released(
 					TStateId from,
@@ -53,14 +56,14 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// A transition type that triggers when a mouse button was just up and is down now.
+		/// It behaves like <c>Input.GetMouseButtonDown(...)</c>.
+		/// </summary>
 		public class Pressed<TStateId> : TransitionBase<TStateId>
 		{
 			private int button;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, when a mouse button was just up and is down now.
-			/// It behaves like Input.GetMouseButtonDown(...).
-			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
 			public Pressed(
 					TStateId from,
@@ -77,14 +80,15 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// A transition type that triggers while a mouse button is up.
+		/// It behaves like <c>!Input.GetMouseButton(...)</c>.
+		/// </summary>
+		/// <typeparam name="TStateId"></typeparam>
 		public class Up<TStateId> : TransitionBase<TStateId>
 		{
 			private int button;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, while a mouse button is up.
-			/// It behaves like !Input.GetMouseButton(...).
-			/// </summary>
 			/// <param name="button">The mouse button to watch.</param>
 			public Up(
 					TStateId from,
@@ -101,6 +105,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Down : Down<string>
 		{
 			public Down(
@@ -112,6 +117,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Released : Released<string>
 		{
 			public Released(
@@ -123,6 +129,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Pressed : Pressed<string>
 		{
 			public Pressed(
@@ -134,6 +141,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Up : Up<string>
 		{
 			public Up(

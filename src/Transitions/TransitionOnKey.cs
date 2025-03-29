@@ -2,17 +2,20 @@
 
 namespace UnityHFSM
 {
+	/// <summary>
+	/// Built-in keyboard-related transition types to increase readability and reduce boilerplate.
+	/// </summary>
 	public static class TransitionOnKey
 	{
+		/// <summary>
+		/// A transition type that triggers while a key is down.
+		/// It behaves like <c>Input.GetKey(...)</c>.
+		/// </summary>
 		public class Down<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, while a key is down.
-			/// It behaves like Input.GetKey(...).
-			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch.</param>
+			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Down(
 					TStateId from,
 					TStateId to,
@@ -28,15 +31,16 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// A transition type that triggers when a key was just down and is up now.
+		/// It behaves like <c>Input.GetKeyUp(...)</c>.
+		/// </summary>
+		/// <typeparam name="TStateId"></typeparam>
 		public class Released<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, when a key was just down and is up now.
-			/// It behaves like Input.GetKeyUp(...).
-			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch.</param>
+			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Released(
 					TStateId from,
 					TStateId to,
@@ -52,15 +56,15 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// A transition type that triggers when a key was just up and is down now.
+		/// It behaves like <c>Input.GetKeyDown(...)</c>.
+		/// </summary>
 		public class Pressed<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, when a key was just up and is down now.
-			/// It behaves like Input.GetKeyDown(...).
-			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch.</param>
+			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Pressed(
 					TStateId from,
 					TStateId to,
@@ -76,15 +80,15 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <summary>
+		/// A transition type that triggers while a key is up.
+		/// It behaves like <c>!Input.GetKey(...)</c>.
+		/// </summary>
 		public class Up<TStateId> : TransitionBase<TStateId>
 		{
 			private KeyCode keyCode;
 
-			/// <summary>
-			/// Initialises a new transition that triggers, while a key is up.
-			/// It behaves like !Input.GetKey(...).
-			/// </summary>
-			/// <param name="key">The KeyCode of the key to watch.</param>
+			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Up(
 					TStateId from,
 					TStateId to,
@@ -100,6 +104,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Down : Down<string>
 		{
 			public Down(
@@ -111,6 +116,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Released : Released<string>
 		{
 			public Released(
@@ -122,6 +128,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Pressed : Pressed<string>
 		{
 			public Pressed(
@@ -133,6 +140,7 @@ namespace UnityHFSM
 			}
 		}
 
+		/// <inheritdoc />
 		public class Up : Up<string>
 		{
 			public Up(

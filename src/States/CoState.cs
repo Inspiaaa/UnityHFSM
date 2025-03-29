@@ -5,7 +5,7 @@ using System;
 namespace UnityHFSM
 {
 	/// <summary>
-	/// A state that can run a Unity coroutine as its OnLogic method.
+	/// A state that can run a Unity coroutine as its <c>OnLogic</c> method.
 	/// </summary>
 	/// <inheritdoc />
 	public class CoState<TStateId, TEvent> : ActionState<TStateId, TEvent>
@@ -33,10 +33,10 @@ namespace UnityHFSM
 		/// <param name="mono">The MonoBehaviour of the script that should run the coroutine.</param>
 		/// <param name="onEnter">A function that is called when the state machine enters this state.</param>
 		/// <param name="coroutine">A coroutine that is run while this state is active.
-		/// 	It runs independently from the parent state machine's OnLogic(), because it is handled by Unity.
+		/// 	It runs independently of the parent state machine's <c>OnLogic()</c>, because it is handled by Unity.
 		/// 	It is started once the state enters and is terminated when the state exits.</param>
 		/// <param name="onExit">A function that is called when the state machine exits this state.</param>
-		/// <param name="canExit">(Only if needsExitTime is true):
+		/// <param name="canExit">(Only if <c>needsExitTime</c> is true):
 		/// 	Function that determines if the state is ready to exit (true) or not (false).
 		/// 	It is called OnExitRequest and on each logic step when a transition is pending.</param>
 		/// <param name="loop">If true, it will loop the coroutine, running it again once it has completed.</param>

@@ -3,7 +3,7 @@ namespace UnityHFSM
 {
 	/// <summary>
 	/// Interface for states that support custom actions. Actions are like the
-	/// builtin events OnEnter / OnLogic / ... but are defined by the user.
+	/// builtin events <c>OnEnter</c> / <c>OnLogic</c> / ... but are defined by the user.
 	/// </summary>
 	public interface IActionable<TEvent>
 	{
