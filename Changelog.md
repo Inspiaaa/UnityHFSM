@@ -8,7 +8,7 @@
 
 - **Animator Graph debugging and visualisation tool**: A new code-based tool has been added to UnityHFSM that allows you to generate an AnimatorController from a hierarchical state machine. This lets you explore a state hierarchy visually in the Unity editor, and at the same time, can be used to display a live preview at runtime.
 
-  ![Animator Graph Example](./docs/Images/AnimatorGraphExample.png)
+  ![Animator Graph Example](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/0ce3902e0f851db2926a7bdd2cfa1af65764a6e4/docs/Images/AnimatorGraphExample.png)
 
   Example usage:
   ```csharp
