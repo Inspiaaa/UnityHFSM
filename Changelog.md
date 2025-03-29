@@ -2,7 +2,7 @@
 
 ---
 
-## 2.2 (in progress)
+## 2.2
 
 ### Added
 
