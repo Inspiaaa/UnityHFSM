@@ -58,15 +58,15 @@
   - Transitions from states with exit time that can instantly exit are about 20% faster now.
   - The overhead of having a transition that is delayed each frame has been reduced by up to 60%
 
-- The state and transition wrapper classes have been reworked:
+- **The state and transition wrapper classes have been reworked**:
   - The classes have been renamed to reflect the underlying design pattern: `StateWrapper -> StateDecorator`, `WrappedState -> DecoratedState`, `TransitionWrapper -> TransitionDecorator`, `WrappedTransition -> DecoratedTransition`
   - The actual "wrapper" classes which were previously nested inside the decorators, have been made independent classes in their own files. This makes them easier to use for "single-use" applications and improves their visibility within the codebase. 
 
-- The `IStateMachine` interface has been reworked and split into two interfaces:
+- **The `IStateMachine` interface has been reworked and split into two interfaces**:
   - `IStateTimingManager`: This is essentially the `IStateMachine` from older versions. Its new name underlines its purpose more accurately.
   - `IStateMachine<T>`: This interface extends the `IStateTimingManager` interface and makes it easier to access some information from StateMachines without needing to perform a cast. (E.g. access to the current state, pending state, method to get a state by name)
 
-- Error messages have been improved thanks to the new introspection infrastructure: State machine exceptions now include information about where in the hierarchy the issue occurred. E.g.
+- **Better error messages**: The built-in error messages have been improved thanks to the new introspection infrastructure: State machine exceptions now include information about where in the hierarchy the issue occurred. E.g.
 
   ```
   StateMachineException: 
@@ -75,7 +75,7 @@
   Problem: The active state is null because the state machine has not been set up yet.
   Solution: Call fsm.SetStartState(...) and fsm.Init() or fsm.OnEnter() to initialize the state machine.
   ```
-- Improved documentation
+- **Improved documentation**: The XML documentation comments in the code (which show in the IDE when inspecting a method / class) has been improved regarding wording, coverage and formatting. 
 
 ### Fixed
 
