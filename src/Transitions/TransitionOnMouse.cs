@@ -35,7 +35,6 @@ namespace UnityHFSM
 		/// A transition type that triggers when a mouse button was just down and is up now.
 		/// It behaves like <c>Input.GetMouseButtonUp(...)</c>.
 		/// </summary>
-		/// <typeparam name="TStateId"></typeparam>
 		public class Released<TStateId> : TransitionBase<TStateId>
 		{
 			private readonly int button;
@@ -84,7 +83,6 @@ namespace UnityHFSM
 		/// A transition type that triggers while a mouse button is up.
 		/// It behaves like <c>!Input.GetMouseButton(...)</c>.
 		/// </summary>
-		/// <typeparam name="TStateId"></typeparam>
 		public class Up<TStateId> : TransitionBase<TStateId>
 		{
 			private readonly int button;
