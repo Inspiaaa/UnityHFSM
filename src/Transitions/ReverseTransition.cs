@@ -9,8 +9,8 @@ namespace UnityHFSM
 	/// </summary>
 	public class ReverseTransition<TStateId> : TransitionBase<TStateId>
 	{
-		public TransitionBase<TStateId> wrappedTransition;
-		private bool shouldInitWrappedTransition;
+		public readonly TransitionBase<TStateId> wrappedTransition;
+		private readonly bool shouldInitWrappedTransition;
 
 		public ReverseTransition(
 				TransitionBase<TStateId> wrappedTransition,

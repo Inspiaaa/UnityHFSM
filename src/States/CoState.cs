@@ -10,14 +10,14 @@ namespace UnityHFSM
 	/// <inheritdoc />
 	public class CoState<TStateId, TEvent> : ActionState<TStateId, TEvent>
 	{
-		private MonoBehaviour mono;
+		private readonly MonoBehaviour mono;
 
-		private Func<IEnumerator> coroutineCreator;
-		private Action<CoState<TStateId, TEvent>> onEnter;
-		private Action<CoState<TStateId, TEvent>> onExit;
-		private Func<CoState<TStateId, TEvent>, bool> canExit;
+		private readonly Func<IEnumerator> coroutineCreator;
+		private readonly Action<CoState<TStateId, TEvent>> onEnter;
+		private readonly Action<CoState<TStateId, TEvent>> onExit;
+		private readonly Func<CoState<TStateId, TEvent>, bool> canExit;
 
-		private bool shouldLoopCoroutine;
+		private readonly bool shouldLoopCoroutine;
 
 		public ITimer timer;
 

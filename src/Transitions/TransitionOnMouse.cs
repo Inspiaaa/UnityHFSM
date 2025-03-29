@@ -13,7 +13,7 @@ namespace UnityHFSM
 		/// </summary>
 		public class Down<TStateId> : TransitionBase<TStateId>
 		{
-			private int button;
+			private readonly int button;
 
 			/// <param name="button">The mouse button to watch.</param>
 			public Down(
@@ -38,7 +38,7 @@ namespace UnityHFSM
 		/// <typeparam name="TStateId"></typeparam>
 		public class Released<TStateId> : TransitionBase<TStateId>
 		{
-			private int button;
+			private readonly int button;
 
 			/// <param name="button">The mouse button to watch.</param>
 			public Released(
@@ -62,7 +62,7 @@ namespace UnityHFSM
 		/// </summary>
 		public class Pressed<TStateId> : TransitionBase<TStateId>
 		{
-			private int button;
+			private readonly int button;
 
 			/// <param name="button">The mouse button to watch.</param>
 			public Pressed(
@@ -87,7 +87,7 @@ namespace UnityHFSM
 		/// <typeparam name="TStateId"></typeparam>
 		public class Up<TStateId> : TransitionBase<TStateId>
 		{
-			private int button;
+			private readonly int button;
 
 			/// <param name="button">The mouse button to watch.</param>
 			public Up(

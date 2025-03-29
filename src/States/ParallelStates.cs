@@ -20,7 +20,7 @@ namespace UnityHFSM
 		ITriggerable<TEvent>,
 		IStateTimingManager
 	{
-		private List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
+		private readonly List<StateBase<TStateId>> states = new List<StateBase<TStateId>>();
 
 		// When the states are passed in via the constructor, they are not assigned names / identifiers.
 		// This means that the active hierarchy path cannot include them (which would be used for debugging purposes).

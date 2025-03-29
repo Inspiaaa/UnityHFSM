@@ -10,7 +10,7 @@ namespace UnityHFSM
 	/// </summary>
 	public class ActionStorage<TEvent>
 	{
-		private Dictionary<TEvent, Delegate> actionsByEvent = new Dictionary<TEvent, Delegate>();
+		private readonly Dictionary<TEvent, Delegate> actionsByEvent = new Dictionary<TEvent, Delegate>();
 
 		/// <summary>
 		/// Returns the action belonging to the specified event.

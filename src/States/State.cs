@@ -8,10 +8,10 @@ namespace UnityHFSM
 	/// </summary>
 	public class State<TStateId, TEvent> : ActionState<TStateId, TEvent>
 	{
-		private Action<State<TStateId, TEvent>> onEnter;
-		private Action<State<TStateId, TEvent>> onLogic;
-		private Action<State<TStateId, TEvent>> onExit;
-		private Func<State<TStateId, TEvent>, bool> canExit;
+		private readonly Action<State<TStateId, TEvent>> onEnter;
+		private readonly Action<State<TStateId, TEvent>> onLogic;
+		private readonly Action<State<TStateId, TEvent>> onExit;
+		private readonly Func<State<TStateId, TEvent>, bool> canExit;
 
 		public ITimer timer;
 

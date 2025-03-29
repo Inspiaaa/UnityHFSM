@@ -6,10 +6,10 @@ namespace UnityHFSM
 	/// </summary>
 	public class TransitionBase<TStateId> : ITransitionListener
 	{
-		public TStateId from;
-		public TStateId to;
+		public readonly TStateId from;
+		public readonly TStateId to;
 
-		public bool forceInstantly;
+		public readonly bool forceInstantly;
 		public bool isExitTransition;
 
 		public IStateMachine<TStateId> fsm;

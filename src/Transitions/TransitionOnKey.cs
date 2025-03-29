@@ -13,7 +13,7 @@ namespace UnityHFSM
 		/// </summary>
 		public class Down<TStateId> : TransitionBase<TStateId>
 		{
-			private KeyCode keyCode;
+			private readonly KeyCode keyCode;
 
 			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Down(
@@ -38,7 +38,7 @@ namespace UnityHFSM
 		/// <typeparam name="TStateId"></typeparam>
 		public class Released<TStateId> : TransitionBase<TStateId>
 		{
-			private KeyCode keyCode;
+			private readonly KeyCode keyCode;
 
 			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Released(
@@ -62,7 +62,7 @@ namespace UnityHFSM
 		/// </summary>
 		public class Pressed<TStateId> : TransitionBase<TStateId>
 		{
-			private KeyCode keyCode;
+			private readonly KeyCode keyCode;
 
 			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Pressed(
@@ -86,7 +86,7 @@ namespace UnityHFSM
 		/// </summary>
 		public class Up<TStateId> : TransitionBase<TStateId>
 		{
-			private KeyCode keyCode;
+			private readonly KeyCode keyCode;
 
 			/// <param name="key">The <c>KeyCode</c> of the key to watch.</param>
 			public Up(

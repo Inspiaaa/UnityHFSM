@@ -7,9 +7,9 @@ namespace UnityHFSM
 	/// </summary>
 	public class Transition<TStateId> : TransitionBase<TStateId>
 	{
-		public Func<Transition<TStateId>, bool> condition;
-		public Action<Transition<TStateId>> beforeTransition;
-		public Action<Transition<TStateId>> afterTransition;
+		private readonly Func<Transition<TStateId>, bool> condition;
+		private readonly Action<Transition<TStateId>> beforeTransition;
+		private readonly Action<Transition<TStateId>> afterTransition;
 
 		/// <summary>
 		/// Initialises a new instance of the Transition class.

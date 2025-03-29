@@ -11,10 +11,10 @@ namespace UnityHFSM
 		public float delay;
 		public ITimer timer;
 
-		public Func<TransitionAfter<TStateId>, bool> condition;
+		private readonly  Func<TransitionAfter<TStateId>, bool> condition;
 
-		public Action<TransitionAfter<TStateId>> beforeTransition;
-		public Action<TransitionAfter<TStateId>> afterTransition;
+		private readonly Action<TransitionAfter<TStateId>> beforeTransition;
+		private readonly Action<TransitionAfter<TStateId>> afterTransition;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfter class.

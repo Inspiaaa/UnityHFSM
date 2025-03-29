@@ -10,13 +10,13 @@ namespace UnityHFSM
 	{
 		public ITimer timer;
 		private float delay;
-		public bool onlyEvaluateDelayOnEnter;
-		public Func<TransitionAfterDynamic<TStateId>, float> delayCalculator;
+		private readonly bool onlyEvaluateDelayOnEnter;
+		private readonly Func<TransitionAfterDynamic<TStateId>, float> delayCalculator;
 
-		public Func<TransitionAfterDynamic<TStateId>, bool> condition;
+		private readonly Func<TransitionAfterDynamic<TStateId>, bool> condition;
 
-		public Action<TransitionAfterDynamic<TStateId>> beforeTransition;
-		public Action<TransitionAfterDynamic<TStateId>> afterTransition;
+		private readonly Action<TransitionAfterDynamic<TStateId>> beforeTransition;
+		private readonly Action<TransitionAfterDynamic<TStateId>> afterTransition;
 
 		/// <summary>
 		/// Initialises a new instance of the TransitionAfterDynamic class.

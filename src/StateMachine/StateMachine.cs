@@ -129,16 +129,16 @@ namespace UnityHFSM
 		private bool rememberLastState = false;
 
 		// Central storage of states.
-		private Dictionary<TStateId, StateBundle> stateBundlesByName
+		private readonly Dictionary<TStateId, StateBundle> stateBundlesByName
 			= new Dictionary<TStateId, StateBundle>();
 
 		private StateBase<TStateId> activeState = null;
 		private List<TransitionBase<TStateId>> activeTransitions = noTransitions;
 		private Dictionary<TEvent, List<TransitionBase<TStateId>>> activeTriggerTransitions = noTriggerTransitions;
 
-		private List<TransitionBase<TStateId>> transitionsFromAny
+		private readonly List<TransitionBase<TStateId>> transitionsFromAny
 			= new List<TransitionBase<TStateId>>();
-		private Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
+		private readonly Dictionary<TEvent, List<TransitionBase<TStateId>>> triggerTransitionsFromAny
 			= new Dictionary<TEvent, List<TransitionBase<TStateId>>>();
 
 		public StateBase<TStateId> ActiveState
