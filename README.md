@@ -33,7 +33,7 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 - UnityHFSM is **lightweight** and **efficient**, making it perfect for solving small and big problems
 
-- It is **especially designed for Unity**, and supports **coroutines**, which would otherwise be difficult to implement in a state machine
+- It is **especially designed for Unity**, and supports **coroutines**, which would otherwise be difficult to integrate in a state machine
 
 - **No GC Allocations** for state changes / updates / ... after setting up the state machine (-> No unwanted GC related lag spikes because of the state machine)
 
