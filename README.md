@@ -71,6 +71,8 @@ It has a special focus on the temporal aspects of state transitions, making it i
 
 - [Generics](#generics)
 
+- [Debugging Tips](#debugging-tips)
+
 ## Installation
 
 ### Unity Package
@@ -911,6 +913,47 @@ UnityHFSM is engineered with both power and performance in mind. It’s designed
 The source code has been carefully benchmarked and optimised to maintain consistent performance across a wide range of use cases.
 
 It follows a "pay only for what you use" design philosophy, both in terms of **memory and performance**. That means that supporting more features does not come at the price of performance. For example, thanks to **lazy initialisation**, UnityHFSM remains extremely lightweight for smaller scenarios, when less features are used. At the same time, its scalable architecture and advanced features are fully capable of handling the demands of larger, more complex projects efficiently.
+
+## Debugging Tips
+
+Here are a couple of tips and tricks you can use to debug complex state machines:
+
+- **Error messages**: When UnityHFSM detects a problem, it throws an exception with a detailed error message that can help you pinpoint the problem and find a solution.
+  - Usually, the **first error** that is thrown is the most important one, as the following ones are most likely a just a consequence of the first error.
+  - As the error messages span multiple lines, you have to **click on the error** in the console in the Unity Editor in order to see the full message.
+
+  **Example error message:**
+  ```
+  StateMachineException: 
+  In state machine 'Root/Fight'
+  Context: Switching states
+  Problem: The state "Wait" has not been defined yet / doesn't exist.
+  Solution: 
+  1. Check that there are no typos in the state names and transition from and to names
+  2. Add this state before calling Init / OnEnter / OnLogic / RequestStateChange / ...
+  ```
+
+  It explains where this error occurred (in the `Fight` child state machine), what went wrong (target state of the transition was not found), and possible solutions.
+
+- When a hierarchical state machine is not behaving as expected, you can call the `GetActiveHierarchyPath()` method on the root state machine and print its result to the console. It tells you **which states are currently active** within a hierarchical state machine:
+
+  ```csharp
+  print(fsm.GetActiveHierarchyPath());  // e.g. "/ExtractIntel/CollectData"
+  ```
+
+- Alternatively, if you prefer a more **visual approach**, you can use the **animator graph** feature. It creates an `AnimatorController` in the Unity Editor that lets you understand the structure of a state hierarchy visually. At the same time, it can show you in real-time which state the state machine is currently in.
+
+  ![Animator Graph Example](https://raw.githubusercontent.com/Inspiaaa/UnityHFSM/d679f37e70eada76f7742a53b3eed03bb6a4dfe3/docs/Images/AnimatorGraphVideo.gif)
+
+  You can find a tutorial on this topic in the [wiki](https://github.com/Inspiaaa/UnityHFSM/wiki/Visualising-State-Machines-with-Animator-Graphs).
+
+- If you are working on more advanced code and want to produce accurate information regarding the path to the current state **from within the state itself**, without having access to the root state machine, you can use the inspection-related code. The `UnityHFSM.Inspection` namespace is the foundation for dynamic tools like the animator graph feature, but can also be used for debugging (it's what is used for the built-in error messages). In particular, the `StateMachineWalker` class could be of interest:
+
+  ```csharp
+  print(StateMachineWalker.GetStringPathOfState(this.fsm));  
+  // Prints the path to the current state.
+  // E.g. "Root/Fight/Hit"
+  ```
 
 # Development
 
