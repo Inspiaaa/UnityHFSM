@@ -789,6 +789,15 @@ IEnumerator SendData(CoState<string, string> state)
 
 > **Tip:** When designing your state machine, it can sometimes be difficult to decide when to use a nested state machine and when to use a coroutine via `CoState`. Although both can usually achieve the desired outcome, one may be a lot simpler to implement than the other. As a rule of thumb, use a coroutine if you notice that your state diagram resembles a flowchart, otherwise use a hierarchical state machine.
 
+## Custom Events
+
+By default, UnityHFSM uses three main events:
+- On Enter: The state machine has switched to this state.
+- On Logic: The state machine checks the polling-based transitions and updates the active state.
+- On Exit: The state machine has switched to another state.
+
+In Unity, having one update function (on logic) is often not enough, as we sometimes want to run code in the `FixedUpdate` or `LateUpdate` calls. In UnityHFSM we can add such custom events to the state machine via the **action system**. For more information and usage instructions you can check out the complete [feature overview wiki page](https://github.com/Inspiaaa/UnityHFSM/wiki).
+
 ## Class-Based Architecture
 
 UnityHFSM is fundamentally designed in an object-oriented manner which allows you to easily create custom state and transition types. By simply inheriting from the common base classes (`StateBase`, `TransitionBase`), custom states and transitions can be developed. This is also how the built-in state and transition types, such as `CoState` and `TransitionAfter`, have been implemented internally.
@@ -829,6 +838,8 @@ class CustomTransition : TransitionBase
     public override void AfterTransition() { }
 }
 ```
+
+When developing custom state and transition classes, it's also worth understanding how UnityHFSM handles generics (see below) and how the inheritance hierarchy is structured (see the [wiki](https://github.com/Inspiaaa/UnityHFSM/wiki/State-Classes)), so that you can support custom actions (events) in your classes.
 
 ## Generics
 
