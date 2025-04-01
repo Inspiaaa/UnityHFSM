@@ -904,15 +904,12 @@ idleFsm.AddState("Animation 2");
 // ...
 ```
 
+
+
+
 # Development
 
-### Running the tests
-
-UnityHFSM has a test suite that can be run from Unity's Test Runner window.
-
-1. Open <kbd>Window</kbd> > <kbd>General</kbd> > <kbd>Test Runner</kbd>
-
-2. To run the tests, click the <kbd>Run All</kbd> button
+If you want to develop new code for UnityHFSM or contribute to the project, you can take a look at the [development wiki page](https://github.com/Inspiaaa/UnityHFSM/wiki/Development). It gives you a brief introduction to the project file structure and a short guide on how to run the unit tests.
 
 ---
 
