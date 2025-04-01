@@ -669,7 +669,7 @@ fsm.AddTriggerTransitionFromAny(
 );
 ```
 
-## Control flow of OnLogic
+## Control Flow of OnLogic
 
 Every StateMachine's `OnLogic` method manages the automatic transitions via `Transition` (`TransitionBase`) objects and the active state's logic function.
 
@@ -789,7 +789,7 @@ IEnumerator SendData(CoState<string, string> state)
 
 > **Tip:** When designing your state machine, it can sometimes be difficult to decide when to use a nested state machine and when to use a coroutine via `CoState`. Although both can usually achieve the desired outcome, one may be a lot simpler to implement than the other. As a rule of thumb, use a coroutine if you notice that your state diagram resembles a flowchart, otherwise use a hierarchical state machine.
 
-## Class-based architecture
+## Class-Based Architecture
 
 UnityHFSM is fundamentally designed in an object-oriented manner which allows you to easily create custom state and transition types. By simply inheriting from the common base classes (`StateBase`, `TransitionBase`), custom states and transitions can be developed. This is also how the built-in state and transition types, such as `CoState` and `TransitionAfter`, have been implemented internally.
 
