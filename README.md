@@ -904,8 +904,13 @@ idleFsm.AddState("Animation 2");
 // ...
 ```
 
+### A Short Note on Performance
 
+UnityHFSM is engineered with both power and performance in mind. It’s designed to deliver robust functionality without compromising on efficiency, making it an **ideal choice for both small and complex projects** in Unity.
 
+The source code has been carefully benchmarked and optimised to maintain consistent performance across a wide range of use cases.
+
+It follows a "pay only for what you use" design philosophy, both in terms of **memory and performance**. That means that supporting more features does not come at the price of performance. For example, thanks to **lazy initialisation**, UnityHFSM remains extremely lightweight for smaller scenarios, when less features are used. At the same time, its scalable architecture and advanced features are fully capable of handling the demands of larger, more complex projects efficiently.
 
 # Development
 
