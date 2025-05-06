@@ -7,8 +7,8 @@ namespace UnityHFSM
 	/// </summary>
 	public interface IActionable<TEvent>
 	{
-		void OnAction(TEvent trigger);
-		void OnAction<TData>(TEvent trigger, TData data);
+		bool OnAction(TEvent trigger);
+		bool OnAction<TData>(TEvent trigger, TData data);
 	}
 
 	/// <inheritdoc />

@@ -77,8 +77,13 @@ namespace UnityHFSM
 		/// If the action is not defined / hasn't been added, nothing will happen.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
-		public void RunAction(TEvent trigger)
-			=> TryGetAndCastAction<Action>(trigger)?.Invoke();
+		public bool RunAction(TEvent trigger)
+		{
+			var action = TryGetAndCastAction<Action>(trigger);
+			if (action is null) return false;
+			action.Invoke();
+			return true;
+		}
 
 		/// <summary>
 		/// Runs an action with a given name and lets you pass in one parameter to the action function.
@@ -87,7 +92,12 @@ namespace UnityHFSM
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Data to pass as the first parameter to the action.</param>
 		/// <typeparam name="TData">Type of the data parameter.</typeparam>
-		public void RunAction<TData>(TEvent trigger, TData data)
-			=> TryGetAndCastAction<Action<TData>>(trigger)?.Invoke(data);
+		public bool RunAction<TData>(TEvent trigger, TData data)
+		{
+			var action = TryGetAndCastAction<Action<TData>>(trigger);
+			if (action is null) return false;
+			action.Invoke(data);
+			return true;
+		}
 	}
 }
