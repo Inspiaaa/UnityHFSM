@@ -177,20 +177,26 @@ namespace UnityHFSM
 			}
 		}
 
-		public void OnAction(TEvent trigger)
+		public bool OnAction(TEvent trigger)
 		{
+			var result = false;
 			foreach (var state in states)
 			{
-				(state as IActionable<TEvent>)?.OnAction(trigger);
+				if ((state as IActionable<TEvent>)?.OnAction(trigger) ?? false)
+					result = true;
 			}
+			return result;
 		}
 
-		public void OnAction<TData>(TEvent trigger, TData data)
-		{
-			foreach (var state in states)
+		public bool OnAction<TData>(TEvent trigger, TData data)
+        {
+            var result = false;
+            foreach (var state in states)
 			{
-				(state as IActionable<TEvent>)?.OnAction(trigger, data);
+				if ((state as IActionable<TEvent>)?.OnAction(trigger, data) ?? false)
+					result = true;
 			}
+			return result;
 		}
 
 		public void StateCanExit()

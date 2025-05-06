@@ -84,14 +84,14 @@ namespace UnityHFSM
         	(state as ITriggerable<TEvent>)?.Trigger(trigger);
         }
 
-        public void OnAction(TEvent trigger)
+        public bool OnAction(TEvent trigger)
         {
-        	(state as IActionable<TEvent>)?.OnAction(trigger);
+        	return (state as IActionable<TEvent>)?.OnAction(trigger) ?? false;
         }
 
-        public void OnAction<TData>(TEvent trigger, TData data)
+        public bool OnAction<TData>(TEvent trigger, TData data)
         {
-        	(state as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
+        	return (state as IActionable<TEvent>)?.OnAction<TData>(trigger, data) ?? false;
         }
 
         public override string GetActiveHierarchyPath()

@@ -52,21 +52,21 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Runs an action with the given name.
-		/// If the action is not defined / hasn't been added, nothing will happen.
+		/// If the action is not defined / hasn't been added, returns false.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
-		public void OnAction(TEvent trigger)
-			=> actionStorage?.RunAction(trigger);
+		public bool OnAction(TEvent trigger)
+			=> actionStorage?.RunAction(trigger) ?? false;
 
 		/// <summary>
 		/// Runs an action with a given name and lets you pass in one parameter to the action function.
-		/// If the action is not defined / hasn't been added, nothing will happen.
+		/// If the action is not defined / hasn't been added, returns false.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Data to pass as the first parameter to the action.</param>
 		/// <typeparam name="TData">Type of the data parameter.</typeparam>
-		public void OnAction<TData>(TEvent trigger, TData data)
-			=> actionStorage?.RunAction<TData>(trigger, data);
+		public bool OnAction<TData>(TEvent trigger, TData data)
+			=> actionStorage?.RunAction<TData>(trigger, data) ?? false;
 	}
 
 	/// <inheritdoc />
