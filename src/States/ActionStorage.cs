@@ -74,7 +74,7 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Runs an action with the given name.
-		/// If the action is not defined / hasn't been added, nothing will happen.
+		/// If the action is not defined / hasn't been added, returns false.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
 		public bool RunAction(TEvent trigger)
@@ -87,7 +87,7 @@ namespace UnityHFSM
 
 		/// <summary>
 		/// Runs an action with a given name and lets you pass in one parameter to the action function.
-		/// If the action is not defined / hasn't been added, nothing will happen.
+		/// If the action is not defined / hasn't been added, returns false.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Data to pass as the first parameter to the action.</param>

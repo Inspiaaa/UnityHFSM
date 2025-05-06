@@ -759,7 +759,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Runs an action on the currently active state.
+		/// Runs an action on the currently active state. Returns false if the state doesn't have the action.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
 		public virtual bool OnAction(TEvent trigger)
@@ -769,7 +769,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Runs an action on the currently active state and lets you pass one data parameter.
+		/// Runs an action on the currently active state and lets you pass one data parameter. Returns false if the state doesn't have the action.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Any custom data for the parameter.</param>
