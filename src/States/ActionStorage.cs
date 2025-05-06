@@ -89,5 +89,13 @@ namespace UnityHFSM
 		/// <typeparam name="TData">Type of the data parameter.</typeparam>
 		public void RunAction<TData>(TEvent trigger, TData data)
 			=> TryGetAndCastAction<Action<TData>>(trigger)?.Invoke(data);
+
+        /// <summary>
+        /// Checks if this action is defined / has been added.
+        /// </summary>
+        /// <param name="trigger">Name of the action.</param>
+        /// <returns></returns>
+        public bool HasAction(TEvent trigger)
+			=> actionsByEvent.ContainsKey(trigger);
 	}
 }

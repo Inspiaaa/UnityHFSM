@@ -781,6 +781,17 @@ namespace UnityHFSM
 			(activeState as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
 		}
 
+        /// <summary>
+        /// Checks if currently active state has this action.
+        /// </summary>
+        /// <param name="trigger">Name of the action.</param>
+        /// <returns></returns>
+        public virtual bool HasAction(TEvent trigger)
+		{
+			EnsureIsInitializedFor("Running HasAction of the active state");
+			return (activeState as IActionable<TEvent>)?.HasAction(trigger) ?? false;
+		}
+
 		public StateBase<TStateId> GetState(TStateId name)
 		{
 			StateBundle bundle;
