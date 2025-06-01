@@ -28,7 +28,7 @@ namespace UnityHFSM
 		// To allow for this and ease of use, the class has two nearly identical constructors.
 
 		/// <summary>
-		/// Initialises a new instance of the CoState class.
+		/// Initializes a new instance of the CoState class.
 		/// </summary>
 		/// <param name="mono">The MonoBehaviour of the script that should run the coroutine.</param>
 		/// <param name="onEnter">A function that is called when the state machine enters this state.</param>

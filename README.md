@@ -166,7 +166,7 @@ As you can see, the enemy will try to stay outside of the player's viewing range
   ));
   ```
 
-- **Initialise the state machine**
+- **Initialize the state machine**
   
   ```csharp
   fsm.SetStartState(id);
@@ -321,7 +321,7 @@ void Start()
 {
     // ...
 
-    // Initialises the state machine and must be called before OnLogic() 
+    // Initializes the state machine and must be called before OnLogic() 
     // is called.
     fsm.Init();
 }

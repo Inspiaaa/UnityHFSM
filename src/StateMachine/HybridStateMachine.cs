@@ -18,12 +18,12 @@ namespace UnityHFSM
 			beforeOnLogic, afterOnLogic,
 			beforeOnExit, afterOnExit;
 
-		// Lazily initialised
+		// Lazily initialized
 		private ActionStorage<TEvent> actionStorage;
 
 		public Timer timer;
 
-		/// <summary>Initialises a new instance of the HybridStateMachine class.</summary>
+		/// <summary>Initializes a new instance of the HybridStateMachine class.</summary>
 		/// <param name="beforeOnEnter">A function that is called before running the sub-state's OnEnter.</param>
 		/// <param name="afterOnEnter">A function that is called after running the sub-state's OnEnter.</param>
 		/// <param name="beforeOnLogic">A function that is called before running the sub-state's OnLogic.</param>
