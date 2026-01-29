@@ -2,6 +2,13 @@
 
 ---
 
+## 2.2.1
+
+### Fixed
+
+- Fixed a memory leak in the Animator Graph visualisation tool (#70).
+- Fixed a synchronization issue between the Animator Graph tool and Unity, triggering errors from the Unity editor (#66).
+
 ## 2.2
 
 ### Added
