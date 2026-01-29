@@ -15,7 +15,7 @@ namespace UnityHFSM
 		public IStateTimingManager fsm;
 
 		/// <summary>
-		/// Initialises a new instance of the StateBase class.
+		/// Initializes a new instance of the StateBase class.
 		/// </summary>
 		/// <param name="needsExitTime">Determines if the state is allowed to instantly
 		/// 	exit on a transition (false), or if the state machine should wait until
@@ -31,7 +31,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Called to initialise the state, after values like <c>name</c> and <c>fsm</c> have been set.
+		/// Called to initialize the state, after values like <c>name</c> and <c>fsm</c> have been set.
 		/// </summary>
 		public virtual void Init()
 		{

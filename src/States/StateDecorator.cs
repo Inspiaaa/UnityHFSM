@@ -19,7 +19,7 @@ namespace UnityHFSM
 			afterOnExit;
 
 		/// <summary>
-		/// Initialises a new instance of the StateDecorator class.
+		/// Initializes a new instance of the StateDecorator class.
 		/// </summary>
 		public StateDecorator(
 				Action<StateBase<TStateId>> beforeOnEnter = null,
