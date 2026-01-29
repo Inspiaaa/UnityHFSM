@@ -548,8 +548,8 @@ public static class HfsmAnimatorGraph
 	{
 		animator.states = new ChildAnimatorState[0];
 		animator.stateMachines = new ChildAnimatorStateMachine[0];
-        animator.entryTransitions = new AnimatorTransition[0];
-        animator.anyStateTransitions = new AnimatorStateTransition[0];
+		animator.entryTransitions = new AnimatorTransition[0];
+		animator.anyStateTransitions = new AnimatorStateTransition[0];
 	}
 }
 }
