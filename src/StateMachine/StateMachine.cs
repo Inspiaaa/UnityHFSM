@@ -759,26 +759,26 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Runs an action on the currently active state.
+		/// Runs an action on the currently active state. Returns false if the state doesn't have the action.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
-		public virtual void OnAction(TEvent trigger)
+		public virtual bool OnAction(TEvent trigger)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
-			(activeState as IActionable<TEvent>)?.OnAction(trigger);
+			return (activeState as IActionable<TEvent>)?.OnAction(trigger) ?? false;
 		}
 
 		/// <summary>
-		/// Runs an action on the currently active state and lets you pass one data parameter.
+		/// Runs an action on the currently active state and lets you pass one data parameter. Returns false if the state doesn't have the action.
 		/// </summary>
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Any custom data for the parameter.</param>
 		/// <typeparam name="TData">Type of the data parameter.
 		/// 	Should match the data type of the action that was added via <c>AddAction&lt;T&gt;(...).</c></typeparam>
-		public virtual void OnAction<TData>(TEvent trigger, TData data)
+		public virtual bool OnAction<TData>(TEvent trigger, TData data)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
-			(activeState as IActionable<TEvent>)?.OnAction<TData>(trigger, data);
+			return (activeState as IActionable<TEvent>)?.OnAction<TData>(trigger, data) ?? false;
 		}
 
 		public StateBase<TStateId> GetState(TStateId name)

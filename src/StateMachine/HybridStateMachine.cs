@@ -84,16 +84,18 @@ namespace UnityHFSM
 			afterOnExit?.Invoke(this);
 		}
 
-		public override void OnAction(TEvent trigger)
+		public override bool OnAction(TEvent trigger)
 		{
-			actionStorage?.RunAction(trigger);
-			base.OnAction(trigger);
+			var result1 = actionStorage?.RunAction(trigger) ?? false;
+			var result2 = base.OnAction(trigger);
+			return result1 || result2;
 		}
 
-		public override void OnAction<TData>(TEvent trigger, TData data)
+		public override bool OnAction<TData>(TEvent trigger, TData data)
 		{
-			actionStorage?.RunAction<TData>(trigger, data);
-			base.OnAction<TData>(trigger, data);
+			var result1 = actionStorage?.RunAction<TData>(trigger, data) ?? false;
+			var result2 = base.OnAction<TData>(trigger, data);
+			return result1 || result2;
 		}
 
 		/// <summary>
