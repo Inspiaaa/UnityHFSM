@@ -1,5 +1,11 @@
 # Changelog
 
+## In Progress
+
+### Added
+
+- `fsm.IsInitialized` property to check whether a state machine is currently running.
+
 ---
 
 ## 2.2.1
