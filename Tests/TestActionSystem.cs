@@ -27,7 +27,7 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_calling_non_existant_action_does_not_throw_exception_when_no_actions_added()
+		public void Test_calling_non_existent_action_does_not_throw_exception_when_no_actions_added()
 		{
 			var state = new ActionState(false);
 
@@ -36,7 +36,7 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_calling_non_existant_action_does_nothing()
+		public void Test_calling_non_existent_action_does_nothing()
 		{
 			bool called = false;
 			var state = new ActionState(false).AddAction("Action", () => called = true);
@@ -56,7 +56,7 @@ namespace UnityHFSM.Tests
 		}
 
 		[Test]
-		public void Test_calling_non_existant_action_with_param_does_nothing()
+		public void Test_calling_non_existent_action_with_param_does_nothing()
 		{
 			int value = 0;
 			var state = new ActionState(false).AddAction<int>("Action", param => value = param);
