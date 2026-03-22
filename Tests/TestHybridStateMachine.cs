@@ -117,5 +117,31 @@ namespace UnityHFSM.Tests
 				.Custom("A.Parameter(10)")
 				.All();
 		}
+
+		[Test]
+		public void Test_HasAction_on_hybrid_fsm()
+		{
+			var fsm = new HybridStateMachine();
+			fsm.AddAction("OwnAction", () => { });
+			fsm.AddAction("BothAction", () => { });
+			fsm.AddAction<int>("OwnDataAction", _ => { });
+			fsm.AddAction<int>("BothDataAction", _ => { });
+
+			var state = new ActionState(false);
+			state.AddAction("Action", () => { });
+			state.AddAction<int>("DataAction", _ => { });
+			state.AddAction("BothAction", () => { });
+			state.AddAction<int>("BothDataAction", _ => { });
+
+			fsm.AddState("A", state);
+			fsm.Init();
+
+			Assert.IsTrue(fsm.HasAction("Action"));
+			Assert.IsTrue(fsm.HasAction("DataAction"));
+			Assert.IsTrue(fsm.HasAction("OwnAction"));
+			Assert.IsTrue(fsm.HasAction("BothAction"));
+			Assert.IsTrue(fsm.HasAction("BothDataAction"));
+			Assert.IsFalse(fsm.HasAction("OtherAction"));
+		}
 	}
 }

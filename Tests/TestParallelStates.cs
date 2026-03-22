@@ -340,5 +340,45 @@ namespace UnityHFSM.Tests
 			Assert.IsTrue(wasOnLogicCalledOn1);
 			Assert.IsFalse(wasOnLogicCalledOn2);
 		}
+
+
+		[Test]
+		public void Test_OnAction_on_ParallelStates()
+		{
+			bool aCalled = false;
+			bool bCalled = false;
+			bool cCalled = false;
+			int cValue = 0;
+
+			var ps = new ParallelStates();
+			ps.AddState("A", new State().AddAction("Action", () => aCalled = true));
+			ps.AddState("B", new State().AddAction("Action", () => bCalled = true));
+			ps.AddState("C", new State().AddAction<int>("DataAction", x => {
+				cCalled = true;
+				cValue = x;
+			}));
+
+			ps.OnAction("Action");
+			Assert.IsTrue(aCalled);
+			Assert.IsTrue(bCalled);
+			Assert.IsFalse(cCalled);
+
+			ps.OnAction("DataAction", 10);
+			Assert.IsTrue(cCalled);
+			Assert.AreEqual(10, cValue);
+		}
+
+		[Test]
+		public void Test_HasAction_on_ParallelStates()
+		{
+			var ps = new ParallelStates();
+			ps.AddState("A", new State().AddAction("Action", () => { }));
+			ps.AddState("B", new State().AddAction("Action", () => { }));
+			ps.AddState("C", new State().AddAction<int>("DataAction", x => { }));
+
+			Assert.IsTrue(ps.HasAction("Action"));
+			Assert.IsTrue(ps.HasAction("DataAction"));
+			Assert.IsFalse(ps.HasAction("OtherAction"));
+		}
 	}
 }

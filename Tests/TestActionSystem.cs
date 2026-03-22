@@ -31,8 +31,8 @@ namespace UnityHFSM.Tests
 		{
 			var state = new ActionState(false);
 
-			Assert.DoesNotThrow(() => state.OnAction("NonExistantAction"));
-			Assert.DoesNotThrow(() => state.OnAction<string>("NonExistantAction", ""));
+			Assert.DoesNotThrow(() => state.OnAction("NonExistentAction"));
+			Assert.DoesNotThrow(() => state.OnAction("NonExistentAction", ""));
 		}
 
 		[Test]
@@ -41,7 +41,7 @@ namespace UnityHFSM.Tests
 			bool called = false;
 			var state = new ActionState(false).AddAction("Action", () => called = true);
 
-			state.OnAction("NonExistantAction");
+			state.OnAction("NonExistentAction");
 			Assert.IsFalse(called);
 		}
 
@@ -51,7 +51,7 @@ namespace UnityHFSM.Tests
 			int value = 0;
 			var state = new ActionState(false).AddAction<int>("Action", param => value = param);
 
-			state.OnAction<int>("Action", 5);
+			state.OnAction("Action", 5);
 			Assert.AreEqual(5, value);
 		}
 
@@ -61,7 +61,7 @@ namespace UnityHFSM.Tests
 			int value = 0;
 			var state = new ActionState(false).AddAction<int>("Action", param => value = param);
 
-			state.OnAction<int>("NonExistantAction", 0);
+			state.OnAction("NonExistentAction", 0);
 			Assert.AreEqual(0, value);
 		}
 
@@ -71,7 +71,7 @@ namespace UnityHFSM.Tests
 			int value = 0;
 			var state = new ActionState(false).AddAction<int>("Action", param => value = param);
 
-			Assert.Throws<InvalidOperationException>(() => state.OnAction<bool>("Action", false));
+			Assert.Throws<InvalidOperationException>(() => state.OnAction("Action", false));
 		}
 
 		[Test]
@@ -97,6 +97,21 @@ namespace UnityHFSM.Tests
 
 			fsm.OnAction("Action");
 			Assert.IsTrue(called);
+		}
+
+		[Test]
+		public void Test_HasAction_on_fsm()
+		{
+			var state = new ActionState(false);
+			state.AddAction("Action", () => { });
+			state.AddAction<int>("DataAction", _ => { });
+			fsm.AddState("A", state);
+
+			fsm.Init();
+
+			Assert.IsTrue(state.HasAction("Action"));
+			Assert.IsTrue(state.HasAction("DataAction"));
+			Assert.IsFalse(state.HasAction("OtherAction"));
 		}
 	}
 }
