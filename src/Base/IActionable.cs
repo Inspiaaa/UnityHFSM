@@ -9,6 +9,7 @@ namespace UnityHFSM
 	{
 		void OnAction(TEvent trigger);
 		void OnAction<TData>(TEvent trigger, TData data);
+		bool HasAction(TEvent trigger);
 	}
 
 	/// <inheritdoc />

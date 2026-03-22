@@ -96,6 +96,12 @@ namespace UnityHFSM
 			base.OnAction<TData>(trigger, data);
 		}
 
+		public override bool HasAction(TEvent trigger)
+		{
+			return (actionStorage?.HasAction(trigger) ?? false)
+				|| base.HasAction(trigger);
+		}
+
 		/// <summary>
 		/// Adds an action that can be called with <c>OnAction()</c>. Actions are like the builtin events
 		/// <c>OnEnter</c> / <c>OnLogic</c> / ... but are defined by the user.

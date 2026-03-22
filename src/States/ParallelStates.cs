@@ -193,6 +193,16 @@ namespace UnityHFSM
 			}
 		}
 
+		public bool HasAction(TEvent trigger)
+		{
+			foreach (var state in states)
+			{
+                if ((state as IActionable<TEvent>)?.HasAction(trigger) ?? false)
+					return true;
+			}
+			return false;
+		}
+
 		public void StateCanExit()
 		{
 			// Try to exit as soon as any one of the child states can exit, unless the exit behaviour
