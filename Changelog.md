@@ -4,6 +4,18 @@
 
 ### Added
 
+- `HasAction(name)` method to see if the currently active state (or any of its child states) have defined an action for the specified trigger. This can be used to implement default behaviours when the active state does not implement an action:
+    ```csharp
+    if (fsm.HasAction("Shoot")) {
+        fsm.OnAction("Shoot");
+    }
+    else {
+        // Feedback for the player when the current state (e.g. "Reloading") 
+        // doesn't support shooting.
+        audioSource.PlayOneShot(clickSound); 
+    }
+    ```
+
 - `fsm.IsInitialized` property to check whether a state machine is currently running.
 
 ---
