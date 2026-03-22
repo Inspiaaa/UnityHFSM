@@ -64,7 +64,7 @@ namespace UnityHFSM
 			params StateBase<TStateId>[] states) : this(canExit, needsExitTime, false, states) { }
 
 		/// <summary>
-		///	Initialises a new instance of the ParallelStates class.
+		///	Initializes a new instance of the ParallelStates class.
 		/// </summary>
 		/// <param name="canExit">(Only if <c>needsExitTime</c> is true):
 		/// 	Function that determines if the state is ready to exit (true) or not (false).

@@ -135,7 +135,7 @@ namespace UnityHFSM.Samples.Sample3d
                 "ExtractIntel",
                 (transition) => DistanceToPlayer() > playerScanningRange);
 
-            // Initialises the state machine and must be called before OnLogic() is called
+            // Initializes the state machine and must be called before OnLogic() is called
             fsm.Init();
         }
 

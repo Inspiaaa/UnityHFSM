@@ -155,13 +155,14 @@ namespace UnityHFSM
 		public TStateId PendingStateName => pendingTransition.targetState;
 		public StateBase<TStateId> PendingState => GetState(PendingStateName);
 		public bool HasPendingTransition => pendingTransition.isPending;
+		public bool IsInitialized => activeState != null;
 
 		public IStateTimingManager ParentFsm => fsm;
 
 		public bool IsRootFsm => fsm == null;
 
 		/// <summary>
-		/// Initialises a new instance of the StateMachine class.
+		/// Initializes a new instance of the StateMachine class.
 		/// </summary>
 		/// <param name="needsExitTime">(Only for hierarchical states):
 		/// 	Determines whether the state machine as a state of a parent state machine is allowed to instantly
@@ -177,12 +178,12 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Throws an exception if the state machine is not initialised yet.
+		/// Throws an exception if the state machine is not initialized yet.
 		/// </summary>
-		/// <param name="context">String message for which action the fsm should be initialised for.</param>
+		/// <param name="context">String message for which action the fsm should be initialized for.</param>
 		private void EnsureIsInitializedFor(string context)
 		{
-			if (activeState == null)
+			if (!IsInitialized)
 				throw UnityHFSM.Exceptions.Common.NotInitialized(this, context);
 		}
 
@@ -406,7 +407,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Initialises the state machine and must be called before <c>OnLogic</c> is called.
+		/// Initializes the state machine and must be called before <c>OnLogic</c> is called.
 		/// It sets the activeState to the selected startState.
 		/// </summary>
 		public override void OnEnter()
@@ -525,7 +526,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Initialises a transition, i.e. sets its <c>fsm</c> attribute, and then calls its <c>Init</c> method.
+		/// Initializes a transition, i.e. sets its <c>fsm</c> attribute, and then calls its <c>Init</c> method.
 		/// </summary>
 		/// <param name="transition"></param>
 		private void InitTransition(TransitionBase<TStateId> transition)

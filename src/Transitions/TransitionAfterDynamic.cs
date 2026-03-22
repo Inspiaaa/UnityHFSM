@@ -19,7 +19,7 @@ namespace UnityHFSM
 		private readonly Action<TransitionAfterDynamic<TStateId>> afterTransition;
 
 		/// <summary>
-		/// Initialises a new instance of the TransitionAfterDynamic class.
+		/// Initializes a new instance of the TransitionAfterDynamic class.
 		/// </summary>
 		/// <param name="delay">A function that dynamically computes the delay time.</param>
 		/// <param name="condition">A function that returns true if the state machine

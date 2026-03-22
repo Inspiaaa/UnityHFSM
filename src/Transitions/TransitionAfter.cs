@@ -17,7 +17,7 @@ namespace UnityHFSM
 		private readonly Action<TransitionAfter<TStateId>> afterTransition;
 
 		/// <summary>
-		/// Initialises a new instance of the TransitionAfter class.
+		/// Initializes a new instance of the TransitionAfter class.
 		/// </summary>
 		/// <param name="delay">The delay that must elapse before the transition can occur</param>
 		/// <param name="condition">A function that returns true if the state machine

@@ -12,7 +12,7 @@ namespace UnityHFSM
 		private ActionStorage<TEvent> actionStorage;
 
 		/// <summary>
-		/// Initialises a new instance of the ActionState class.
+		/// Initializes a new instance of the ActionState class.
 		/// </summary>
 		/// <inheritdoc cref="StateBase{T}(bool, bool)"/>
 		public ActionState(bool needsExitTime, bool isGhostState = false)

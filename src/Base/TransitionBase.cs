@@ -15,7 +15,7 @@ namespace UnityHFSM
 		public IStateMachine<TStateId> fsm;
 
 		/// <summary>
-		/// Initialises a new instance of the TransitionBase class.
+		/// Initializes a new instance of the TransitionBase class.
 		/// </summary>
 		/// <param name="from">The name / identifier of the active state.</param>
 		/// <param name="to">The name / identifier of the next state.</param>
@@ -30,7 +30,7 @@ namespace UnityHFSM
 		}
 
 		/// <summary>
-		/// Called to initialise the transition, after values like <c>fsm</c> have been set.
+		/// Called to initialize the transition, after values like <c>fsm</c> have been set.
 		/// </summary>
 		public virtual void Init()
 		{

@@ -16,7 +16,7 @@ namespace UnityHFSM
 		public ITimer timer;
 
 		/// <summary>
-		/// Initialises a new instance of the State class.
+		/// Initializes a new instance of the State class.
 		/// </summary>
 		/// <param name="onEnter">A function that is called when the state machine enters this state.</param>
 		/// <param name="onLogic">A function that is called by the logic function of the state machine if this

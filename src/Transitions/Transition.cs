@@ -12,7 +12,7 @@ namespace UnityHFSM
 		private readonly Action<Transition<TStateId>> afterTransition;
 
 		/// <summary>
-		/// Initialises a new instance of the Transition class.
+		/// Initializes a new instance of the Transition class.
 		/// </summary>
 		/// <param name="condition">A function that returns true if the state machine
 		/// 	should transition to the <c>to</c> state.</param>
