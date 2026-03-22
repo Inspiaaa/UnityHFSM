@@ -1,7 +1,7 @@
 {
   "name": "com.inspiaaa.unityhfsm",
   "displayName": "UnityHFSM",
-  "description": "A simple yet powerful class-based hierarchical finite state machine for Unity3D",
+  "description": "A fast, tried-and-tested hierarchical finite state machine library for Unity, designed to be easy to use yet powerful without compromising performance.",
 
   "version": "2.2.1",
   "license": "MIT",
