@@ -779,7 +779,8 @@ namespace UnityHFSM
 		/// <param name="trigger">Name of the action.</param>
 		/// <param name="data">Any custom data for the parameter.</param>
 		/// <typeparam name="TData">Type of the data parameter.
-		/// 	Should match the data type of the action that was added via <c>AddAction&lt;T&gt;(...).</c></typeparam>
+		/// 	Should match the data type of the action that was added via <c>AddAction&lt;T&gt;(...)</c>.</typeparam>
+		/// <inheritdoc />
 		public virtual void OnAction<TData>(TEvent trigger, TData data)
 		{
 			EnsureIsInitializedFor("Running OnAction of the active state");
@@ -787,10 +788,9 @@ namespace UnityHFSM
 		}
 
         /// <summary>
-        /// Checks if currently active state has this action.
+        /// Checks if currently active state has the specified action.
         /// </summary>
         /// <param name="trigger">Name of the action.</param>
-        /// <returns></returns>
         public virtual bool HasAction(TEvent trigger)
 		{
 			EnsureIsInitializedFor("Running HasAction of the active state");
