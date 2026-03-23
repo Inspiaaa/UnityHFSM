@@ -9,7 +9,25 @@ namespace UnityHFSM
 		public readonly TStateId from;
 		public readonly TStateId to;
 
-		public readonly bool forceInstantly;
+		/// <summary>
+		/// If true, the state machine will ignore the current state's needsExitTime behaviour to immediately
+		/// transition to the 'to' state as soon as the condition is met.
+		/// </summary>
+		/// <remarks>
+		/// Changing this value at runtime will only take effect the next time the state machine
+		/// evaluates this transition.
+		/// </remarks>
+		public bool forceInstantly;
+
+		/// <summary>
+		/// Indicates if this transition is specifically designed to exit a nested
+		/// state machine and return control to the parent state machine.
+		/// </summary>
+		/// <remarks>
+		/// Changing this value at runtime will only take effect the next time the state machine
+		/// evaluates this transition. <para/>
+		/// If this field is true, the 'to' state is irrelevant (and can have any value).
+		/// </remarks>
 		public bool isExitTransition;
 
 		public IStateMachine<TStateId> fsm;

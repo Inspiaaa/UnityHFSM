@@ -8,8 +8,29 @@ namespace UnityHFSM
 	/// </summary>
 	public class StateBase<TStateId> : IVisitableState
 	{
-		public readonly bool needsExitTime;
-		public readonly bool isGhostState;
+		/// <summary>
+		/// If true, the state machine will wait for this state to signal it is "ready to exit"
+		/// before allowing a transition to occur.
+		/// </summary>
+		/// <remarks>
+		/// Changes to this at runtime only take effect the next time a transition is evaluated on this state.
+		/// </remarks>
+		public bool needsExitTime;
+		/// <summary>
+		/// When entered, the state machine will immediately check this state's outgoing transitions
+		/// and move to the next valid state within the same update tick if possible.
+		/// </summary>
+		/// <remarks>
+		/// Changes to this at runtime only take effect the next this state is entered.
+		/// </remarks>
+		public bool isGhostState;
+
+		/// <summary>
+		/// The unique identifier used to reference this state within the state machine.
+		/// </summary>
+		/// <remarks>
+		/// This field should not be changed once this state has been added to a state machine.
+		/// </remarks>
 		public TStateId name;
 
 		public IStateTimingManager fsm;
