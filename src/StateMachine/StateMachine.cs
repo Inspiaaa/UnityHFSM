@@ -8,7 +8,7 @@ using UnityHFSM.Inspection;
  * Hierarchical Finite State Machine for Unity
  * by Inspiaaa and contributors
  *
- * Version: 2.3
+ * Version: 2.3.0
  */
 
 namespace UnityHFSM
