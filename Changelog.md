@@ -18,6 +18,10 @@
 
 - `fsm.IsInitialized` property to check whether a state machine is currently running.
 
+### Improved
+
+- Slightly reduced the overhead of most methods of the `StateMachine` class.
+
 ### Fixed
 
 - A crash occurring in some Unity 6 versions during package import (issue #68).
