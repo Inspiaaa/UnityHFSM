@@ -4,7 +4,9 @@
 
 ### Added
 
-- `HasAction(name)` method to see if the currently active state (or any of its child states) have defined an action for the specified trigger. This can be used to implement default behaviours when the active state does not implement an action:
+- **New `HasAction(name)` method**: Added the ability to query whether the active state hierarchy (including nested states) has a handler for a specific action. This is ideal for implementing "fallback" logic when a command is ignored by the current state.
+
+    Example:
     ```csharp
     if (fsm.HasAction("Shoot")) {
         fsm.OnAction("Shoot");
@@ -16,7 +18,9 @@
     }
     ```
 
-- `fsm.IsInitialized` property to check whether a state machine is currently running.
+- **`fsm.IsInitialized` property**: A new boolean flag to safely verify if a state machine has been started and is ready to process logic.
+
+- **Dynamic state / transition configuration**: Key fields including `needsExitTime`, `forceInstantly`, `isGhostState`, and `isExitTransition` can now be modified at runtime. This allows states and transitions to adapt their behavior dynamically during execution, providing significantly more flexibility for complex logic.
 
 ### Improved
 
