@@ -159,7 +159,10 @@ namespace UnityHFSM
 		/// <summary>
 		/// Returns true when the state machine is currently running.
 		/// </summary>
-		public bool IsInitialized => activeState != null;
+		public bool IsInitialized {
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => activeState != null;
+		}
 
 		public IStateTimingManager ParentFsm => fsm;
 
@@ -185,6 +188,7 @@ namespace UnityHFSM
 		/// Throws an exception if the state machine is not initialized yet.
 		/// </summary>
 		/// <param name="context">String message for which action the fsm should be initialized for.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private void EnsureIsInitializedFor(string context)
 		{
 			if (!IsInitialized)
