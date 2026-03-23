@@ -1,6 +1,6 @@
 # Changelog
 
-## In Progress
+## 2.3
 
 ### Added
 
